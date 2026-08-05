@@ -1,0 +1,20 @@
+diff --git a/common_library_config.gradle b/common_library_config.gradle
+index 611ea7ce8c..376378dc3c 100644
+--- a/common_library_config.gradle
++++ b/common_library_config.gradle
+@@ -22,7 +22,14 @@ android {
+     defaultConfig {
+         minSdkVersion project.ext.minSdkVersion
+         targetSdkVersion project.ext.targetSdkVersion
+-        consumerProguardFiles 'proguard-rules.txt'
++        // SHELLAC PATCH: 25 of the media3 libraries (common_ktx, session, effect, muxer,
++        // transformer, ui_compose, ...) do not ship a proguard-rules.txt. Older AGP silently
++        // ignored a missing consumer proguard file; AGP 9.2.1 fails the build with
++        // "Supplied consumer proguard configuration does not exist". Only declare it when
++        // the file is actually present, which reproduces the previous AGP behaviour.
++        if (project.file('proguard-rules.txt').exists()) {
++            consumerProguardFiles 'proguard-rules.txt'
++        }
+         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+         aarMetadata {
+             minCompileSdk = project.ext.compileSdkVersion
