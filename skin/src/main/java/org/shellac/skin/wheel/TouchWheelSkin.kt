@@ -479,7 +479,15 @@ class TouchWheelSkin : AppSkin {
             remember(destination) {
                 WheelMenuState(selectionIndices[destination] ?: 0)
             }
+        // Re-clamp the restored index once the collection is known, in case it shrank while
+        // we were away. Only when something is actually loaded: clampIndex returns 0 for an
+        // empty list, and a paged screen always begins at itemCount == 0 before its first
+        // page arrives (as does the scanning/failed status screen, which passes 0). Running
+        // this then would write 0 straight over the index we just restored - which is
+        // exactly what made descending into an album and pressing MENU return to the top of
+        // the list instead of to the album you came from.
         LaunchedEffect(itemCount) {
+            if (itemCount <= 0) return@LaunchedEffect
             wheelState.onRotate(delta = 0, itemCount = itemCount)
             selectionIndices[destination] = wheelState.selectedIndex
         }
