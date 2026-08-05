@@ -7,16 +7,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,7 +25,7 @@ import org.shellac.skin.support.SkinColors
 import org.shellac.skin.support.SkinTheme
 import org.shellac.skin.support.SkinTypography
 
-internal val ZuneColors =
+internal val SkinPaletteColors =
     SkinColors(
         background = Color(0xFF050505),
         surface = Color(0xFF171717),
@@ -35,23 +35,23 @@ internal val ZuneColors =
         onAccent = Color(0xFF050505),
     )
 
-internal val ZuneTypography =
+internal val SkinPaletteTypography =
     SkinTypography(
         title = TextStyle(
-            color = ZuneColors.onBackground,
+            color = SkinPaletteColors.onBackground,
             fontSize = 52.sp,
             lineHeight = 50.sp,
             fontWeight = FontWeight.Light,
             letterSpacing = (-2.2).sp,
         ),
         body = TextStyle(
-            color = ZuneColors.onBackground,
+            color = SkinPaletteColors.onBackground,
             fontSize = 18.sp,
             lineHeight = 22.sp,
             fontWeight = FontWeight.Light,
         ),
         label = TextStyle(
-            color = ZuneColors.onSurface,
+            color = SkinPaletteColors.onSurface,
             fontSize = 13.sp,
             lineHeight = 16.sp,
             fontWeight = FontWeight.Normal,
@@ -60,30 +60,38 @@ internal val ZuneTypography =
     )
 
 @Composable
-internal fun ZuneFrame(
+internal fun BlackFrame(
     title: String,
     modifier: Modifier = Modifier,
     utility: @Composable (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     SkinTheme(
-        colors = ZuneColors,
-        typography = ZuneTypography,
+        colors = SkinPaletteColors,
+        typography = SkinPaletteTypography,
         darkSystemBars = true,
         content = {
             Column(
                 modifier = modifier
-                    .background(ZuneColors.background)
+                    .fillMaxSize()
+                    .background(SkinPaletteColors.background)
                     .padding(start = 28.dp, end = 20.dp, top = 24.dp, bottom = 18.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
+                    // Oversized headings must CLIP at the right edge, never wrap. Wrapping
+                    // turned "music" into "mu / sic" and "playlists" into "playli / sts".
+                    // The bleed past the frame is the signature of this visual language;
+                    // a wrapped heading just reads as a layout bug.
                     BasicText(
                         text = title,
                         style = SkinTheme.typography.title,
                         modifier = Modifier.weight(1f),
+                        maxLines = 1,
+                        softWrap = false,
+                        overflow = TextOverflow.Clip,
                     )
                     if (utility != null) {
                         utility()
@@ -97,7 +105,7 @@ internal fun ZuneFrame(
 }
 
 @Composable
-internal fun ZuneUtilityLink(
+internal fun AccentLink(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -110,7 +118,7 @@ internal fun ZuneUtilityLink(
 }
 
 @Composable
-internal fun ZuneSectionLabel(text: String) {
+internal fun SectionLabel(text: String) {
     BasicText(
         text = text,
         style = SkinTheme.typography.label.copy(color = SkinTheme.colors.accent),
@@ -119,7 +127,7 @@ internal fun ZuneSectionLabel(text: String) {
 }
 
 @Composable
-internal fun ZuneListRow(
+internal fun LibraryRow(
     title: String,
     subtitle: String = "",
     onClick: (() -> Unit)? = null,
@@ -151,14 +159,14 @@ internal fun ZuneListRow(
 }
 
 @Composable
-internal fun ZuneSongRow(
+internal fun SongRow(
     song: SkinSong,
     index: Int? = null,
     onClick: () -> Unit,
     trailing: String? = null,
 ) {
     val prefix = if (index == null) "" else "${index + 1}. "
-    ZuneListRow(
+    LibraryRow(
         title = "$prefix${song.title}",
         subtitle = "${song.artist}  ·  ${song.album}",
         onClick = onClick,
@@ -167,13 +175,17 @@ internal fun ZuneSongRow(
 }
 
 @Composable
-internal fun ZuneEmptyMessage(text: String) {
+internal fun EmptyMessage(text: String) {
     BasicText(
         text = text,
         style = SkinTheme.typography.body.copy(color = SkinTheme.colors.onSurface),
         modifier = Modifier.padding(vertical = 20.dp),
     )
 }
+
+/** "1 song" / "2 songs" - counts are user-visible, so they should read correctly. */
+internal fun plural(count: Int, noun: String): String =
+    if (count == 1) "1 $noun" else "$count ${noun}s"
 
 internal fun formatDuration(durationMs: Long): String {
     val seconds = (durationMs / 1000L).coerceAtLeast(0L)

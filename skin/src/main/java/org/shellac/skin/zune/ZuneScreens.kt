@@ -10,13 +10,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicText
@@ -37,19 +38,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.shellac.skin.LibraryLoadState
 import org.shellac.skin.SkinAlbum
-import org.shellac.skin.SkinArtist
-import org.shellac.skin.SkinGenre
-import org.shellac.skin.SkinLibrary
-import org.shellac.skin.SkinPlaylist
 import org.shellac.skin.SkinSearchResults
 import org.shellac.skin.SkinSession
 import org.shellac.skin.SkinSong
@@ -74,41 +69,49 @@ internal fun ZuneSkin.libraryScreen(session: SkinSession) {
     SkinLibraryGate(
         loadState = loadState,
         scanning = { loaded, explored ->
-            ZuneFrame(title = "music") {
-                ZuneSectionLabel("indexing")
-                BasicText(
-                    text = if (loaded == null || explored == null) "scanning" else "$loaded / $explored",
-                    style = SkinTheme.typography.body,
-                )
-            }
+            BlackFrame(
+                title = "music",
+                utility = { AccentLink(text = "settings", onClick = session.openAppSettings) },
+                content = {
+                    SectionLabel("indexing")
+                    BasicText(
+                        text = if (loaded == null || explored == null) "scanning" else "$loaded / $explored",
+                        style = SkinTheme.typography.body,
+                    )
+                },
+            )
         },
         failed = { message ->
-            ZuneFrame(title = "music") {
-                ZuneSectionLabel("library error")
-                BasicText(text = message, style = SkinTheme.typography.body)
-            }
+            BlackFrame(
+                title = "music",
+                utility = { AccentLink(text = "settings", onClick = session.openAppSettings) },
+                content = {
+                    SectionLabel("library error")
+                    BasicText(text = message, style = SkinTheme.typography.body)
+                },
+            )
         },
         empty = {
-            ZuneFrame(title = "music") {
-                ZuneEmptyMessage("nothing here yet")
-                ZuneUtilityLink(text = "settings", onClick = session.openAppSettings)
-            }
+            BlackFrame(title = "music", content = {
+                EmptyMessage("nothing here yet")
+                AccentLink(text = "settings", onClick = session.openAppSettings)
+            })
         },
         ready = {
             val pagerState = rememberPagerState(pageCount = { Pivot.entries.size })
             val pagerScope = rememberCoroutineScope()
-            ZuneFrame(
+            BlackFrame(
                 title = "music",
                 utility = {
-                    ZuneUtilityLink(text = "search", onClick = { navigateToSearch() })
-                    ZuneUtilityLink(text = "queue", onClick = { navigateToQueue() })
-                    ZuneUtilityLink(
+                    AccentLink(text = "search", onClick = { navigateToSearch() })
+                    AccentLink(text = "queue", onClick = { navigateToQueue() })
+                    AccentLink(
                         text = "now playing",
-                        onClick = { navigateToNowPlaying(session) },
+                        onClick = { navigateToNowPlaying() },
                     )
-                    ZuneUtilityLink(text = "settings", onClick = session.openAppSettings)
+                    AccentLink(text = "settings", onClick = session.openAppSettings)
                 },
-            ) {
+                content = {
                 PivotHeadings(
                     pagerState = pagerState,
                     onSelect = { page ->
@@ -123,7 +126,8 @@ internal fun ZuneSkin.libraryScreen(session: SkinSession) {
                         PivotPage(session = session, pivot = Pivot.entries[page])
                     },
                 )
-            }
+                },
+            )
         },
     )
 }
@@ -134,14 +138,19 @@ private fun PivotHeadings(
     pagerState: androidx.compose.foundation.pager.PagerState,
     onSelect: (Int) -> Unit,
 ) {
+    // Horizontally scrollable: the inactive headings are meant to run off the edge, but they
+    // still have to be reachable, and a plain Row would compress them to fit instead.
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
         verticalAlignment = Alignment.Bottom,
     ) {
         Pivot.entries.forEachIndexed { index, pivot ->
             val active = pagerState.currentPage == index
             BasicText(
                 text = pivot.title,
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Clip,
                 modifier = Modifier
                     .padding(end = if (active) 18.dp else 14.dp)
                     .clickable(onClick = { onSelect(index) }),
@@ -168,7 +177,7 @@ private fun ZuneSkin.PivotPage(session: SkinSession, pivot: Pivot) {
 
 @Composable
 private fun ZuneSkin.artistsPivot(session: SkinSession) {
-    val artists = remember(session.library) { session.library.artists() }.collectAsLazyPagingItems()
+    val artists = remember(session.library, calculation = { session.library.artists() }).collectAsLazyPagingItems()
     LazyColumn(
         contentPadding = PaddingValues(bottom = 24.dp),
         content = {
@@ -177,10 +186,10 @@ private fun ZuneSkin.artistsPivot(session: SkinSession) {
                 key = { index -> artists.peek(index)?.id ?: index },
                 itemContent = { index ->
                     artists[index]?.let { artist ->
-                        ZuneListRow(
+                        LibraryRow(
                             title = artist.name,
-                            subtitle = "${artist.albumCount} albums  ·  ${artist.songCount} songs",
-                            onClick = { open(ZuneDestination.ArtistAlbums(artist.id, artist.name)) },
+                            subtitle = "${plural(artist.albumCount, "album")}  ·  ${plural(artist.songCount, "song")}",
+                            onClick = { open(SkinDestination.ArtistAlbums(artist.id, artist.name)) },
                         )
                     }
                 },
@@ -191,7 +200,7 @@ private fun ZuneSkin.artistsPivot(session: SkinSession) {
 
 @Composable
 private fun ZuneSkin.albumsPivot(session: SkinSession) {
-    val albums = remember(session.library) { session.library.albums() }.collectAsLazyPagingItems()
+    val albums = remember(session.library, calculation = { session.library.albums() }).collectAsLazyPagingItems()
     LazyColumn(
         contentPadding = PaddingValues(bottom = 24.dp),
         content = {
@@ -202,7 +211,7 @@ private fun ZuneSkin.albumsPivot(session: SkinSession) {
                     albums[index]?.let { album ->
                         AlbumRow(
                             album = album,
-                            onClick = { open(ZuneDestination.AlbumSongs(album.id, album.title)) },
+                            onClick = { open(SkinDestination.AlbumSongs(album.id, album.title)) },
                         )
                     }
                 },
@@ -213,7 +222,7 @@ private fun ZuneSkin.albumsPivot(session: SkinSession) {
 
 @Composable
 private fun ZuneSkin.songsPivot(session: SkinSession) {
-    val songs = remember(session.library) { session.library.songs() }.collectAsLazyPagingItems()
+    val songs = remember(session.library, calculation = { session.library.songs() }).collectAsLazyPagingItems()
     LazyColumn(
         contentPadding = PaddingValues(bottom = 24.dp),
         content = {
@@ -222,12 +231,12 @@ private fun ZuneSkin.songsPivot(session: SkinSession) {
                 key = { index -> songs.peek(index)?.id ?: index },
                 itemContent = { index ->
                     songs[index]?.let { song ->
-                        ZuneSongRow(
+                        SongRow(
                             song = song,
                             index = index,
                             onClick = {
                                 session.commands.playSongFromAll(song.id)
-                                open(ZuneDestination.NowPlaying)
+                                open(SkinDestination.NowPlaying)
                             },
                         )
                     }
@@ -239,7 +248,7 @@ private fun ZuneSkin.songsPivot(session: SkinSession) {
 
 @Composable
 private fun ZuneSkin.genresPivot(session: SkinSession) {
-    val genres = remember(session.library) { session.library.genres() }.collectAsLazyPagingItems()
+    val genres = remember(session.library, calculation = { session.library.genres() }).collectAsLazyPagingItems()
     LazyColumn(
         contentPadding = PaddingValues(bottom = 24.dp),
         content = {
@@ -248,10 +257,10 @@ private fun ZuneSkin.genresPivot(session: SkinSession) {
                 key = { index -> genres.peek(index)?.id ?: index },
                 itemContent = { index ->
                     genres[index]?.let { genre ->
-                        ZuneListRow(
+                        LibraryRow(
                             title = genre.name,
-                            subtitle = "${genre.songCount} songs",
-                            onClick = { open(ZuneDestination.GenreSongs(genre.id, genre.name)) },
+                            subtitle = plural(genre.songCount, "song"),
+                            onClick = { open(SkinDestination.GenreSongs(genre.id, genre.name)) },
                         )
                     }
                 },
@@ -262,7 +271,7 @@ private fun ZuneSkin.genresPivot(session: SkinSession) {
 
 @Composable
 private fun ZuneSkin.playlistsPivot(session: SkinSession) {
-    val playlists = remember(session.library) { session.library.playlists() }.collectAsLazyPagingItems()
+    val playlists = remember(session.library, calculation = { session.library.playlists() }).collectAsLazyPagingItems()
     LazyColumn(
         contentPadding = PaddingValues(bottom = 24.dp),
         content = {
@@ -271,11 +280,11 @@ private fun ZuneSkin.playlistsPivot(session: SkinSession) {
                 key = { index -> playlists.peek(index)?.id ?: index },
                 itemContent = { index ->
                     playlists[index]?.let { playlist ->
-                        ZuneListRow(
+                        LibraryRow(
                             title = playlist.name,
                             subtitle = "${playlist.songCount} songs  ·  ${formatDuration(playlist.durationMs)}",
                             onClick = {
-                                open(ZuneDestination.PlaylistSongs(playlist.id, playlist.name))
+                                open(SkinDestination.PlaylistSongs(playlist.id, playlist.name))
                             },
                         )
                     }
@@ -314,7 +323,7 @@ private fun AlbumRow(album: SkinAlbum, onClick: () -> Unit) {
         Column(modifier = Modifier.padding(start = 14.dp)) {
             BasicText(text = album.title, style = SkinTheme.typography.body)
             BasicText(
-                text = "${album.artist}  ·  ${album.songCount} songs",
+                text = "${album.artist}  ·  ${plural(album.songCount, "song")}",
                 style = SkinTheme.typography.label,
                 modifier = Modifier.padding(top = 2.dp),
             )
@@ -325,22 +334,23 @@ private fun AlbumRow(album: SkinAlbum, onClick: () -> Unit) {
 @Composable
 internal fun ZuneSkin.artistAlbumsScreen(
     session: SkinSession,
-    destination: ZuneDestination.ArtistAlbums,
+    destination: SkinDestination.ArtistAlbums,
 ) {
-    val albums = remember(session.library, destination.artistId) {
-        session.library.albumsByArtist(destination.artistId)
-    }.collectAsLazyPagingItems()
+    val albums = remember(
+        session.library,
+        destination.artistId,
+        calculation = { session.library.albumsByArtist(destination.artistId) },
+    ).collectAsLazyPagingItems()
     LibraryBackFrame(
         title = destination.artistName,
-        session = session,
         onSettings = session.openAppSettings,
         onBack = { navigateBack() },
-    ) {
+        content = {
         SkinLibraryGate(
             loadState = session.library.loadState.collectAsState().value,
-            scanning = { _, _ -> ZuneEmptyMessage("scanning") },
-            failed = { message -> ZuneEmptyMessage(message) },
-            empty = { ZuneEmptyMessage("no albums") },
+            scanning = { _, _ -> EmptyMessage("scanning") },
+            failed = { message -> EmptyMessage(message) },
+            empty = { EmptyMessage("no albums") },
             ready = {
                 LazyColumn(
                     contentPadding = PaddingValues(bottom = 24.dp),
@@ -353,7 +363,7 @@ internal fun ZuneSkin.artistAlbumsScreen(
                                     AlbumRow(
                                         album = album,
                                         onClick = {
-                                            open(ZuneDestination.AlbumSongs(album.id, album.title))
+                                            open(SkinDestination.AlbumSongs(album.id, album.title))
                                         },
                                     )
                                 }
@@ -363,68 +373,74 @@ internal fun ZuneSkin.artistAlbumsScreen(
                 )
             },
         )
-    }
+        },
+    )
 }
 
 @Composable
 internal fun ZuneSkin.albumSongsScreen(
     session: SkinSession,
-    destination: ZuneDestination.AlbumSongs,
+    destination: SkinDestination.AlbumSongs,
 ) {
-    val songsFlow = remember(session.library, destination.albumId) {
-        session.library.songsByAlbum(destination.albumId)
-    }
+    val songsFlow = remember(
+        session.library,
+        destination.albumId,
+        calculation = { session.library.songsByAlbum(destination.albumId) },
+    )
     val songs by songsFlow.collectAsState(initial = emptyList())
     LibraryBackFrame(
         title = destination.albumTitle,
-        session = session,
         onSettings = session.openAppSettings,
         onBack = { navigateBack() },
-    ) {
-        if (songs.isEmpty()) {
-            ZuneEmptyMessage("no songs")
-        } else {
-            LazyColumn(
-                contentPadding = PaddingValues(bottom = 24.dp),
-                content = {
-                    items(
-                        items = songs,
-                        key = { song -> song.id },
-                        itemContent = { song ->
-                            ZuneSongRow(
-                                song = song,
-                                onClick = {
-                                    session.commands.playSongFromAlbum(song.id, destination.albumId)
-                                    open(ZuneDestination.NowPlaying)
-                                },
-                            )
-                        },
-                    )
-                },
-            )
-        }
-    }
+        content = {
+        libraryContentGate(session = session, content = {
+            if (songs.isEmpty()) {
+                EmptyMessage("no songs")
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(bottom = 24.dp),
+                    content = {
+                        items(
+                            items = songs,
+                            key = { song -> song.id },
+                            itemContent = { song ->
+                                SongRow(
+                                    song = song,
+                                    onClick = {
+                                        session.commands.playSongFromAlbum(song.id, destination.albumId)
+                                        open(SkinDestination.NowPlaying)
+                                    },
+                                )
+                            },
+                        )
+                    },
+                )
+            }
+        })
+        },
+    )
 }
 
 @Composable
 internal fun ZuneSkin.genreSongsScreen(
     session: SkinSession,
-    destination: ZuneDestination.GenreSongs,
+    destination: SkinDestination.GenreSongs,
 ) {
-    val songs = remember(session.library, destination.genreId) {
-        session.library.songsByGenre(destination.genreId)
-    }.collectAsLazyPagingItems()
+    val songs = remember(
+        session.library,
+        destination.genreId,
+        calculation = { session.library.songsByGenre(destination.genreId) },
+    ).collectAsLazyPagingItems()
     LibraryBackFrame(
         title = destination.genreName,
-        session = session,
         onSettings = session.openAppSettings,
         onBack = { navigateBack() },
-    ) {
+        content = {
         SkinLibraryGate(
             loadState = session.library.loadState.collectAsState().value,
-            scanning = { _, _ -> ZuneEmptyMessage("scanning") },
-            failed = { message -> ZuneEmptyMessage(message) },
-            empty = { ZuneEmptyMessage("no songs") },
+            scanning = { _, _ -> EmptyMessage("scanning") },
+            failed = { message -> EmptyMessage(message) },
+            empty = { EmptyMessage("no songs") },
             ready = {
                 LazyColumn(
                     contentPadding = PaddingValues(bottom = 24.dp),
@@ -434,11 +450,11 @@ internal fun ZuneSkin.genreSongsScreen(
                             key = { index -> songs.peek(index)?.id ?: index },
                             itemContent = { index ->
                                 songs[index]?.let { song ->
-                                    ZuneSongRow(
+                                    SongRow(
                                         song = song,
                                         onClick = {
                                             session.commands.playSongFromGenre(song.id, destination.genreId)
-                                            open(ZuneDestination.NowPlaying)
+                                            open(SkinDestination.NowPlaying)
                                         },
                                     )
                                 }
@@ -448,62 +464,66 @@ internal fun ZuneSkin.genreSongsScreen(
                 )
             },
         )
-    }
+        },
+    )
 }
 
 @Composable
 internal fun ZuneSkin.playlistSongsScreen(
     session: SkinSession,
-    destination: ZuneDestination.PlaylistSongs,
+    destination: SkinDestination.PlaylistSongs,
 ) {
-    val songsFlow = remember(session.library, destination.playlistId) {
-        session.library.songsByPlaylist(destination.playlistId)
-    }
+    val songsFlow = remember(
+        session.library,
+        destination.playlistId,
+        calculation = { session.library.songsByPlaylist(destination.playlistId) },
+    )
     val songs by songsFlow.collectAsState(initial = emptyList())
     LibraryBackFrame(
         title = destination.playlistName,
-        session = session,
         onSettings = session.openAppSettings,
         onBack = { navigateBack() },
-    ) {
-        if (songs.isEmpty()) {
-            ZuneEmptyMessage("no songs")
-        } else {
-            LazyColumn(
-                contentPadding = PaddingValues(bottom = 24.dp),
-                content = {
-                    items(
-                        items = songs,
-                        key = { song -> song.id },
-                        itemContent = { song ->
-                            ZuneSongRow(
-                                song = song,
-                                onClick = {
-                                    session.commands.playSongFromPlaylist(song.id, destination.playlistId)
-                                    open(ZuneDestination.NowPlaying)
-                                },
-                            )
-                        },
-                    )
-                },
-            )
-        }
-    }
+        content = {
+        libraryContentGate(session = session, content = {
+            if (songs.isEmpty()) {
+                EmptyMessage("no songs")
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(bottom = 24.dp),
+                    content = {
+                        items(
+                            items = songs,
+                            key = { song -> song.id },
+                            itemContent = { song ->
+                                SongRow(
+                                    song = song,
+                                    onClick = {
+                                        session.commands.playSongFromPlaylist(song.id, destination.playlistId)
+                                        open(SkinDestination.NowPlaying)
+                                    },
+                                )
+                            },
+                        )
+                    },
+                )
+            }
+        })
+        },
+    )
 }
 
 @Composable
 private fun LibraryBackFrame(
     title: String,
-    session: SkinSession,
     onSettings: () -> Unit,
     onBack: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    ZuneFrame(
+    BlackFrame(
         title = title,
         utility = {
-            ZuneUtilityLink(text = "back", onClick = onBack)
-            ZuneUtilityLink(text = "settings", onClick = onSettings)
+            AccentLink(text = "back", onClick = onBack)
+            AccentLink(text = "settings", onClick = onSettings)
         },
         content = content,
     )
@@ -513,20 +533,21 @@ private fun LibraryBackFrame(
 internal fun ZuneSkin.searchScreen(session: SkinSession) {
     var query by remember { mutableStateOf("") }
     var debouncedQuery by remember { mutableStateOf("") }
-    LaunchedEffect(query) {
+    LaunchedEffect(query, block = {
         delay(250L)
         debouncedQuery = query
-    }
-    val searchFlow = remember(session.library, debouncedQuery) {
-        session.library.search(debouncedQuery)
-    }
+    })
+    val searchFlow = remember(
+        session.library,
+        debouncedQuery,
+        calculation = { session.library.search(debouncedQuery) },
+    )
     val results by searchFlow.collectAsState(initial = SkinSearchResults())
     LibraryBackFrame(
         title = "search",
-        session = session,
         onSettings = session.openAppSettings,
         onBack = { navigateBack() },
-    ) {
+        content = {
         BasicTextField(
             value = query,
             onValueChange = { query = it },
@@ -549,16 +570,35 @@ internal fun ZuneSkin.searchScreen(session: SkinSession) {
                 }
             },
         )
-        if (debouncedQuery.isEmpty()) {
-            ZuneEmptyMessage("search your library")
-        } else if (results.isEmpty) {
-            SkinNoResults(query = debouncedQuery) { value ->
-                ZuneEmptyMessage("no results for $value")
+        libraryContentGate(session = session, content = {
+            if (debouncedQuery.isEmpty()) {
+                EmptyMessage("search your library")
+            } else if (results.isEmpty) {
+                SkinNoResults(
+                    query = debouncedQuery,
+                    content = { value -> EmptyMessage("no results for $value") },
+                )
+            } else {
+                SearchResults(session = session, results = results)
             }
-        } else {
-            SearchResults(session = session, results = results)
-        }
-    }
+        })
+        },
+    )
+}
+
+@Composable
+private fun libraryContentGate(
+    session: SkinSession,
+    content: @Composable () -> Unit,
+) {
+    val loadState by session.library.loadState.collectAsState()
+    SkinLibraryGate(
+        loadState = loadState,
+        scanning = { _, _ -> EmptyMessage("scanning") },
+        failed = { message -> EmptyMessage(message) },
+        empty = { EmptyMessage("nothing here yet") },
+        ready = content,
+    )
 }
 
 @Composable
@@ -567,73 +607,73 @@ private fun ZuneSkin.SearchResults(session: SkinSession, results: SkinSearchResu
         contentPadding = PaddingValues(bottom = 24.dp),
         content = {
             if (results.songs.isNotEmpty()) {
-                item { ZuneSectionLabel("songs") }
+                item(content = { SectionLabel("songs") })
                 items(
                     items = results.songs,
                     key = { song -> "song-${song.id}" },
                     itemContent = { song ->
-                        ZuneSongRow(
+                        SongRow(
                             song = song,
                             onClick = {
                                 session.commands.playSongs(results.songs, results.songs.indexOf(song))
-                                open(ZuneDestination.NowPlaying)
+                                open(SkinDestination.NowPlaying)
                             },
                         )
                     },
                 )
             }
             if (results.albums.isNotEmpty()) {
-                item { ZuneSectionLabel("albums") }
+                item(content = { SectionLabel("albums") })
                 items(
                     items = results.albums,
                     key = { album -> "album-${album.id}" },
                     itemContent = { album ->
                         AlbumRow(
                             album = album,
-                            onClick = { open(ZuneDestination.AlbumSongs(album.id, album.title)) },
+                            onClick = { open(SkinDestination.AlbumSongs(album.id, album.title)) },
                         )
                     },
                 )
             }
             if (results.artists.isNotEmpty()) {
-                item { ZuneSectionLabel("artists") }
+                item(content = { SectionLabel("artists") })
                 items(
                     items = results.artists,
                     key = { artist -> "artist-${artist.id}" },
                     itemContent = { artist ->
-                        ZuneListRow(
+                        LibraryRow(
                             title = artist.name,
-                            subtitle = "${artist.albumCount} albums  ·  ${artist.songCount} songs",
-                            onClick = { open(ZuneDestination.ArtistAlbums(artist.id, artist.name)) },
+                            subtitle = "${plural(artist.albumCount, "album")}  ·  ${plural(artist.songCount, "song")}",
+                            onClick = { open(SkinDestination.ArtistAlbums(artist.id, artist.name)) },
                         )
                     },
                 )
             }
             if (results.genres.isNotEmpty()) {
-                item { ZuneSectionLabel("genres") }
+                item(content = { SectionLabel("genres") })
                 items(
                     items = results.genres,
                     key = { genre -> "genre-${genre.id}" },
                     itemContent = { genre ->
-                        ZuneListRow(
+                        LibraryRow(
                             title = genre.name,
-                            subtitle = "${genre.songCount} songs",
-                            onClick = { open(ZuneDestination.GenreSongs(genre.id, genre.name)) },
+                            subtitle = plural(genre.songCount, "song"),
+                            onClick = { open(SkinDestination.GenreSongs(genre.id, genre.name)) },
                         )
                     },
                 )
             }
             if (results.playlists.isNotEmpty()) {
-                item { ZuneSectionLabel("playlists") }
+                item(content = { SectionLabel("playlists") })
                 items(
                     items = results.playlists,
                     key = { playlist -> "playlist-${playlist.id}" },
                     itemContent = { playlist ->
-                        ZuneListRow(
+                        LibraryRow(
                             title = playlist.name,
                             subtitle = "${playlist.songCount} songs  ·  ${formatDuration(playlist.durationMs)}",
                             onClick = {
-                                open(ZuneDestination.PlaylistSongs(playlist.id, playlist.name))
+                                open(SkinDestination.PlaylistSongs(playlist.id, playlist.name))
                             },
                         )
                     },
@@ -648,15 +688,15 @@ internal fun ZuneSkin.nowPlayingScreen(session: SkinSession) {
     val playback by session.playback.collectAsState()
     val smoothPosition by rememberInterpolatedPosition(playback)
     val song = playback.song
-    ZuneFrame(
-        title = "now playing",
-        utility = {
-            ZuneUtilityLink(text = "queue", onClick = { navigateToQueue() })
-            ZuneUtilityLink(text = "settings", onClick = session.openAppSettings)
-        },
-    ) {
+            BlackFrame(
+                title = "now playing",
+                utility = {
+                    AccentLink(text = "queue", onClick = { navigateToQueue() })
+                    AccentLink(text = "settings", onClick = session.openAppSettings)
+                },
+        content = {
         if (song == null) {
-            ZuneEmptyMessage("nothing playing")
+            EmptyMessage("nothing playing")
         } else {
             SkinAlbumArt(
                 uri = song.albumArtUri,
@@ -702,12 +742,13 @@ internal fun ZuneSkin.nowPlayingScreen(session: SkinSession) {
                 modifier = Modifier.fillMaxWidth().padding(top = 22.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                ZuneUtilityLink(text = "previous", onClick = session.commands::previous)
-                ZuneUtilityLink(text = if (playback.isPlaying) "pause" else "play", onClick = session.commands::playPause)
-                ZuneUtilityLink(text = "next", onClick = session.commands::next)
+                AccentLink(text = "previous", onClick = session.commands::previous)
+                AccentLink(text = if (playback.isPlaying) "pause" else "play", onClick = session.commands::playPause)
+                AccentLink(text = "next", onClick = session.commands::next)
             }
         }
-    }
+        },
+    )
 }
 
 @Composable
@@ -717,7 +758,7 @@ private fun ScrubbableProgress(
     onSeek: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var dragPositionMs by remember(durationMs) { mutableStateOf<Long?>(null) }
+    var dragPositionMs by remember(durationMs, calculation = { mutableStateOf<Long?>(null) })
     val latestPositionMs by rememberUpdatedState(positionMs)
     val commitSeek by rememberUpdatedState(onSeek)
     val shownPositionMs = dragPositionMs ?: positionMs
@@ -765,22 +806,22 @@ private fun ScrubbableProgress(
 @Composable
 internal fun ZuneSkin.queueScreen(session: SkinSession) {
     val playback by session.playback.collectAsState()
-    ZuneFrame(
+    BlackFrame(
         title = "queue",
-        utility = { ZuneUtilityLink(text = "settings", onClick = session.openAppSettings) },
-    ) {
+        utility = { AccentLink(text = "settings", onClick = session.openAppSettings) },
+        content = {
         if (playback.queue.isEmpty()) {
-            ZuneEmptyMessage("queue is empty")
+            EmptyMessage("queue is empty")
         } else {
             LazyColumn(
                 contentPadding = PaddingValues(bottom = 24.dp),
                 content = {
                     items(
-                        items = playback.queue,
-                        key = { song -> song.id },
-                        itemContent = { song ->
-                            val index = playback.queue.indexOf(song)
-                            ZuneSongRow(
+                        count = playback.queue.size,
+                        key = { index -> "${playback.queue[index].id}-$index" },
+                        itemContent = { index ->
+                            val song = playback.queue[index]
+                            SongRow(
                                 song = song,
                                 index = index,
                                 trailing = if (index == playback.queueIndex) "playing" else null,
@@ -791,5 +832,6 @@ internal fun ZuneSkin.queueScreen(session: SkinSession) {
                 },
             )
         }
-    }
+        },
+    )
 }

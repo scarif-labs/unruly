@@ -13,6 +13,7 @@ import org.shellac.skin.AppSkin
 import org.shellac.skin.debug.DebugSkinA
 import org.shellac.skin.debug.DebugSkinB
 import org.shellac.skin.wheel.TouchWheelSkin
+import org.shellac.skin.zune.ZuneSkin
 
 /**
  * Owns which skins exist, which one is active, and the recovery path when the active one is
@@ -39,7 +40,7 @@ class SkinRegistry @Inject constructor(@ApplicationContext context: Context) {
     private val fallback: AppSkin = DebugSkinA()
 
     private val skins: Map<String, AppSkin> =
-        listOf(fallback, DebugSkinB(), TouchWheelSkin()).associateBy { it.id }
+        listOf(fallback, DebugSkinB(), TouchWheelSkin(), ZuneSkin()).associateBy { it.id }
 
     /** Skins that threw during composition this process. Not persisted; a restart re-tries. */
     private val quarantined = mutableSetOf<String>()
