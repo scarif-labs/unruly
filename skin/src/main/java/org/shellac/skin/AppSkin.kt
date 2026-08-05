@@ -14,6 +14,15 @@ class SkinSession(
     val library: SkinLibrary,
     val commands: SkinCommands,
     /**
+     * Lyrics for the playing track.
+     *
+     * The only part of the contract backed by a network call, so a skin should expect
+     * [SkinLyricsState.Failed] and [SkinLyricsState.NotFound] to be ordinary outcomes rather
+     * than edge cases, and must handle [SkinLyricsState.Disabled] - the lookup is
+     * user-toggleable because this engine is otherwise entirely offline.
+     */
+    val lyrics: SkinLyricsSource,
+    /**
      * Opens the app-native settings screen.
      *
      * A skin SHOULD surface this somewhere, but the host also exposes settings through a

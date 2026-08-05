@@ -742,6 +742,7 @@ internal fun ZuneSkin.nowPlayingScreen(session: SkinSession) {
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         AccentLink(text = "queue", onClick = { navigateToQueue() })
+                        AccentLink(text = "lyrics", onClick = { navigateToLyrics() })
                         AccentLink(text = "settings", onClick = session.openAppSettings)
                     }
 

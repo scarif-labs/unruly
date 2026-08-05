@@ -16,4 +16,5 @@ sealed interface WheelDestination {
     data class GenreSongs(val genreId: String, val title: String) : WheelDestination
     data class PlaylistSongs(val playlistId: String, val title: String) : WheelDestination
     data object NowPlaying : WheelDestination
+    data object Lyrics : WheelDestination
 }

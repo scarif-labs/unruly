@@ -9,6 +9,7 @@ internal sealed interface SkinDestination {
     data object Library : SkinDestination
     data object Search : SkinDestination
     data object NowPlaying : SkinDestination
+    data object Lyrics : SkinDestination
     data object Queue : SkinDestination
     data class ArtistAlbums(val artistId: String, val artistName: String) : SkinDestination
     data class AlbumSongs(val albumId: String, val albumTitle: String) : SkinDestination
@@ -37,6 +38,7 @@ class ZuneSkin : AppSkin {
             SkinDestination.Library -> libraryScreen(session)
             SkinDestination.Search -> searchScreen(session)
             SkinDestination.NowPlaying -> nowPlayingScreen(session)
+            SkinDestination.Lyrics -> lyricsScreen(session)
             SkinDestination.Queue -> queueScreen(session)
             is SkinDestination.ArtistAlbums -> artistAlbumsScreen(session, destination)
             is SkinDestination.AlbumSongs -> albumSongsScreen(session, destination)
@@ -51,6 +53,10 @@ class ZuneSkin : AppSkin {
 
     internal fun navigateToQueue() {
         open(SkinDestination.Queue)
+    }
+
+    internal fun navigateToLyrics() {
+        open(SkinDestination.Lyrics)
     }
 
     internal fun navigateToSearch() {

@@ -40,6 +40,7 @@ import org.shellac.skin.AppSkin
 import org.shellac.skin.SkinAlbum
 import org.shellac.skin.SkinArtist
 import org.shellac.skin.SkinGenre
+import org.shellac.skin.SkinLyricLine
 import org.shellac.skin.SkinPlaylist
 import org.shellac.skin.SkinSession
 import org.shellac.skin.SkinSong
@@ -54,6 +55,7 @@ private enum class RootItem {
     QUEUE,
     SHUFFLE_SONGS,
     NOW_PLAYING,
+    LYRICS,
     SETTINGS,
 }
 
@@ -130,6 +132,7 @@ class TouchWheelSkin : AppSkin {
                 is WheelDestination.GenreSongs -> genreSongsScreen(session, destination)
                 is WheelDestination.PlaylistSongs -> playlistSongsScreen(session, destination)
                 WheelDestination.NowPlaying -> nowPlayingScreen(session)
+                WheelDestination.Lyrics -> lyricsScreen(session)
             }
         }
     }
@@ -148,6 +151,7 @@ class TouchWheelSkin : AppSkin {
                     RootItem.QUEUE -> "Queue"
                     RootItem.SHUFFLE_SONGS -> "Shuffle Songs"
                     RootItem.NOW_PLAYING -> "Now Playing"
+                    RootItem.LYRICS -> "Lyrics"
                     RootItem.SETTINGS -> "Settings"
                 }
             },
@@ -160,6 +164,7 @@ class TouchWheelSkin : AppSkin {
                         navigateTo(WheelDestination.NowPlaying)
                     }
                     RootItem.NOW_PLAYING -> navigateTo(WheelDestination.NowPlaying)
+                    RootItem.LYRICS -> navigateTo(WheelDestination.Lyrics)
                     // Skin switching is deliberately not a skin's job - the host owns it, so
                     // it stays reachable even when a skin is broken. This just opens it.
                     RootItem.SETTINGS -> session.openAppSettings()
@@ -177,6 +182,7 @@ class TouchWheelSkin : AppSkin {
                         RootItem.QUEUE -> "Queue"
                         RootItem.SHUFFLE_SONGS -> "Shuffle Songs"
                         RootItem.NOW_PLAYING -> "Now Playing"
+                        RootItem.LYRICS -> "Lyrics"
                         RootItem.SETTINGS -> "Settings"
                     }
                 },
@@ -410,6 +416,21 @@ class TouchWheelSkin : AppSkin {
         ) {
             WheelNowPlaying(session = session, state = nowPlayingState)
         }
+    }
+
+    @Composable
+    private fun lyricsScreen(session: SkinSession) {
+        val lyricsState = rememberWheelLyricsState()
+        wheelScaffold<SkinLyricLine>(
+            session = session,
+            destination = WheelDestination.Lyrics,
+            itemCount = 0,
+            resolveSelected = { null },
+            itemLabel = SkinLyricLine::text,
+            onCenter = { _, _ -> },
+            onRotate = lyricsState::onRotate,
+            body = { _ -> WheelLyrics(session = session, state = lyricsState) },
+        )
     }
 
     @Composable

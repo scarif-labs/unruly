@@ -34,6 +34,7 @@ constructor(
     searchEngine: SearchEngine,
     playbackManager: PlaybackStateManager,
     listSettings: ListSettings,
+    private val lyrics: SkinLyricsSourceImpl,
 ) {
     private val context = context.applicationContext
     private val musicRepository = musicRepository
@@ -45,7 +46,7 @@ constructor(
 
     fun bind(playbackModel: PlaybackViewModel, openAppSettings: () -> Unit): SkinSession {
         val binding = Binding(playbackModel)
-        return SkinSession(binding.playback, library, binding.commands, openAppSettings)
+        return SkinSession(binding.playback, library, binding.commands, lyrics, openAppSettings)
     }
 
     inner class Binding internal constructor(private val playbackModel: PlaybackViewModel) {
