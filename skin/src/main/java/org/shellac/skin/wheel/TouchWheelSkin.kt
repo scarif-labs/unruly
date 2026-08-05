@@ -344,13 +344,7 @@ class TouchWheelSkin : AppSkin {
 
     @Composable
     private fun nowPlayingScreen(session: SkinSession) {
-        val playback by session.playback.collectAsState()
-        val song = playback.song
-        val queueSize = playback.queue.size
-        val queuePosition =
-            if (playback.queueIndex in playback.queue.indices) playback.queueIndex + 1
-            else if (song == null) 0 else 1
-
+        val nowPlayingState = rememberWheelNowPlayingState()
         wheelScaffold<SkinSong>(
             session = session,
             destination = WheelDestination.NowPlaying,
@@ -358,40 +352,9 @@ class TouchWheelSkin : AppSkin {
             resolveSelected = { null },
             itemLabel = { it.title },
             onCenter = { _, _ -> },
+            onRotate = nowPlayingState::onRotate,
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize().background(colors.background).padding(20.dp),
-            ) {
-                BasicText("Now Playing", style = typography.title.copy(color = colors.onBackground))
-                if (song == null) {
-                    BasicText(
-                        "No song loaded",
-                        modifier = Modifier.padding(top = 20.dp),
-                        style = typography.body.copy(color = colors.onBackground),
-                    )
-                } else {
-                    BasicText(
-                        song.title,
-                        modifier = Modifier.padding(top = 20.dp),
-                        style = typography.title.copy(color = colors.onBackground),
-                    )
-                    BasicText(
-                        song.artist,
-                        modifier = Modifier.padding(top = 8.dp),
-                        style = typography.body.copy(color = colors.onSurface),
-                    )
-                    BasicText(
-                        song.album,
-                        modifier = Modifier.padding(top = 4.dp),
-                        style = typography.body.copy(color = colors.onSurface),
-                    )
-                    BasicText(
-                        "$queuePosition of $queueSize",
-                        modifier = Modifier.padding(top = 20.dp),
-                        style = typography.label.copy(color = colors.onSurface),
-                    )
-                }
-            }
+            WheelNowPlaying(session = session, state = nowPlayingState)
         }
     }
 
@@ -509,6 +472,7 @@ class TouchWheelSkin : AppSkin {
         resolveSelected: (Int) -> T?,
         itemLabel: (T) -> String,
         onCenter: (T, Int) -> Unit,
+        onRotate: ((Int) -> Unit)? = null,
         body: @Composable (selectedIndex: Int) -> Unit,
     ) {
         val wheelState =
@@ -549,8 +513,12 @@ class TouchWheelSkin : AppSkin {
                                 }
                             },
                             onRotate = { delta ->
-                                wheelState.onRotate(delta, itemCount)
-                                selectionIndices[destination] = wheelState.selectedIndex
+                                if (onRotate != null) {
+                                    onRotate(delta)
+                                } else {
+                                    wheelState.onRotate(delta, itemCount)
+                                    selectionIndices[destination] = wheelState.selectedIndex
+                                }
                             },
                         )
                     }

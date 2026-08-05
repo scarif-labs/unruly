@@ -1,6 +1,7 @@
 package org.shellac.skin.wheel
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 
@@ -67,19 +69,27 @@ fun <T> WheelMenuList(
     // throw" guarantee for the render path (the state path is handled by clampIndex).
     val effectiveIndex = selectedIndex.coerceIn(0, items.lastIndex)
 
-    // Centre the selected row: push its top edge down by half the leftover space so the
-    // item sits dead-centre in the viewport. Blank space above item 0 is intentional - the
-    // list genuinely moves under the stationary wheel cursor, never the reverse.
-    val centreOffset = if (viewportHeight > 0 && rowHeight > 0) {
-        (viewportHeight - rowHeight) / 2
-    } else {
-        0
+    // Centre the selected row via contentPadding, NOT via scrollToItem's offset.
+    //
+    // The offset argument cannot do this. `scrollToItem(i, offset)` scrolls the content so
+    // item i's top sits `offset` pixels ABOVE the viewport start - a positive offset moves
+    // content up, away from centre. It also cannot scroll before the first item, so with a
+    // short list (the 3-item root menu) nothing moves at all and the selection is pinned to
+    // the top forever. An earlier version did exactly this and the fixed-cursor behaviour -
+    // the whole character of the component - silently did not work.
+    //
+    // Half a viewport of padding at each end is what makes centring possible: it gives the
+    // list somewhere to scroll to when the selection is the first or last item. That blank
+    // space above item 0 is intentional; the list moves under a stationary cursor.
+    val centrePadding = with(LocalDensity.current) {
+        ((viewportHeight - rowHeight) / 2).coerceAtLeast(0).toDp()
     }
 
     Box(modifier = modifier.onSizeChanged { viewportHeight = it.height }) {
         LazyColumn(
             state = listState,
             modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(vertical = centrePadding),
             // The wheel is the only way to move: letting the finger scroll the list would
             // fight the fixed-cursor model and desync it from the rotation state. Rotation
             // never goes through LazyColumn's gestures, so this is safe to leave off.
@@ -107,10 +117,12 @@ fun <T> WheelMenuList(
     // LaunchedEffect keyed on the index (and the measured sizes) so we scroll only when
     // the target actually changes, never on unrelated recompositions.
     LaunchedEffect(effectiveIndex, viewportHeight, rowHeight) {
-        // Wait until the first layout pass has measured both sizes so the offset is real;
+        // Wait until the first layout pass has measured both sizes so the padding is real;
         // until then there is nothing meaningful to centre against.
+        // Offset 0: contentPadding already places the item at the centre, so the item's top
+        // aligns with the start of the padded content area. Any offset here would undo it.
         if (viewportHeight > 0 && rowHeight > 0) {
-            listState.scrollToItem(effectiveIndex, centreOffset)
+            listState.scrollToItem(effectiveIndex, 0)
         }
     }
 }
@@ -162,10 +174,10 @@ fun <T : Any> WheelMenuList(
     if (items.itemCount == 0) return
 
     val effectiveIndex = selectedIndex.coerceIn(0, items.itemCount - 1)
-    val centreOffset = if (viewportHeight > 0 && rowHeight > 0) {
-        (viewportHeight - rowHeight) / 2
-    } else {
-        0
+
+    // See the List overload for why this is contentPadding and not scrollToItem's offset.
+    val centrePadding = with(LocalDensity.current) {
+        ((viewportHeight - rowHeight) / 2).coerceAtLeast(0).toDp()
     }
     val itemKey = key?.let { items.itemKey(it) }
 
@@ -173,6 +185,7 @@ fun <T : Any> WheelMenuList(
         LazyColumn(
             state = listState,
             modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(vertical = centrePadding),
             userScrollEnabled = false,
         ) {
             items(
@@ -193,7 +206,7 @@ fun <T : Any> WheelMenuList(
 
     LaunchedEffect(effectiveIndex, viewportHeight, rowHeight) {
         if (viewportHeight > 0 && rowHeight > 0) {
-            listState.scrollToItem(effectiveIndex, centreOffset)
+            listState.scrollToItem(effectiveIndex, 0)
         }
     }
 }
