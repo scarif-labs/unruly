@@ -1,17 +1,16 @@
 package org.shellac.skin.wheel
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,9 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.shellac.skin.SkinSession
@@ -144,110 +143,96 @@ internal fun WheelNowPlaying(
     val displayedPositionMs =
         (scrubTargetMs ?: state.seekHoldMs ?: livePositionMs).coerceIn(0L, durationMs)
     val progress = progressFraction(displayedPositionMs, durationMs)
-    val colors = SkinTheme.colors
-    val typography = SkinTheme.typography
-
-    Column(
-        modifier = Modifier.fillMaxSize().background(colors.background).padding(20.dp),
-    ) {
-        BasicText(
-            "Now Playing",
-            style = typography.title.copy(color = colors.onBackground),
+    Column(modifier = Modifier.fillMaxSize().background(Color.White)) {
+        ClassicTitleBar(
+            title = "Now Playing",
+            isPlaying = playback.isPlaying,
+            hasSong = song != null,
         )
         if (song == null) {
-            BasicText(
-                "Nothing playing",
-                modifier = Modifier.padding(top = 20.dp),
-                style = typography.body.copy(color = colors.onBackground),
-            )
-        } else {
-            BoxWithConstraints(
-                modifier = Modifier.fillMaxWidth().weight(1f),
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
             ) {
-                val artSize = minOf(maxWidth, maxHeight * 0.43f)
+                BasicText(
+                    "Nothing playing",
+                    style = ClassicTypography.body.copy(color = Color(0xFF5A5A5A)),
+                )
+            }
+        } else {
+            BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                // Artwork takes a fixed share of the width and stays square; the metadata
+                // column takes the rest. This is the layout of the hardware being matched:
+                // art on the left, text beside it, transport information underneath.
+                val artWidth = maxWidth * 0.38f
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 10.dp, vertical = 8.dp),
                 ) {
-                    Box(
-                        modifier = Modifier.size(artSize),
-                    ) {
-                        SkinAlbumArt(
-                            uri = song.albumArtUri,
-                            contentDescription = song.album,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop,
-                            fallback = {
-                                Box(
-                                    modifier = Modifier.fillMaxSize().background(colors.surface),
-                                )
-                            },
-                        )
+                    ClassicCaption(queuePositionText(playback.queueIndex, playback.queue.size))
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Box(modifier = Modifier.width(artWidth).aspectRatio(1f)) {
+                            SkinAlbumArt(
+                                uri = song.albumArtUri,
+                                contentDescription = song.album,
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop,
+                                fallback = {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .background(Color(0xFFD5D5D5)),
+                                    )
+                                },
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = 10.dp),
+                        ) {
+                            BasicText(
+                                song.title,
+                                style = ClassicTypography.title.copy(color = Color.Black),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                            BasicText(
+                                song.artist,
+                                modifier = Modifier.padding(top = 3.dp),
+                                style = ClassicTypography.body.copy(color = Color.Black),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                            BasicText(
+                                song.album,
+                                modifier = Modifier.padding(top = 3.dp),
+                                style = ClassicTypography.body.copy(color = Color(0xFF3A3A3A)),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
                     }
-                    BasicText(
-                        song.title,
-                        modifier = Modifier.padding(top = 10.dp),
-                        style = typography.title.copy(color = colors.onBackground),
-                    )
-                    BasicText(
-                        song.artist,
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    ClassicProgressBar(fraction = progress)
+                    ClassicTimeRow(
+                        elapsed = formatTime(displayedPositionMs),
+                        remaining = "-${formatTime(durationMs - displayedPositionMs)}",
+                        // The scrub target is shown in the accent colour so the number
+                        // reads as a destination rather than the current position.
+                        elapsedColor =
+                            if (scrubTargetMs != null) ClassicColors.accent else Color(0xFF5A5A5A),
                         modifier = Modifier.padding(top = 3.dp),
-                        style = typography.body.copy(color = colors.onSurface),
                     )
-                    BasicText(
-                        song.album,
-                        modifier = Modifier.padding(top = 2.dp),
-                        style = typography.body.copy(color = colors.onSurface),
-                    )
-                    BasicText(
-                        queuePositionText(playback.queueIndex, playback.queue.size),
-                        modifier = Modifier.padding(top = 5.dp),
-                        style = typography.label.copy(color = colors.onSurface),
-                    )
-                    ProgressBar(
-                        fraction = progress,
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(top = 3.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        BasicText(
-                            formatTime(displayedPositionMs),
-                            style = typography.label.copy(
-                                color = if (scrubTargetMs != null) colors.accent else colors.onSurface,
-                                fontWeight = if (scrubTargetMs != null) FontWeight.Bold else null,
-                            ),
-                        )
-                        BasicText(
-                            "-${formatTime(durationMs - displayedPositionMs)}",
-                            style = typography.label.copy(color = colors.onSurface),
-                        )
-                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun ProgressBar(
-    fraction: Float,
-    modifier: Modifier,
-) {
-    val colors = SkinTheme.colors
-    Canvas(modifier = modifier.height(8.dp)) {
-        val safeFraction = fraction.coerceIn(0f, 1f)
-        drawRect(
-            color = colors.surface,
-            topLeft = androidx.compose.ui.geometry.Offset.Zero,
-            size = size,
-        )
-        drawRect(
-            color = colors.accent,
-            topLeft = androidx.compose.ui.geometry.Offset.Zero,
-            size = Size(size.width * safeFraction, size.height),
-        )
     }
 }
 

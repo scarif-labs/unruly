@@ -1,7 +1,11 @@
 package org.oxycblt.auxio.shellac.host
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import org.shellac.skin.AppSkin
 import org.shellac.skin.SkinSession
 
@@ -37,10 +41,23 @@ import org.shellac.skin.SkinSession
  *
  * Defence in depth: ShellacSettingsActivity has its own launcher icon and never composes a
  * skin, so it stays reachable even during a crash loop.
+ *
+ * ## Insets
+ *
+ * `AppSkin.supportsEdgeToEdge` is honoured **here**, not by the Activity.
+ * `WindowCompat.setDecorFitsSystemWindows` is deprecated and **ignored from API 35 onward**,
+ * where edge-to-edge is enforced. On the API 36 test device it did nothing at all, so a skin
+ * declaring `supportsEdgeToEdge = false` still drew its own title bar underneath the system
+ * status bar. Applying `safeDrawingPadding` to the skin's root fixes it for every skin
+ * rather than making each one remember to handle insets itself.
  */
 @Composable
 fun SkinHost(skin: AppSkin, session: SkinSession, onRenderSucceeded: (String) -> Unit) {
-    skin.Render(session)
+    if (skin.supportsEdgeToEdge) {
+        skin.Render(session)
+    } else {
+        Box(modifier = Modifier.fillMaxSize().safeDrawingPadding()) { skin.Render(session) }
+    }
 
     // Reached only if Render returned without throwing. LaunchedEffect runs after the frame
     // is applied, so this genuinely means "this skin composed successfully at least once".

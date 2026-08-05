@@ -40,11 +40,13 @@ import org.shellac.skin.support.SkinTypography
 
 private enum class RootItem {
     MUSIC,
+    QUEUE,
     SHUFFLE_SONGS,
     NOW_PLAYING,
 }
 
 private enum class MusicItem {
+    SEARCH,
     ARTISTS,
     ALBUMS,
     SONGS,
@@ -60,31 +62,21 @@ class TouchWheelSkin : AppSkin {
     private val backStack = SkinBackStack<WheelDestination>(WheelDestination.Root)
     private val selectionIndices = mutableStateMapOf<WheelDestination, Int>()
 
-    private val colors =
-        SkinColors(
-            background = Color(0xFF101214),
-            surface = Color(0xFF202428),
-            onBackground = Color(0xFFE2E5E7),
-            onSurface = Color(0xFFB3B8BC),
-            accent = Color(0xFF9EA5AA),
-            onAccent = Color(0xFF101214),
-        )
-
-    private val typography =
-        SkinTypography(
-            title = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Medium),
-            body = TextStyle(fontSize = 17.sp),
-            label = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Medium),
-        )
+    // White screen, black text, blue gradient selection - see WheelChrome.kt.
+    private val colors = ClassicColors
+    private val typography = ClassicTypography
 
     override fun onBackPressed(): Boolean = backStack.pop()
 
     @Composable
     override fun Render(session: SkinSession) {
-        SkinTheme(colors = colors, typography = typography, darkSystemBars = true) {
+        SkinTheme(colors = colors, typography = typography, darkSystemBars = false) {
             when (val destination = backStack.current) {
                 WheelDestination.Root -> rootScreen(session)
                 WheelDestination.MusicMenu -> musicScreen(session)
+                WheelDestination.Queue -> queueScreen(session)
+                is WheelDestination.QueueActions -> queueActionsScreen(session, destination)
+                WheelDestination.Search -> searchScreen(session)
                 WheelDestination.Artists -> artistsScreen(session)
                 WheelDestination.Albums -> albumsScreen(session)
                 WheelDestination.Songs -> songsScreen(session)
@@ -110,6 +102,7 @@ class TouchWheelSkin : AppSkin {
             itemLabel = { item ->
                 when (item) {
                     RootItem.MUSIC -> "Music"
+                    RootItem.QUEUE -> "Queue"
                     RootItem.SHUFFLE_SONGS -> "Shuffle Songs"
                     RootItem.NOW_PLAYING -> "Now Playing"
                 }
@@ -117,6 +110,7 @@ class TouchWheelSkin : AppSkin {
             onCenter = { item, _ ->
                 when (item) {
                     RootItem.MUSIC -> backStack.push(WheelDestination.MusicMenu)
+                    RootItem.QUEUE -> backStack.push(WheelDestination.Queue)
                     RootItem.SHUFFLE_SONGS -> {
                         session.commands.shuffleAll()
                         backStack.push(WheelDestination.NowPlaying)
@@ -126,16 +120,20 @@ class TouchWheelSkin : AppSkin {
             },
         ) { selectedIndex ->
             wheelListBody(
+                session = session,
                 title = "Touch Wheel",
                 items = items,
                 selectedIndex = selectedIndex,
                 itemLabel = { item ->
                     when (item) {
                         RootItem.MUSIC -> "Music"
+                        RootItem.QUEUE -> "Queue"
                         RootItem.SHUFFLE_SONGS -> "Shuffle Songs"
                         RootItem.NOW_PLAYING -> "Now Playing"
                     }
                 },
+                // Shuffle acts immediately; the rest open a screen.
+                showChevron = { it != RootItem.SHUFFLE_SONGS },
             )
         }
     }
@@ -152,6 +150,7 @@ class TouchWheelSkin : AppSkin {
             onCenter = { item, _ ->
                 backStack.push(
                     when (item) {
+                        MusicItem.SEARCH -> WheelDestination.Search
                         MusicItem.ARTISTS -> WheelDestination.Artists
                         MusicItem.ALBUMS -> WheelDestination.Albums
                         MusicItem.SONGS -> WheelDestination.Songs
@@ -162,10 +161,12 @@ class TouchWheelSkin : AppSkin {
             },
         ) { selectedIndex ->
             wheelListBody(
+                session = session,
                 title = "Music",
                 items = items,
                 selectedIndex = selectedIndex,
                 itemLabel = { item -> item.name.lowercase().replaceFirstChar { it.uppercase() } },
+                showChevron = { true },
             )
         }
     }
@@ -176,6 +177,7 @@ class TouchWheelSkin : AppSkin {
         pagedLibraryScreen(
             session = session,
             destination = WheelDestination.Artists,
+            showChevron = true,
             title = "Artists",
             items = artists,
             itemLabel = SkinArtist::name,
@@ -192,6 +194,7 @@ class TouchWheelSkin : AppSkin {
         pagedLibraryScreen(
             session = session,
             destination = WheelDestination.Albums,
+            showChevron = true,
             title = "Albums",
             items = albums,
             itemLabel = { album -> "${album.title} — ${album.artist}" },
@@ -225,6 +228,7 @@ class TouchWheelSkin : AppSkin {
         pagedLibraryScreen(
             session = session,
             destination = WheelDestination.Genres,
+            showChevron = true,
             title = "Genres",
             items = genres,
             itemLabel = SkinGenre::name,
@@ -241,6 +245,7 @@ class TouchWheelSkin : AppSkin {
         pagedLibraryScreen(
             session = session,
             destination = WheelDestination.Playlists,
+            showChevron = true,
             title = "Playlists",
             items = playlists,
             itemLabel = { playlist -> playlist.name },
@@ -270,6 +275,7 @@ class TouchWheelSkin : AppSkin {
             onCenter = { album, _ ->
                 backStack.push(WheelDestination.AlbumSongs(album.id, album.title))
             },
+            showChevron = true,
         )
     }
 
@@ -359,6 +365,132 @@ class TouchWheelSkin : AppSkin {
     }
 
     @Composable
+    private fun queueScreen(session: SkinSession) {
+        WheelQueue(
+            session = session,
+            onCenter = { song, index ->
+                backStack.push(
+                    WheelDestination.QueueActions(
+                        queueIndex = index,
+                        songId = song.id,
+                        title = song.title,
+                    ),
+                )
+            },
+            scaffold = { itemCount, initialSelection, resolveSelected, onCenter, body ->
+                wheelScaffold(
+                    session = session,
+                    destination = WheelDestination.Queue,
+                    itemCount = itemCount,
+                    initialSelection = initialSelection,
+                    resolveSelected = resolveSelected,
+                    itemLabel = { song -> "${song.title} — ${song.artist}" },
+                    onCenter = onCenter,
+                    body = body,
+                )
+            },
+        )
+    }
+
+    @Composable
+    private fun queueActionsScreen(
+        session: SkinSession,
+        destination: WheelDestination.QueueActions,
+    ) {
+        val playback by session.playback.collectAsState()
+        WheelQueueActions(
+            destination = destination,
+            onAction = { action, actionIndex ->
+                when (action) {
+                    QueueAction.PLAY -> {
+                        session.commands.playQueueItem(index = destination.queueIndex)
+                        backStack.pop()
+                    }
+                    QueueAction.MOVE_UP -> {
+                        if (destination.queueIndex > 0 &&
+                            destination.queueIndex <= playback.queue.lastIndex
+                        ) {
+                            val nextDestination =
+                                destination.copy(queueIndex = destination.queueIndex - 1)
+                            session.commands.moveInQueue(
+                                from = destination.queueIndex,
+                                to = nextDestination.queueIndex,
+                            )
+                            selectionIndices[WheelDestination.Queue] = nextDestination.queueIndex
+                            selectionIndices[nextDestination] = actionIndex
+                            backStack.pop()
+                            backStack.push(nextDestination)
+                        }
+                    }
+                    QueueAction.MOVE_DOWN -> {
+                        if (destination.queueIndex in 0 until playback.queue.lastIndex) {
+                            val nextDestination =
+                                destination.copy(queueIndex = destination.queueIndex + 1)
+                            session.commands.moveInQueue(
+                                from = destination.queueIndex,
+                                to = nextDestination.queueIndex,
+                            )
+                            selectionIndices[WheelDestination.Queue] = nextDestination.queueIndex
+                            selectionIndices[nextDestination] = actionIndex
+                            backStack.pop()
+                            backStack.push(nextDestination)
+                        }
+                    }
+                    QueueAction.REMOVE -> {
+                        session.commands.removeFromQueue(index = destination.queueIndex)
+                        val newQueueSize = (playback.queue.size - 1).coerceAtLeast(0)
+                        selectionIndices[WheelDestination.Queue] =
+                            if (newQueueSize == 0) 0
+                            else destination.queueIndex.coerceIn(0, newQueueSize - 1)
+                        backStack.pop()
+                    }
+                    QueueAction.CANCEL -> backStack.pop()
+                }
+            },
+            scaffold = { itemCount, initialSelection, resolveSelected, onCenter, body ->
+                wheelScaffold(
+                    session = session,
+                    destination = destination,
+                    itemCount = itemCount,
+                    initialSelection = initialSelection,
+                    resolveSelected = resolveSelected,
+                    itemLabel = QueueAction::label,
+                    onCenter = onCenter,
+                    body = body,
+                )
+            },
+        )
+    }
+
+    @Composable
+    private fun searchScreen(session: SkinSession) {
+        WheelSearch(
+            session = session,
+            onSong = { song ->
+                session.commands.playSongFromAll(songId = song.id)
+                backStack.push(WheelDestination.NowPlaying)
+            },
+            onAlbum = { album ->
+                backStack.push(WheelDestination.AlbumSongs(albumId = album.id, title = album.title))
+            },
+            onArtist = { artist ->
+                backStack.push(WheelDestination.ArtistAlbums(artistId = artist.id, title = artist.name))
+            },
+            scaffold = { itemCount, resolveSelected, onCenter, body ->
+                wheelScaffold(
+                    session = session,
+                    destination = WheelDestination.Search,
+                    itemCount = itemCount,
+                    resolveSelected = resolveSelected,
+                    itemLabel = WheelSearchItem::label,
+                    onCenter = onCenter,
+                    body = body,
+                )
+            },
+        )
+    }
+
+    @Composable
     private fun <T : Any> pagedLibraryScreen(
         session: SkinSession,
         destination: WheelDestination,
@@ -367,6 +499,7 @@ class TouchWheelSkin : AppSkin {
         itemLabel: (T) -> String,
         itemKey: (T) -> Any,
         onCenter: (T, Int) -> Unit,
+        showChevron: Boolean = false,
     ) {
         val loadState by session.library.loadState.collectAsState()
         SkinLibraryGate(
@@ -386,11 +519,13 @@ class TouchWheelSkin : AppSkin {
                     onCenter = onCenter,
                 ) { selectedIndex ->
                     wheelListBody(
+                        session = session,
                         title = title,
                         items = items,
                         selectedIndex = selectedIndex,
                         itemLabel = itemLabel,
                         itemKey = itemKey,
+                        showChevron = { showChevron },
                     )
                 }
             },
@@ -406,6 +541,7 @@ class TouchWheelSkin : AppSkin {
         itemLabel: (T) -> String,
         itemKey: (T) -> Any,
         onCenter: (T, Int) -> Unit,
+        showChevron: Boolean = false,
     ) {
         val loadState by session.library.loadState.collectAsState()
         SkinLibraryGate(
@@ -425,11 +561,13 @@ class TouchWheelSkin : AppSkin {
                     onCenter = onCenter,
                 ) { selectedIndex ->
                     wheelListBody(
+                        session = session,
                         title = title,
                         items = items,
                         selectedIndex = selectedIndex,
                         itemLabel = itemLabel,
                         itemKey = itemKey,
+                        showChevron = { showChevron },
                     )
                 }
             },
@@ -469,6 +607,7 @@ class TouchWheelSkin : AppSkin {
         session: SkinSession,
         destination: WheelDestination,
         itemCount: Int,
+        initialSelection: Int? = null,
         resolveSelected: (Int) -> T?,
         itemLabel: (T) -> String,
         onCenter: (T, Int) -> Unit,
@@ -476,8 +615,8 @@ class TouchWheelSkin : AppSkin {
         body: @Composable (selectedIndex: Int) -> Unit,
     ) {
         val wheelState =
-            remember(destination) {
-                WheelMenuState(selectionIndices[destination] ?: 0)
+            remember(destination, initialSelection) {
+                WheelMenuState(selectionIndices[destination] ?: initialSelection ?: 0)
             }
         // Re-clamp the restored index once the collection is known, in case it shrank while
         // we were away. Only when something is actually loaded: clampIndex returns 0 for an
@@ -537,95 +676,87 @@ class TouchWheelSkin : AppSkin {
 
     @Composable
     private fun <T : Any> wheelListBody(
+        session: SkinSession,
         title: String,
         items: List<T>,
         selectedIndex: Int,
         itemLabel: (T) -> String,
         itemKey: ((T) -> Any)? = null,
+        showChevron: (T) -> Boolean = { false },
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize().background(colors.background).padding(top = 16.dp),
-        ) {
-            BasicText(
-                title,
-                modifier = Modifier.padding(horizontal = 20.dp),
-                style = typography.title.copy(color = colors.onBackground),
+        val playback by session.playback.collectAsState()
+        Column(modifier = Modifier.fillMaxSize().background(Color.White)) {
+            ClassicTitleBar(
+                title = title,
+                isPlaying = playback.isPlaying,
+                hasSong = playback.song != null,
             )
-            if (items.isEmpty()) {
-                BasicText(
-                    "No items",
-                    modifier = Modifier.padding(20.dp),
-                    style = typography.body.copy(color = colors.onSurface),
-                )
-            } else {
-                Box(modifier = Modifier.fillMaxWidth().weight(1f).padding(top = 12.dp)) {
-                    WheelMenuList(
-                        items = items,
-                        selectedIndex = selectedIndex,
-                        key = itemKey,
-                    ) { item, isSelected ->
-                        BasicText(
-                            itemLabel(item),
-                            modifier =
-                                Modifier.fillMaxWidth()
-                                    .background(if (isSelected) colors.accent else colors.surface)
-                                    .padding(horizontal = 20.dp, vertical = 10.dp),
-                            style =
-                                typography.body.copy(
-                                    color = if (isSelected) colors.onAccent else colors.onSurface,
-                                    fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal,
-                                ),
-                        )
+            ClassicSplitLayout(
+                modifier = Modifier.weight(1f),
+                panel = { ClassicArtPanel(playback.song) },
+                menu = {
+                    if (items.isEmpty()) {
+                        ClassicEmptyLabel("No items")
+                    } else {
+                        WheelMenuList(
+                            items = items,
+                            selectedIndex = selectedIndex,
+                            modifier = Modifier.fillMaxSize(),
+                            key = itemKey,
+                        ) { item, isSelected ->
+                            ClassicMenuRow(
+                                label = itemLabel(item),
+                                isSelected = isSelected,
+                                showChevron = showChevron(item),
+                            )
+                        }
                     }
-                }
-            }
+                },
+            )
         }
     }
 
     @Composable
     private fun <T : Any> wheelListBody(
+        session: SkinSession,
         title: String,
         items: LazyPagingItems<T>,
         selectedIndex: Int,
         itemLabel: (T) -> String,
         itemKey: ((T) -> Any)? = null,
+        showChevron: (T) -> Boolean = { false },
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize().background(colors.background).padding(top = 16.dp),
-        ) {
-            BasicText(
-                title,
-                modifier = Modifier.padding(horizontal = 20.dp),
-                style = typography.title.copy(color = colors.onBackground),
+        val playback by session.playback.collectAsState()
+        Column(modifier = Modifier.fillMaxSize().background(Color.White)) {
+            ClassicTitleBar(
+                title = title,
+                isPlaying = playback.isPlaying,
+                hasSong = playback.song != null,
             )
-            if (items.itemCount == 0) {
-                BasicText(
-                    "No items",
-                    modifier = Modifier.padding(20.dp),
-                    style = typography.body.copy(color = colors.onSurface),
-                )
-            } else {
-                Box(modifier = Modifier.fillMaxWidth().weight(1f).padding(top = 12.dp)) {
-                    WheelMenuList(
-                        items = items,
-                        selectedIndex = selectedIndex,
-                        key = itemKey,
-                    ) { item, isSelected ->
-                        BasicText(
-                            item?.let(itemLabel) ?: "Loading…",
-                            modifier =
-                                Modifier.fillMaxWidth()
-                                    .background(if (isSelected) colors.accent else colors.surface)
-                                    .padding(horizontal = 20.dp, vertical = 10.dp),
-                            style =
-                                typography.body.copy(
-                                    color = if (isSelected) colors.onAccent else colors.onSurface,
-                                    fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal,
-                                ),
-                        )
+            ClassicSplitLayout(
+                modifier = Modifier.weight(1f),
+                panel = { ClassicArtPanel(playback.song) },
+                menu = {
+                    if (items.itemCount == 0) {
+                        ClassicEmptyLabel("No items")
+                    } else {
+                        WheelMenuList(
+                            items = items,
+                            selectedIndex = selectedIndex,
+                            modifier = Modifier.fillMaxSize(),
+                            key = itemKey,
+                        ) { item, isSelected ->
+                            // A row whose page has not arrived yet still needs full height,
+                            // or the fixed-centre offset jumps when it resolves.
+                            ClassicMenuRow(
+                                label = item?.let(itemLabel) ?: "Loading…",
+                                isSelected = isSelected,
+                                showChevron = item != null && showChevron(item),
+                            )
+                        }
                     }
-                }
-            }
+                },
+            )
         }
     }
 

@@ -5,6 +5,9 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -33,7 +36,6 @@ fun TouchWheel(
     onRotate: (Int) -> Unit = {},
     innerRadiusFraction: Float = 0.42f,
 ) {
-    val colors = SkinTheme.colors
     val textMeasurer = rememberTextMeasurer()
     val clampedInnerFraction = innerRadiusFraction.coerceIn(0f, OUTER_RADIUS_FRACTION)
 
@@ -60,7 +62,7 @@ fun TouchWheel(
 
     // SkinTheme.typography is a @Composable @ReadOnlyComposable getter, so it must be read
     // here and not inside the Canvas draw block - a DrawScope is not composable scope.
-    val labelStyle = SkinTheme.typography.label.copy(color = colors.onSurface)
+    val labelStyle = SkinTheme.typography.label.copy(color = wheelLabel)
 
     Canvas(gestureModifier) {
         val outerRadius = min(size.width, size.height) / 2f
@@ -68,15 +70,42 @@ fun TouchWheel(
         val innerRadius = clampedInnerFraction * outerRadius
 
         // Use one radius from the smaller dimension so the wheel remains circular.
-        drawCircle(color = colors.surface, radius = outerRadius, center = center)
-        drawCircle(color = colors.accent, radius = innerRadius, center = center)
+        // The ring is a shallow radial gradient and the centre button is flat and lighter,
+        // which is what reads as a dished physical wheel rather than two flat discs.
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(wheelRingInner, wheelRingOuter),
+                center = center,
+                radius = outerRadius,
+            ),
+            radius = outerRadius,
+            center = center,
+        )
+        drawCircle(color = wheelCentre, radius = innerRadius, center = center)
+        drawCircle(
+            color = wheelHairline,
+            radius = innerRadius,
+            center = center,
+            style = Stroke(width = 1f),
+        )
+
+        // MENU stays a word; the transport controls use the standard glyphs, as on the
+        // hardware this is modelled on.
         val labelRadius = (outerRadius + innerRadius) / 2f
         drawWheelLabel("MENU", center, Offset(0f, -labelRadius), labelStyle, textMeasurer)
-        drawWheelLabel("NEXT", center, Offset(labelRadius, 0f), labelStyle, textMeasurer)
-        drawWheelLabel("PLAY", center, Offset(0f, labelRadius), labelStyle, textMeasurer)
-        drawWheelLabel("PREV", center, Offset(-labelRadius, 0f), labelStyle, textMeasurer)
+        drawWheelLabel("▶▶|", center, Offset(labelRadius, 0f), labelStyle, textMeasurer)
+        drawWheelLabel("▶ ||", center, Offset(0f, labelRadius), labelStyle, textMeasurer)
+        drawWheelLabel("|◀◀", center, Offset(-labelRadius, 0f), labelStyle, textMeasurer)
     }
 }
+
+// Silver wheel of the light-cased models: a light ring darkening slightly outward, a paler
+// centre button, and a hairline separating them.
+private val wheelRingInner = Color(0xFFE2E2E2)
+private val wheelRingOuter = Color(0xFFC9C9C9)
+private val wheelCentre = Color(0xFFF2F2F2)
+private val wheelHairline = Color(0xFFA8A8A8)
+private val wheelLabel = Color(0xFF5F5F5F)
 
 private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawWheelLabel(
     text: String,
