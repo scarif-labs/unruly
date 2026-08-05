@@ -20,6 +20,14 @@
         app:title="@string/lbl_playback"
         tools:subtitle="@string/lbl_all_songs" />
 
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/shellac_compose"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playback_toolbar" />
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/playback_pager"
         android:layout_width="0dp"
