@@ -2,7 +2,11 @@ package org.shellac.skin.wheel
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -631,18 +635,41 @@ class TouchWheelSkin : AppSkin {
             selectionIndices[destination] = wheelState.selectedIndex
         }
 
-        BoxWithConstraints(modifier = Modifier.fillMaxSize().background(colors.background)) {
-            val wheelAreaHeight = maxHeight * 0.45f
-            val wheelDiameter = wheelDiameterFor(maxWidth, wheelAreaHeight)
-            Column(modifier = Modifier.fillMaxSize()) {
-                Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+        // Proportions taken from the hardware rather than from the phone. On that device the
+        // screen is 4:3 and the wheel is roughly 70% of the body width, which together take
+        // about three quarters of the face. A modern phone is far taller relative to its
+        // width (~2.2:1 against ~1.7:1), so filling the height would stretch both out of
+        // shape - and letting the wheel span the full width is what made it oversized.
+        // Instead the face is sized to whichever of width or height binds first, then centred,
+        // with the body colour filling the space left over.
+        BoxWithConstraints(modifier = Modifier.fillMaxSize().background(BodySilver)) {
+            val margin = 12.dp
+            val faceWidth =
+                minOf(maxWidth - margin * 2, (maxHeight - margin * 2) / FACE_HEIGHT_RATIO)
+            val screenHeight = faceWidth * SCREEN_ASPECT
+            val gap = faceWidth * FACE_GAP_RATIO
+            val wheelDiameter = faceWidth * WHEEL_WIDTH_RATIO
+
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width(faceWidth)
+                        .height(screenHeight)
+                        .border(1.dp, BodyBezel)
+                        .background(colors.background),
+                ) {
                     body(wheelState.selectedIndex)
                 }
+                Spacer(modifier = Modifier.height(gap))
                 Box(
-                    modifier = Modifier.fillMaxWidth().height(wheelAreaHeight),
+                    modifier = Modifier.size(wheelDiameter),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Box(modifier = Modifier.size(wheelDiameter)) {
+                    Box(modifier = Modifier.fillMaxSize()) {
                         TouchWheel(
                             modifier = Modifier.fillMaxSize(),
                             onZonePressed = { zone ->

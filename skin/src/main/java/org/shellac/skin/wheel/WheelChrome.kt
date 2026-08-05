@@ -74,6 +74,31 @@ private val TrackGrey = Color(0xFFE4E4E4)
 
 internal val TitleBarHeight = 26.dp
 
+// Face proportions, derived from the hardware: a 61.8 x 103.5 mm body carrying a 4:3 screen
+// about 38 mm tall and a wheel about 43 mm across.
+//
+//   screen height / face width = 0.75   (4:3, landscape)
+//   wheel diameter / face width = 0.70
+//   gap between them            = 0.10
+//
+/** Screen height as a fraction of face width - 4:3, so 3/4. */
+internal const val SCREEN_ASPECT = 0.75f
+
+/** Wheel diameter as a fraction of face width. */
+internal const val WHEEL_WIDTH_RATIO = 0.70f
+
+/** Vertical gap between screen and wheel, as a fraction of face width. */
+internal const val FACE_GAP_RATIO = 0.10f
+
+/** Total face height as a multiple of face width - the three values above summed. */
+internal const val FACE_HEIGHT_RATIO = SCREEN_ASPECT + FACE_GAP_RATIO + WHEEL_WIDTH_RATIO
+
+/** Body around the screen and wheel. */
+internal val BodySilver = Color(0xFFDCDCDE)
+
+/** Hairline bezel around the screen. */
+internal val BodyBezel = Color(0xFF6E6E6E)
+
 /**
  * Grey gradient title bar: play state at the left, centred title, battery at the right.
  *
