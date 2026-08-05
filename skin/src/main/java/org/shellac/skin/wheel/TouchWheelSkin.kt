@@ -2,6 +2,8 @@ package org.shellac.skin.wheel
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -22,7 +24,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -64,13 +69,28 @@ class TouchWheelSkin : AppSkin {
     override val supportsEdgeToEdge: Boolean = false
 
     private val backStack = SkinBackStack<WheelDestination>(WheelDestination.Root)
+
+    // Which way the last navigation went, so the screen slides in from the correct edge.
+    // A plain field, not remembered state: onBackPressed is not composable and has to be
+    // able to set it too (see AppSkin rule 2).
+    private var navigatingForward = true
     private val selectionIndices = mutableStateMapOf<WheelDestination, Int>()
 
     // White screen, black text, blue gradient selection - see WheelChrome.kt.
     private val colors = ClassicColors
     private val typography = ClassicTypography
 
-    override fun onBackPressed(): Boolean = backStack.pop()
+    override fun onBackPressed(): Boolean = navigateBack()
+
+    private fun navigateTo(destination: WheelDestination) {
+        navigatingForward = true
+        backStack.push(destination)
+    }
+
+    private fun navigateBack(): Boolean {
+        navigatingForward = false
+        return backStack.pop()
+    }
 
     @Composable
     override fun Render(session: SkinSession) {
@@ -113,13 +133,13 @@ class TouchWheelSkin : AppSkin {
             },
             onCenter = { item, _ ->
                 when (item) {
-                    RootItem.MUSIC -> backStack.push(WheelDestination.MusicMenu)
-                    RootItem.QUEUE -> backStack.push(WheelDestination.Queue)
+                    RootItem.MUSIC -> navigateTo(WheelDestination.MusicMenu)
+                    RootItem.QUEUE -> navigateTo(WheelDestination.Queue)
                     RootItem.SHUFFLE_SONGS -> {
                         session.commands.shuffleAll()
-                        backStack.push(WheelDestination.NowPlaying)
+                        navigateTo(WheelDestination.NowPlaying)
                     }
-                    RootItem.NOW_PLAYING -> backStack.push(WheelDestination.NowPlaying)
+                    RootItem.NOW_PLAYING -> navigateTo(WheelDestination.NowPlaying)
                 }
             },
         ) { selectedIndex ->
@@ -152,7 +172,7 @@ class TouchWheelSkin : AppSkin {
             resolveSelected = items::getOrNull,
             itemLabel = { item -> item.name.lowercase().replaceFirstChar { it.uppercase() } },
             onCenter = { item, _ ->
-                backStack.push(
+                navigateTo(
                     when (item) {
                         MusicItem.SEARCH -> WheelDestination.Search
                         MusicItem.ARTISTS -> WheelDestination.Artists
@@ -187,7 +207,7 @@ class TouchWheelSkin : AppSkin {
             itemLabel = SkinArtist::name,
             itemKey = SkinArtist::id,
             onCenter = { artist, _ ->
-                backStack.push(WheelDestination.ArtistAlbums(artist.id, artist.name))
+                navigateTo(WheelDestination.ArtistAlbums(artist.id, artist.name))
             },
         )
     }
@@ -204,7 +224,7 @@ class TouchWheelSkin : AppSkin {
             itemLabel = { album -> "${album.title} — ${album.artist}" },
             itemKey = SkinAlbum::id,
             onCenter = { album, _ ->
-                backStack.push(WheelDestination.AlbumSongs(album.id, album.title))
+                navigateTo(WheelDestination.AlbumSongs(album.id, album.title))
             },
         )
     }
@@ -221,7 +241,7 @@ class TouchWheelSkin : AppSkin {
             itemKey = SkinSong::id,
             onCenter = { song, _ ->
                 session.commands.playSongFromAll(song.id)
-                backStack.push(WheelDestination.NowPlaying)
+                navigateTo(WheelDestination.NowPlaying)
             },
         )
     }
@@ -238,7 +258,7 @@ class TouchWheelSkin : AppSkin {
             itemLabel = SkinGenre::name,
             itemKey = SkinGenre::id,
             onCenter = { genre, _ ->
-                backStack.push(WheelDestination.GenreSongs(genre.id, genre.name))
+                navigateTo(WheelDestination.GenreSongs(genre.id, genre.name))
             },
         )
     }
@@ -255,7 +275,7 @@ class TouchWheelSkin : AppSkin {
             itemLabel = { playlist -> playlist.name },
             itemKey = SkinPlaylist::id,
             onCenter = { playlist, _ ->
-                backStack.push(WheelDestination.PlaylistSongs(playlist.id, playlist.name))
+                navigateTo(WheelDestination.PlaylistSongs(playlist.id, playlist.name))
             },
         )
     }
@@ -277,7 +297,7 @@ class TouchWheelSkin : AppSkin {
             itemLabel = { album -> "${album.title} — ${album.artist}" },
             itemKey = SkinAlbum::id,
             onCenter = { album, _ ->
-                backStack.push(WheelDestination.AlbumSongs(album.id, album.title))
+                navigateTo(WheelDestination.AlbumSongs(album.id, album.title))
             },
             showChevron = true,
         )
@@ -301,7 +321,7 @@ class TouchWheelSkin : AppSkin {
             itemKey = SkinSong::id,
             onCenter = { song, _ ->
                 session.commands.playSongFromAlbum(song.id, destination.albumId)
-                backStack.push(WheelDestination.NowPlaying)
+                navigateTo(WheelDestination.NowPlaying)
             },
         )
     }
@@ -324,7 +344,7 @@ class TouchWheelSkin : AppSkin {
             itemKey = SkinSong::id,
             onCenter = { song, _ ->
                 session.commands.playSongFromGenre(song.id, destination.genreId)
-                backStack.push(WheelDestination.NowPlaying)
+                navigateTo(WheelDestination.NowPlaying)
             },
         )
     }
@@ -347,7 +367,7 @@ class TouchWheelSkin : AppSkin {
             itemKey = SkinSong::id,
             onCenter = { song, _ ->
                 session.commands.playSongFromPlaylist(song.id, destination.playlistId)
-                backStack.push(WheelDestination.NowPlaying)
+                navigateTo(WheelDestination.NowPlaying)
             },
         )
     }
@@ -373,7 +393,7 @@ class TouchWheelSkin : AppSkin {
         WheelQueue(
             session = session,
             onCenter = { song, index ->
-                backStack.push(
+                navigateTo(
                     WheelDestination.QueueActions(
                         queueIndex = index,
                         songId = song.id,
@@ -423,7 +443,7 @@ class TouchWheelSkin : AppSkin {
                             selectionIndices[WheelDestination.Queue] = nextDestination.queueIndex
                             selectionIndices[nextDestination] = actionIndex
                             backStack.pop()
-                            backStack.push(nextDestination)
+                            navigateTo(nextDestination)
                         }
                     }
                     QueueAction.MOVE_DOWN -> {
@@ -437,7 +457,7 @@ class TouchWheelSkin : AppSkin {
                             selectionIndices[WheelDestination.Queue] = nextDestination.queueIndex
                             selectionIndices[nextDestination] = actionIndex
                             backStack.pop()
-                            backStack.push(nextDestination)
+                            navigateTo(nextDestination)
                         }
                     }
                     QueueAction.REMOVE -> {
@@ -472,13 +492,13 @@ class TouchWheelSkin : AppSkin {
             session = session,
             onSong = { song ->
                 session.commands.playSongFromAll(songId = song.id)
-                backStack.push(WheelDestination.NowPlaying)
+                navigateTo(WheelDestination.NowPlaying)
             },
             onAlbum = { album ->
-                backStack.push(WheelDestination.AlbumSongs(albumId = album.id, title = album.title))
+                navigateTo(WheelDestination.AlbumSongs(albumId = album.id, title = album.title))
             },
             onArtist = { artist ->
-                backStack.push(WheelDestination.ArtistAlbums(artistId = artist.id, title = artist.name))
+                navigateTo(WheelDestination.ArtistAlbums(artistId = artist.id, title = artist.name))
             },
             scaffold = { itemCount, resolveSelected, onCenter, body ->
                 wheelScaffold(
@@ -635,6 +655,7 @@ class TouchWheelSkin : AppSkin {
             selectionIndices[destination] = wheelState.selectedIndex
         }
 
+        val view = LocalView.current
         // Proportions taken from the hardware rather than from the phone. On that device the
         // screen is 4:3 and the wheel is roughly 70% of the body width, which together take
         // about three quarters of the face. A modern phone is far taller relative to its
@@ -655,14 +676,30 @@ class TouchWheelSkin : AppSkin {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                // Only the screen slides; the wheel is a physical control and must not
+                // move with it. Just an enter animation - the outgoing screen has already
+                // left the composition by the time the new one runs, so there is nothing
+                // left to animate out, and a slide-in alone reads correctly.
+                val slide =
+                    remember(destination) { Animatable(if (navigatingForward) 1f else -1f) }
+                LaunchedEffect(destination) {
+                    slide.animateTo(0f, animationSpec = tween(durationMillis = 170))
+                }
                 Box(
                     modifier = Modifier
                         .width(faceWidth)
                         .height(screenHeight)
                         .border(1.dp, BodyBezel)
-                        .background(colors.background),
+                        .background(colors.background)
+                        .clipToBounds(),
                 ) {
-                    body(wheelState.selectedIndex)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .graphicsLayer { translationX = slide.value * size.width },
+                    ) {
+                        body(wheelState.selectedIndex)
+                    }
                 }
                 Spacer(modifier = Modifier.height(gap))
                 Box(
@@ -673,8 +710,9 @@ class TouchWheelSkin : AppSkin {
                         TouchWheel(
                             modifier = Modifier.fillMaxSize(),
                             onZonePressed = { zone ->
+                                view.performWheelPress()
                                 when (zone) {
-                                    WheelZone.MENU -> backStack.pop()
+                                    WheelZone.MENU -> navigateBack()
                                     WheelZone.NEXT -> session.commands.next()
                                     WheelZone.PREVIOUS -> session.commands.previous()
                                     WheelZone.PLAY_PAUSE -> session.commands.playPause()
@@ -687,6 +725,7 @@ class TouchWheelSkin : AppSkin {
                                 }
                             },
                             onRotate = { delta ->
+                                view.performWheelTick()
                                 if (onRotate != null) {
                                     onRotate(delta)
                                 } else {
