@@ -792,10 +792,14 @@ internal fun ZuneSkin.nowPlayingScreen(session: SkinSession) {
                                 style = SkinTheme.typography.label,
                             )
                         }
-                        // Left-aligned, not spread across the width: everything else on this
-                        // screen hangs off the same left margin, and centring only the
-                        // controls breaks that line.
-                        Row(modifier = Modifier.padding(top = 16.dp)) {
+                        // Transport is centred while the track details stay on the left
+                        // margin. The controls are the one thing here you reach for without
+                        // looking, so they sit under the thumb rather than following the
+                        // type.
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                            horizontalArrangement = Arrangement.Center,
+                        ) {
                             AccentLink(text = "previous", onClick = session.commands::previous)
                             AccentLink(
                                 text = if (playback.isPlaying) "pause" else "play",
