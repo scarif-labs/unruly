@@ -67,6 +67,39 @@ interface SkinCommands {
     /** Plays an arbitrary list, e.g. search results. Maps to `PlaySong.ByItself`. */
     fun playSongs(songs: List<SkinSong>, startIndex: Int = 0)
 
+    // ---- Play one song *within* a browsing context -------------------------------------
+    //
+    // These exist because of a gap the first real skin (Touch Wheel, Phase 5e) hit head-on.
+    //
+    // `playSongs(list, startIndex)` needs the whole collection materialised. But
+    // `SkinLibrary.songs()`, `songsByGenre()` and `albumsByArtist()` return `PagingData`,
+    // which by construction never hands you a complete list. To play track #500 of a
+    // 20,000-song library the skin was forced to page the entire library into memory just
+    // to build the argument - defeating paging, and failing buildspec Phase 6.2 outright.
+    //
+    // The engine never had this problem: `play(song, PlaySong.FromGenre(genre))` takes one
+    // song plus a context. These methods expose that directly, so a skin plays what it can
+    // see (one id) without materialising what it cannot. Prefer them over `playSongs` for
+    // anything backed by a paged flow; `playSongs` remains right for genuinely ad-hoc lists
+    // like search results, which are small and already in hand.
+    //
+    // Each is a no-op when either id is unknown, per the empty-collection rule above.
+
+    /** Plays [songId] with the whole library as its queue context. `PlaySong.FromAll`. */
+    fun playSongFromAll(songId: String)
+
+    /** Plays [songId] with [albumId]'s track list as its queue context. */
+    fun playSongFromAlbum(songId: String, albumId: String)
+
+    /** Plays [songId] with [artistId]'s songs as its queue context. */
+    fun playSongFromArtist(songId: String, artistId: String)
+
+    /** Plays [songId] with [genreId]'s songs as its queue context. */
+    fun playSongFromGenre(songId: String, genreId: String)
+
+    /** Plays [songId] with [playlistId]'s track list as its queue context. */
+    fun playSongFromPlaylist(songId: String, playlistId: String)
+
     /** Shuffles the entire library. Maps to `PlaySong.FromAll` with shuffle enabled. */
     fun shuffleAll()
 

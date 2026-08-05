@@ -15,6 +15,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 
 /**
  * The reusable list primitive the whole Touch Wheel skin is built on.
@@ -114,6 +116,89 @@ fun <T> WheelMenuList(
 }
 
 /**
+ * Paged counterpart of the [List]-based [WheelMenuList] above. Same fixed-cursor behaviour;
+ * the differences are all consequences of never holding the whole collection.
+ *
+ * **Never materialise [items].** An earlier version reached the plain-`List` overload by
+ * calling `items[itemCount - 1]`, which tells Paging to load every page up to the end - so
+ * each screen pulled the entire library into memory. That is invisible on a 2,000-track
+ * device and a hard failure at the 20,000 this project targets. Rows are fetched by index
+ * inside the item lambda instead, so Paging loads only around the visible window.
+ *
+ * Two consequences for callers:
+ *
+ * 1. **[itemContent] receives `T?`.** A row whose page has not loaded yet is null; render a
+ *    placeholder of the same height, or the fixed-centre offset will jump when it arrives.
+ * 2. **Selection is decided by index**, not by identity. The `List` overload can compare
+ *    `item === items[effectiveIndex]`; here that would mark *every* unloaded row selected,
+ *    since all null placeholders are equal.
+ *
+ * To resolve the selected item outside composition (activating it, say), use
+ * `LazyPagingItems.peek(index)` rather than `get`: `peek` does not register a load, so
+ * pressing a button cannot itself trigger a fetch. It returns null for an unloaded row,
+ * which callers should treat as "do nothing".
+ *
+ * @param items The paged rows, in display order.
+ * @param selectedIndex Index of the highlighted row, clamped into range locally.
+ * @param modifier Applied to the viewport.
+ * @param key Optional stable key per item, wrapped via `LazyPagingItems.itemKey` so
+ *   placeholders get a positional key instead of colliding on null.
+ * @param itemContent Renders one row, receiving the item (null if unloaded) and whether it
+ *   is selected.
+ */
+@Composable
+fun <T : Any> WheelMenuList(
+    items: LazyPagingItems<T>,
+    selectedIndex: Int,
+    modifier: Modifier = Modifier,
+    key: ((T) -> Any)? = null,
+    itemContent: @Composable (item: T?, isSelected: Boolean) -> Unit,
+) {
+    val listState = rememberLazyListState()
+
+    var viewportHeight by remember { mutableStateOf(0) }
+    var rowHeight by remember { mutableStateOf(0) }
+
+    if (items.itemCount == 0) return
+
+    val effectiveIndex = selectedIndex.coerceIn(0, items.itemCount - 1)
+    val centreOffset = if (viewportHeight > 0 && rowHeight > 0) {
+        (viewportHeight - rowHeight) / 2
+    } else {
+        0
+    }
+    val itemKey = key?.let { items.itemKey(it) }
+
+    Box(modifier = modifier.onSizeChanged { viewportHeight = it.height }) {
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.fillMaxSize(),
+            userScrollEnabled = false,
+        ) {
+            items(
+                count = items.itemCount,
+                key = itemKey,
+            ) { index ->
+                val item = items[index]
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onSizeChanged { rowHeight = it.height },
+                ) {
+                    itemContent(item, index == effectiveIndex)
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(effectiveIndex, viewportHeight, rowHeight) {
+        if (viewportHeight > 0 && rowHeight > 0) {
+            listState.scrollToItem(effectiveIndex, centreOffset)
+        }
+    }
+}
+
+/**
  * Pure, Compose-free selection driver for a wheel list.
  *
  * The index is read back via [selectedIndex]. Moving is done exclusively through
@@ -165,4 +250,3 @@ internal fun clampIndex(current: Int, delta: Int, itemCount: Int): Int {
     if (itemCount <= 0) return 0
     return (current + delta).coerceIn(0, itemCount - 1)
 }
-

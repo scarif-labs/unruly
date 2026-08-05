@@ -71,6 +71,44 @@ class SkinCommandsImpl(
         playbackModel.play(resolved.drop(startAt) + resolved.take(startAt))
     }
 
+    // Song-plus-context playback. Each maps onto PlaybackViewModel.play(song, PlaySong),
+    // which is how Auxio itself starts playback from a browsing list. Resolution is by id
+    // only, so a skin backed by a paged flow never has to materialise the collection just
+    // to name a starting point (see the SkinCommands doc for why that mattered).
+    //
+    // FromArtist/FromGenre take a nullable "which" - null means "let Auxio pick the song's
+    // own artist/genre". We pass the resolved object when the id is known, so the queue is
+    // built from the collection the user was actually browsing, which matters for a song
+    // belonging to more than one artist or genre.
+    override fun playSongFromAll(songId: String) {
+        val song = findSongById(songId) ?: return
+        playbackModel.play(song, PlaySong.FromAll)
+    }
+
+    override fun playSongFromAlbum(songId: String, albumId: String) {
+        val song = findSongById(songId) ?: return
+        if (findAlbum(albumId) == null) return
+        playbackModel.play(song, PlaySong.FromAlbum)
+    }
+
+    override fun playSongFromArtist(songId: String, artistId: String) {
+        val song = findSongById(songId) ?: return
+        val artist = findArtist(artistId) ?: return
+        playbackModel.play(song, PlaySong.FromArtist(artist))
+    }
+
+    override fun playSongFromGenre(songId: String, genreId: String) {
+        val song = findSongById(songId) ?: return
+        val genre = findGenre(genreId) ?: return
+        playbackModel.play(song, PlaySong.FromGenre(genre))
+    }
+
+    override fun playSongFromPlaylist(songId: String, playlistId: String) {
+        val song = findSongById(songId) ?: return
+        val playlist = findPlaylist(playlistId) ?: return
+        playbackModel.play(song, PlaySong.FromPlaylist(playlist))
+    }
+
     override fun shuffleAll() = playbackModel.shuffleAll()
 
     override fun playQueueItem(index: Int) {
@@ -96,8 +134,10 @@ class SkinCommandsImpl(
         if (from in indices && to in indices) playbackManager.moveQueueItem(from, to)
     }
 
-    private fun findSong(song: SkinSong): Song? =
-        musicRepository.library?.songs?.firstOrNull { it.uid.toString() == song.id }
+    private fun findSong(song: SkinSong): Song? = findSongById(song.id)
+
+    private fun findSongById(id: String): Song? =
+        musicRepository.library?.songs?.firstOrNull { it.uid.toString() == id }
 
     /**
      * Resolves a batch in one pass.
