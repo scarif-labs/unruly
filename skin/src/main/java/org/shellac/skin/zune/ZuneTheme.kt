@@ -77,23 +77,27 @@ internal fun BlackFrame(
                     .background(SkinPaletteColors.background)
                     .padding(start = 28.dp, end = 20.dp, top = 24.dp, bottom = 18.dp),
             ) {
-                Row(
+                // The heading gets the full width and a line of its own.
+                //
+                // It used to share a Row with the utility links, with weight(1f) - so the
+                // links took their space first and the heading was squeezed into what was
+                // left, clipping "music" to "mus" and cutting the g off "now playing". Short
+                // headings should simply fit; the deliberate bleed is for genuinely long
+                // ones running off the screen edge, not for a four-letter word losing a
+                // fight with a row of links.
+                BasicText(
+                    text = title,
+                    style = SkinTheme.typography.title,
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    // Oversized headings must CLIP at the right edge, never wrap. Wrapping
-                    // turned "music" into "mu / sic" and "playlists" into "playli / sts".
-                    // The bleed past the frame is the signature of this visual language;
-                    // a wrapped heading just reads as a layout bug.
-                    BasicText(
-                        text = title,
-                        style = SkinTheme.typography.title,
-                        modifier = Modifier.weight(1f),
-                        maxLines = 1,
-                        softWrap = false,
-                        overflow = TextOverflow.Clip,
-                    )
-                    if (utility != null) {
+                    maxLines = 1,
+                    softWrap = false,
+                    overflow = TextOverflow.Clip,
+                )
+                if (utility != null) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
                         utility()
                     }
                 }

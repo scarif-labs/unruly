@@ -35,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -688,65 +689,124 @@ internal fun ZuneSkin.nowPlayingScreen(session: SkinSession) {
     val playback by session.playback.collectAsState()
     val smoothPosition by rememberInterpolatedPosition(playback)
     val song = playback.song
-            BlackFrame(
-                title = "now playing",
-                utility = {
-                    AccentLink(text = "queue", onClick = { navigateToQueue() })
-                    AccentLink(text = "settings", onClick = session.openAppSettings)
-                },
+
+    // Deliberately NOT BlackFrame. On the hardware this is modelled on, now-playing is not a
+    // titled page with a thumbnail on it - the artwork IS the screen, full bleed, with the
+    // track details sitting over its lower half. A 250dp square centred in an otherwise empty
+    // column is a generic music app, not this one.
+    SkinTheme(
+        colors = SkinPaletteColors,
+        typography = SkinPaletteTypography,
+        darkSystemBars = true,
         content = {
-        if (song == null) {
-            EmptyMessage("nothing playing")
-        } else {
-            SkinAlbumArt(
-                uri = song.albumArtUri,
-                contentDescription = song.album,
-                modifier = Modifier.size(250.dp),
-                contentScale = ContentScale.Crop,
-                fallback = {
+            Box(modifier = Modifier.fillMaxSize().background(SkinPaletteColors.background)) {
+                if (song == null) {
                     Box(
-                        modifier = Modifier.size(250.dp).background(SkinTheme.colors.surface),
+                        modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center,
+                        content = { EmptyMessage("nothing playing") },
+                    )
+                } else {
+                    SkinAlbumArt(
+                        uri = song.albumArtUri,
+                        contentDescription = song.album,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop,
+                        fallback = {
+                            Box(modifier = Modifier.fillMaxSize().background(SkinPaletteColors.surface))
+                        },
+                    )
+
+                    // Scrim, so the text stays legible over a cover of any brightness. Without
+                    // it the layout works on dark art and is unreadable on pale art.
+                    Box(
+                        modifier = Modifier.fillMaxSize().background(
+                            // Reaches near-solid well above the text block. An earlier,
+                            // gentler ramp left the cover's own lettering showing through
+                            // behind the progress bar, which read as two sets of type
+                            // fighting each other.
+                            Brush.verticalGradient(
+                                0.00f to Color(0x00000000),
+                                0.35f to Color(0x40000000),
+                                0.55f to Color(0xB3000000),
+                                0.70f to Color(0xF0000000),
+                                1.00f to Color(0xFF000000),
+                            ),
+                        ),
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(top = 20.dp, end = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        AccentLink(text = "queue", onClick = { navigateToQueue() })
+                        AccentLink(text = "settings", onClick = session.openAppSettings)
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .fillMaxWidth()
+                            .padding(start = 28.dp, end = 20.dp, bottom = 26.dp),
                     ) {
                         BasicText(
-                            text = song.album.take(1).lowercase(),
-                            style = SkinTheme.typography.title.copy(color = SkinTheme.colors.accent),
+                            text = song.title,
+                            style = SkinTheme.typography.title.copy(
+                                fontSize = 30.sp,
+                                lineHeight = 33.sp,
+                            ),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
                         )
+                        BasicText(
+                            text = song.artist,
+                            style = SkinTheme.typography.body,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(top = 2.dp),
+                        )
+                        BasicText(
+                            text = song.album,
+                            style = SkinTheme.typography.label,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        ScrubbableProgress(
+                            positionMs = smoothPosition,
+                            durationMs = playback.durationMs,
+                            onSeek = { positionMs -> session.commands.seekTo(positionMs) },
+                            modifier = Modifier.padding(top = 20.dp),
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            BasicText(
+                                text = formatDuration(smoothPosition),
+                                style = SkinTheme.typography.label,
+                            )
+                            BasicText(
+                                text = formatSignedDuration(smoothPosition - playback.durationMs),
+                                style = SkinTheme.typography.label,
+                            )
+                        }
+                        // Left-aligned, not spread across the width: everything else on this
+                        // screen hangs off the same left margin, and centring only the
+                        // controls breaks that line.
+                        Row(modifier = Modifier.padding(top = 16.dp)) {
+                            AccentLink(text = "previous", onClick = session.commands::previous)
+                            AccentLink(
+                                text = if (playback.isPlaying) "pause" else "play",
+                                onClick = session.commands::playPause,
+                                modifier = Modifier.padding(horizontal = 18.dp),
+                            )
+                            AccentLink(text = "next", onClick = session.commands::next)
+                        }
                     }
-                },
-            )
-            BasicText(
-                text = song.title,
-                style = SkinTheme.typography.title.copy(fontSize = 34.sp, lineHeight = 36.sp),
-                modifier = Modifier.padding(top = 18.dp),
-            )
-            BasicText(text = song.artist, style = SkinTheme.typography.body)
-            BasicText(text = song.album, style = SkinTheme.typography.label)
-            ScrubbableProgress(
-                positionMs = smoothPosition,
-                durationMs = playback.durationMs,
-                onSeek = { positionMs -> session.commands.seekTo(positionMs) },
-                modifier = Modifier.padding(top = 22.dp),
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 7.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                BasicText(text = formatDuration(smoothPosition), style = SkinTheme.typography.label)
-                BasicText(
-                    text = formatSignedDuration(smoothPosition - playback.durationMs),
-                    style = SkinTheme.typography.label,
-                )
+                }
             }
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 22.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-            ) {
-                AccentLink(text = "previous", onClick = session.commands::previous)
-                AccentLink(text = if (playback.isPlaying) "pause" else "play", onClick = session.commands::playPause)
-                AccentLink(text = "next", onClick = session.commands::next)
-            }
-        }
         },
     )
 }
