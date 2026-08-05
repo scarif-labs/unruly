@@ -9,6 +9,15 @@ buildscript {
         core_version = '1.18.0'
         desugaring_version = '2.1.3'
 
+        // Shellac: Compose skin layer. BOM pins all androidx.compose.* artifact versions,
+        // so those are deliberately declared without versions below.
+        compose_bom_version = '2026.06.01'
+        activity_compose_version = '1.13.0'
+        // NOT 2.11.0: that release requires compileSdk 37 (checkDebugAarMetadata fails),
+        // and the project is on 36. 2.10.0 declares minCompileSdk=35. Revisit only if the
+        // whole project moves to compileSdk 37.
+        lifecycle_compose_version = '2.10.0'
+
         min_sdk = 24
         target_sdk = 36
         ndk_version = "28.2.13676358"
@@ -30,6 +39,9 @@ plugins {
     //noinspection GradlePluginVersion
     id 'com.android.library' version "$agp_version" apply false
     id "org.jetbrains.kotlin.plugin.parcelize" version "$kotlin_version" apply false
+    // Shellac: required from Kotlin 2.0+; the Compose compiler ships with Kotlin, so this
+    // version must always track kotlin_version exactly.
+    id "org.jetbrains.kotlin.plugin.compose" version "$kotlin_version" apply false
     id "com.google.devtools.ksp" version '2.3.6' apply false
     // We use spotless in the root build.gradle to apply to all modules.
     id "com.diffplug.spotless" version "8.4.0" apply true
