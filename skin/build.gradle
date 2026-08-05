@@ -46,8 +46,18 @@ dependencies {
     api "androidx.compose.foundation:foundation"
     api "androidx.compose.material3:material3"
 
+    // WindowCompat / WindowInsetsControllerCompat, used by SkinTheme to control system bar
+    // appearance per skin.
+    implementation "androidx.core:core-ktx:$core_version"
+
     // Paging is part of the contract surface (SkinLibrary returns Flow<PagingData<T>>),
     // so it must be `api`, not `implementation`.
     api "androidx.paging:paging-common:$paging_version"
     api "androidx.paging:paging-compose:$paging_version"
+
+    // Coil, pinned to the SAME version :app already uses (app/build.gradle:183). Two Coil
+    // versions in one APK means two image caches and duplicate-class risk.
+    // SkinAlbumArt wraps this; skins are not expected to use Coil directly, but loading a
+    // content:// URI needs no Auxio type, so the boundary is unaffected.
+    implementation "io.coil-kt.coil3:coil-compose:$coil_version"
 }
