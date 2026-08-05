@@ -20,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -52,6 +54,7 @@ private enum class RootItem {
     QUEUE,
     SHUFFLE_SONGS,
     NOW_PLAYING,
+    SETTINGS,
 }
 
 private enum class MusicItem {
@@ -74,13 +77,29 @@ class TouchWheelSkin : AppSkin {
     // A plain field, not remembered state: onBackPressed is not composable and has to be
     // able to set it too (see AppSkin rule 2).
     private var navigatingForward = true
+
+    // Lets the on-screen destination intercept MENU. Registered by whichever screen needs it
+    // and cleared on dispose. A field, not composition state, because onBackPressed is not
+    // composable and must consult the same hook - otherwise the wheel's MENU zone and the
+    // system back gesture would disagree.
+    private var menuOverride: (() -> Boolean)? = null
+
+    // Search query lives here rather than in the search screen, so leaving the screen and
+    // coming back does not discard what was typed.
+    private var searchQuery by mutableStateOf("")
     private val selectionIndices = mutableStateMapOf<WheelDestination, Int>()
 
     // White screen, black text, blue gradient selection - see WheelChrome.kt.
     private val colors = ClassicColors
     private val typography = ClassicTypography
 
-    override fun onBackPressed(): Boolean = navigateBack()
+    override fun onBackPressed(): Boolean = handleMenu()
+
+    /** MENU and system back are the same action, including any screen-level override. */
+    private fun handleMenu(): Boolean {
+        if (menuOverride?.invoke() == true) return true
+        return navigateBack()
+    }
 
     private fun navigateTo(destination: WheelDestination) {
         navigatingForward = true
@@ -129,6 +148,7 @@ class TouchWheelSkin : AppSkin {
                     RootItem.QUEUE -> "Queue"
                     RootItem.SHUFFLE_SONGS -> "Shuffle Songs"
                     RootItem.NOW_PLAYING -> "Now Playing"
+                    RootItem.SETTINGS -> "Settings"
                 }
             },
             onCenter = { item, _ ->
@@ -140,6 +160,9 @@ class TouchWheelSkin : AppSkin {
                         navigateTo(WheelDestination.NowPlaying)
                     }
                     RootItem.NOW_PLAYING -> navigateTo(WheelDestination.NowPlaying)
+                    // Skin switching is deliberately not a skin's job - the host owns it, so
+                    // it stays reachable even when a skin is broken. This just opens it.
+                    RootItem.SETTINGS -> session.openAppSettings()
                 }
             },
         ) { selectedIndex ->
@@ -154,6 +177,7 @@ class TouchWheelSkin : AppSkin {
                         RootItem.QUEUE -> "Queue"
                         RootItem.SHUFFLE_SONGS -> "Shuffle Songs"
                         RootItem.NOW_PLAYING -> "Now Playing"
+                        RootItem.SETTINGS -> "Settings"
                     }
                 },
                 // Shuffle acts immediately; the rest open a screen.
@@ -490,6 +514,9 @@ class TouchWheelSkin : AppSkin {
     private fun searchScreen(session: SkinSession) {
         WheelSearch(
             session = session,
+            query = searchQuery,
+            onQueryChange = { searchQuery = it },
+            registerMenuOverride = { menuOverride = it },
             onSong = { song ->
                 session.commands.playSongFromAll(songId = song.id)
                 navigateTo(WheelDestination.NowPlaying)
@@ -712,7 +739,7 @@ class TouchWheelSkin : AppSkin {
                             onZonePressed = { zone ->
                                 view.performWheelPress()
                                 when (zone) {
-                                    WheelZone.MENU -> navigateBack()
+                                    WheelZone.MENU -> handleMenu()
                                     WheelZone.NEXT -> session.commands.next()
                                     WheelZone.PREVIOUS -> session.commands.previous()
                                     WheelZone.PLAY_PAUSE -> session.commands.playPause()
