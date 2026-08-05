@@ -97,7 +97,31 @@ All on `PlaybackViewModel`:
 | Shuffle | `toggleShuffled()` | `:620-624` |
 | Repeat | `toggleRepeatMode()` | `:626-634` |
 
-### ⚠️ `PlaySong` — playback context is a *parameter*, not a set of methods
+### ⚠️ CORRECTION (2026-08-05) — collection-level play methods DO exist
+
+An earlier revision of this file claimed `play(song, PlaySong)` was "exactly one entry
+point" and that `SkinCommands.playAlbum(...)` therefore could not be implemented as the
+buildspec specifies. **That was wrong.** Verified overloads on `PlaybackViewModel`:
+
+| Method | Line | `playNext` equivalent |
+|---|---|---|
+| `play(album: Album)` | `:336` | `:507` |
+| `play(artist: Artist)` | `:356` | `:517` |
+| `play(genre: Genre)` | `:376` | `:527` |
+| `play(playlist: Playlist)` | `:396` | `:537` |
+| `play(songs: List<Song>)` | `:416` | `:547` |
+
+Also `playExplicit(song, with)` `:222`, `playFromArtist(song, artist)` `:243`,
+`playFromGenre(song, genre)` `:254`.
+
+**Consequence:** `SkinCommands.playAlbum(albumId)` maps almost directly — resolve the id to
+an `Album`, then call `play(album)`. The adapter does *not* need to hand-roll
+"find first song + PlaySong.FromAlbum"; doing so risks diverging from Auxio's own semantics
+for shuffle and queue construction. **Prefer the collection overloads.** Found by the
+Phase 3.5 adapter agent; the original error came from the Phase 1 mapping and was repeated
+here without independent checking.
+
+### `PlaySong` — context parameter for song-level playback
 
 `org.oxycblt.auxio.playback.PlaySong` — `playback/PlaySong.kt:38`
 

@@ -33,14 +33,11 @@ class SkinCommandsImpl(
 
     override fun cycleRepeatMode() = playbackModel.toggleRepeatMode()
 
-    override fun setRepeatMode(mode: SkinRepeatMode) {
-        val target = mode.toAuxio()
-        var current = playbackModel.repeatMode.value
-        while (current != target) {
-            playbackModel.toggleRepeatMode()
-            current = current.increment()
-        }
-    }
+    // PlaybackStateManager exposes a direct setter (PlaybackStateManager.kt:227). The
+    // previous implementation cycled toggleRepeatMode() until it matched, which emitted
+    // intermediate states to every listener and would spin forever if the enum order ever
+    // changed.
+    override fun setRepeatMode(mode: SkinRepeatMode) = playbackManager.repeatMode(mode.toAuxio())
 
     override fun playAlbum(albumId: String, startIndex: Int) {
         val album = findAlbum(albumId) ?: return
@@ -48,36 +45,30 @@ class SkinCommandsImpl(
         playbackModel.play(song, PlaySong.FromAlbum)
     }
 
+    // These use Auxio's own collection-level overloads (PlaybackViewModel.kt:356/376/396)
+    // rather than hand-rolling "first song + PlaySong.FromX". Auxio applies its own sort,
+    // shuffle and queue-construction semantics inside them; reimplementing that here would
+    // silently diverge from how the app itself starts playback.
     override fun playArtist(artistId: String) {
-        val artist = findArtist(artistId) ?: return
-        val song = listSettings.artistSongSort.songs(artist.songs).firstOrNull() ?: return
-        playbackModel.play(song, PlaySong.FromArtist(artist))
+        findArtist(artistId)?.let(playbackModel::play)
     }
 
     override fun playGenre(genreId: String) {
-        val genre = findGenre(genreId) ?: return
-        val song = listSettings.genreSongSort.songs(genre.songs).firstOrNull() ?: return
-        playbackModel.play(song, PlaySong.FromGenre(genre))
+        findGenre(genreId)?.let(playbackModel::play)
     }
 
     override fun playPlaylist(playlistId: String) {
-        val playlist = findPlaylist(playlistId) ?: return
-        val song = playlist.songs.firstOrNull() ?: return
-        playbackModel.play(song, PlaySong.FromPlaylist(playlist))
+        findPlaylist(playlistId)?.let(playbackModel::play)
     }
 
+    // play(songs: List<Song>) (PlaybackViewModel.kt:416) plays a list atomically. The
+    // previous implementation played the first song then appended the rest via addToQueue,
+    // which briefly exposed a one-item queue and produced a different shuffle result.
     override fun playSongs(songs: List<SkinSong>, startIndex: Int) {
-        val requestedStart = songs.getOrNull(startIndex)?.let(::findSong) ?: return
-        val resolved = songs.mapNotNull(::findSong)
+        val resolved = findSongs(songs)
         if (resolved.isEmpty()) return
-
-        val startAt = resolved.indexOf(requestedStart)
-        if (startAt < 0) return
-        val ordered = resolved.drop(startAt) + resolved.take(startAt)
-        // PlaySong.ByItself supplies the required starting-song context; append the remainder
-        // through the real queue API so the contract's arbitrary-list command remains a list play.
-        playbackModel.play(ordered.first(), PlaySong.ByItself)
-        if (ordered.size > 1) playbackModel.addToQueue(ordered.drop(1))
+        val startAt = startIndex.coerceIn(0, resolved.lastIndex)
+        playbackModel.play(resolved.drop(startAt) + resolved.take(startAt))
     }
 
     override fun shuffleAll() = playbackModel.shuffleAll()
@@ -108,7 +99,26 @@ class SkinCommandsImpl(
     private fun findSong(song: SkinSong): Song? =
         musicRepository.library?.songs?.firstOrNull { it.uid.toString() == song.id }
 
-    private fun findSongs(songs: List<SkinSong>): List<Song> = songs.mapNotNull(::findSong)
+    /**
+     * Resolves a batch in one pass.
+     *
+     * Deliberately NOT `songs.mapNotNull(::findSong)` — that is a linear scan of the whole
+     * library per element, i.e. O(queue x library). Adding a 500-track queue against the
+     * 20,000-track library of buildspec Phase 6.2 would be 10 million comparisons. Building
+     * one index and looking up against it keeps it linear.
+     */
+    private fun findSongs(songs: List<SkinSong>): List<Song> {
+        if (songs.isEmpty()) return emptyList()
+        val wanted = songs.mapTo(HashSet()) { it.id }
+        val index =
+            musicRepository.library
+                ?.songs
+                ?.asSequence()
+                ?.map { it.uid.toString() to it }
+                ?.filter { it.first in wanted }
+                ?.toMap() ?: return emptyList()
+        return songs.mapNotNull { index[it.id] }
+    }
 
     private fun findAlbum(id: String): Album? =
         musicRepository.library?.albums?.firstOrNull { it.uid.toString() == id }

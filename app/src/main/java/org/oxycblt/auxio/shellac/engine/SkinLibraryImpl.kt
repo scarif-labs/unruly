@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import org.oxycblt.auxio.music.IndexingState
 import org.oxycblt.auxio.music.MusicRepository
@@ -41,6 +42,24 @@ constructor(
 ) : SkinLibrary {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
+    /**
+     * Ticks whenever the library changes.
+     *
+     * MUST be shared. As a cold `callbackFlow` this registered a **new**
+     * `MusicRepository.UpdateListener` per collector, and since every `albums()` / `songs()`
+     * call returns a fresh flow, a recomposing skin churned listeners several times a
+     * second:
+     *
+     * ```
+     * D MusicRepositoryImpl: Removing ...SkinLibraryImpl$changes$1$listener$1@f2d83b6
+     * D MusicRepositoryImpl: Adding   ...SkinLibraryImpl$changes$1$listener$1@5d5538e
+     * ```
+     *
+     * `shareIn` collapses that to one listener for all collectors. `replay = 1` means a new
+     * collector immediately gets the current state instead of waiting for the next change -
+     * without it, a skin subscribing after indexing finished would show an empty list
+     * forever.
+     */
     private val changes: Flow<Unit> =
         callbackFlow {
             val listener =
@@ -50,9 +69,12 @@ constructor(
                     }
                 }
             musicRepository.addUpdateListener(listener)
+            // Prime it so collectors render whatever is already loaded.
+            trySend(Unit)
             awaitClose { musicRepository.removeUpdateListener(listener) }
         }
             .conflate()
+            .shareIn(scope, SharingStarted.WhileSubscribed(5_000), replay = 1)
 
     override val loadState: StateFlow<LibraryLoadState> =
         callbackFlow {

@@ -43,6 +43,47 @@
                 android:name="androidx.car.app.TintableAttributionIcon"
                 android:resource="@drawable/ic_auxio_24" />
 
+        <!--
+        SHELLAC HOST. Hosts the active skin and nothing else.
+        Kept alongside .MainActivity for now so the original UI stays testable; .MainActivity
+        is removed once a real skin exists (buildspec Phase 5).
+        -->
+        <activity
+            android:name=".shellac.host.ShellacActivity"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="Shellac"
+            android:launchMode="singleTask"
+            android:roundIcon="@mipmap/ic_launcher"
+            android:windowSoftInputMode="adjustNothing">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.APP_MUSIC" />
+            </intent-filter>
+        </activity>
+
+        <!--
+        SHELLAC SETTINGS - buildspec 3.7.
+        Its own LAUNCHER entry is deliberate and load-bearing: it must be reachable when the
+        active skin crashes on launch or renders an unusable interface. If it were only
+        reachable from inside a skin, a bad skin would mean reinstalling the app. This
+        Activity never composes a skin.
+        -->
+        <activity
+            android:name=".shellac.host.ShellacSettingsActivity"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="Shellac Settings"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

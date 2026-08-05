@@ -3,10 +3,18 @@ package org.shellac.skin
 /**
  * Everything a skin can ask the engine to do.
  *
- * ## Why the `playX` methods are not a thin wrapper
+ * ## How `playX` maps to the engine
  *
- * The buildspec assumes the engine offers `playAlbum(albumId)`, `playArtist(artistId)` and
- * so on. **It does not.** Auxio has exactly one entry point:
+ * The engine DOES provide collection-level play methods, taking objects rather than ids:
+ * `play(album: Album)`, `play(artist: Artist)`, `play(genre: Genre)`,
+ * `play(playlist: Playlist)`, `play(songs: List<Song>)`, plus `playNext` equivalents.
+ * So `playAlbum(albumId)` is: resolve id -> `Album` -> `play(album)`. **Prefer these** over
+ * hand-rolling "first song + PlaySong.FromAlbum", which risks diverging from Auxio's own
+ * shuffle and queue-construction semantics.
+ *
+ * (An earlier revision of this doc claimed these overloads did not exist. They do.)
+ *
+ * For song-level playback with a browsing context, the engine uses:
  *
  * ```kotlin
  * PlaybackViewModel.play(song: Song, with: PlaySong)
@@ -21,10 +29,9 @@ package org.shellac.skin
  * }
  * ```
  *
- * Playback context is a *parameter*, not a method set. Each command below therefore
- * requires the adapter to resolve the id, pick a starting song, and call `play(song, ...)`
- * with the matching context. That translation is real work and lives entirely in the
- * adapter - see DECISION D4.
+ * Here the browsing context is a *parameter*, not a method set — used when a skin plays one
+ * song from within an album/artist/genre listing. Either way, all id-to-object resolution
+ * lives entirely in the adapter (DECISION D4).
  *
  * ## Empty collections
  *
