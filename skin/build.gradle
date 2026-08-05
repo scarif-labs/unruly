@@ -1,0 +1,53 @@
+// Shellac skin contract.
+//
+// ARCHITECTURAL BOUNDARY: this module MUST NOT depend on ':app' or ':musikr'.
+// That is what makes buildspec Phase 3's grep gate structurally true rather than a
+// convention people have to remember - a skin physically cannot import an Auxio type,
+// because this module cannot see one.
+//
+// Only ':app' depends on ':skin', and only the engine adapter in ':app' knows both worlds.
+
+// NOTE: no 'org.jetbrains.kotlin.android' - AGP 9.2.1 provides Kotlin support built in,
+// which is why :app and :musikr do not declare it either.
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.plugin.compose'
+    id 'com.diffplug.spotless'
+}
+
+android {
+    namespace 'org.shellac.skin'
+    compileSdk target_sdk
+
+    defaultConfig {
+        minSdk min_sdk
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+
+    buildFeatures {
+        compose true
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    // Flow/StateFlow are part of the contract surface, so this is `api`.
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
+
+    // Compose types appear in the contract surface (AppSkin.Render is @Composable) and
+    // skins are written against these directly, so they are `api`, not `implementation`.
+    api platform("androidx.compose:compose-bom:$compose_bom_version")
+    api "androidx.compose.runtime:runtime"
+    api "androidx.compose.ui:ui"
+    api "androidx.compose.foundation:foundation"
+    api "androidx.compose.material3:material3"
+
+    // Paging is part of the contract surface (SkinLibrary returns Flow<PagingData<T>>),
+    // so it must be `api`, not `implementation`.
+    api "androidx.paging:paging-common:$paging_version"
+    api "androidx.paging:paging-compose:$paging_version"
+}

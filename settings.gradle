@@ -24,3 +24,5 @@ apply from: file("media/core_settings.gradle")
 rootProject.name = "Auxio"
 include ':app'
 include ':musikr'
+// Shellac skin contract. Deliberately has no dependency on :app or :musikr.
+include ':skin'

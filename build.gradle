@@ -13,6 +13,8 @@ buildscript {
         // so those are deliberately declared without versions below.
         compose_bom_version = '2026.06.01'
         activity_compose_version = '1.13.0'
+        // verified minCompileSdk=35 via aar-metadata.properties, so safe on compileSdk 36
+        paging_version = '3.5.0'
         // NOT 2.11.0: that release requires compileSdk 37 (checkDebugAarMetadata fails),
         // and the project is on 36. 2.10.0 declares minCompileSdk=35. Revisit only if the
         // whole project moves to compileSdk 37.
