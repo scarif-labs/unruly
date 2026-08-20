@@ -1,46 +1,38 @@
-# Auxio contribution guidelines
+# Contributing to Shellac
 
-## Crashes & Bugs
-Log them in the [Issues](https://github.com/OxygenCobalt/Auxio/issues) tab.
+Shellac is a fork of [Auxio](https://github.com/OxygenCobalt/Auxio). Please file issues about
+Shellac here — not upstream. If a bug reproduces in stock Auxio, it belongs upstream instead.
 
-Please keep in mind when reporting an issue:
-- **Has it been reported?** Make sure an issue for the issue is not already there.
-- **Has it been already fixed?** Make sure a fix wasn't already added.
-- **Is it still relevant in the latest version?** Make sure to test it in the latest version.
+## Bugs and crashes
 
-If you do make an issue, Make sure to provide:
-- A description of the bug/crash
-- A summary of the steps to create the bug/crash
-- A stack trace/logcat if possible, the longer the better.
+Open an issue with:
 
-If you have knowledge of Android/Kotlin in general, you could also go about fixing the bug yourself and opening a [Pull Request](https://github.com/OxygenCobalt/Auxio/pulls).
+- What happened, and what you expected instead.
+- The steps to reproduce it.
+- Which skin was active. Most UI bugs are skin bugs.
+- A logcat or stack trace if you have one. Longer is better.
 
-## Feature Requests
-These should also be logged in the [Issues](https://github.com/OxygenCobalt/Auxio/issues) tab.
+## Feature requests
 
-Please keep in mind when requesting a feature:
-- **Has it already been requested?** Make sure request for this feature is not already here.
-- **Has it been already added?** Make sure this feature has not already been added in the most recent release.
-- **Will it be accepted?** Read the [Why Are These Features Missing?](https://github.com/OxygenCobalt/Auxio/wiki/Why-Are-These-Features-Missing%3F) in order to see the likelihood that your request will be implemented.
+Open an issue describing what you want and the problem it solves. Be aware of the architectural
+line the project draws: anything that changes how a *screen* looks or behaves belongs in a skin,
+not in the engine. "Add a setting to reorder the queue screen" is a skin change; "expose queue
+reordering in the skin contract" is an engine change.
 
-If you do make a request, provide the following:
-- What is it that you want?
-- Is it related to some problem? If so, describe why.
-- Why do you think it will benefit everyone's usage of the app?
+## Code
 
-If you have the knowledge, you can also implement the feature yourself and create a [Pull Request](https://github.com/OxygenCobalt/Auxio/pulls), but its recommended that **you create an issue beforehand to give me a heads up.**
-Its also recommended that you read about [Auxio's Architecture](https://github.com/OxygenCobalt/Auxio/wiki/Architecture) as well to make changes better and more efficient.
+- **Never edit the playback or indexer packages.** They are Auxio's, and the audio quality they
+  provide is why Shellac forked Auxio instead of starting fresh. If a skin needs something they
+  do not expose, extend the skin contract in `skin/src/main/java/org/shellac/skin/AppSkin.kt`.
+- **Skins must not import `com.merklegroot.shellac.*` or `org.oxycblt.musikr.*`.** The module
+  graph enforces this — if you find yourself fighting it, the contract is what needs changing.
+- Kotlin only, except where a UI component has to be vendored.
+- Run `./gradlew spotlessApply` before you push. CI checks formatting.
+- Test on a real device with a real library. Emulators flatter the indexer.
+- Keep GPLv3 headers on new files; `spotlessApply` adds them for you.
 
-## Translations
-Go to Auxio's weblate project [here](https://hosted.weblate.org/engage/auxio/).
+## New skins
 
-## Code Contributions
-If you have knowledge of Android/Kotlin, feel free to to contribute to the project.
-- If you want to help out with an existing bug report, comment on the issue that you want to fix saying that you are going to try your hand at it.
-- If you want to add something, its recommended to open up an issue for what you want to change before you start working on it. That way I can determine if the addition will be merged in the first place, and generally gives a heads-up overall.
-- Do not bring non-free software into the project, such as Binary Blobs.
-- Stick to [F-Droid Inclusion Guidelines](https://f-droid.org/wiki/page/Inclusion_Policy)
-- Make sure you stick to Auxio's styling, which should be auto-formatted on every build.
-- Please ***FULLY TEST*** your changes before creating a PR. Untested code will not be merged.
-- Only **Kotlin** will be accepted, except for the case that a UI component must be vendored in the project.
-- Keep your code up the date with the upstream and continue to maintain it after you create the PR. This makes it less of a hassle to merge.
+Adding a skin is the intended way to extend Shellac. Implement `AppSkin`, register it in
+`SkinRegistry`, and read the KDoc on `AppSkin` first — it documents the rules the host relies on.
+Pick a stable `id`: it is persisted as the user's preference and can never change once shipped.
