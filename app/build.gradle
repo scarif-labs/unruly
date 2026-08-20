@@ -10,13 +10,14 @@ plugins {
 }
 
 android {
-    // Auxio implicitly depends on the native modules, explicitly specify it
+    // Shellac implicitly depends on the native modules, explicitly specify it
     // here so the libraries are still stripped.
     ndkVersion ndk_version
-    namespace "org.oxycblt.auxio"
+    namespace "com.merklegroot.shellac"
 
     defaultConfig {
-        applicationId namespace
+        // Published package identity for the Shellac app.
+        applicationId "com.merklegroot.shellac"
         versionName "4.1.5"
         versionCode 75
 
@@ -93,7 +94,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-guava:$kotlin_coroutines_version"
 
     // --- SHELLAC ---
-    // The skin contract. :skin does NOT depend back on :app, so skins cannot see Auxio types.
+    // The skin contract. :skin does NOT depend back on :app, so skins cannot see Shellac types.
     implementation project(":skin")
 
     // --- SHELLAC: COMPOSE SKIN LAYER ---

@@ -30,7 +30,7 @@
     <queries />
 
     <application
-        android:name=".Auxio"
+        android:name=".Shellac"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -38,7 +38,7 @@
         android:label="@string/info_app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Auxio.App"
+        android:theme="@style/Theme.Shellac.App"
         android:appCategory="audio"
         android:enableOnBackInvokedCallback="true"
         tools:ignore="UnusedAttribute">
@@ -47,7 +47,7 @@
             android:resource="@xml/automotive_app_desc"/>
         <meta-data
                 android:name="androidx.car.app.TintableAttributionIcon"
-                android:resource="@drawable/ic_auxio_24" />
+                android:resource="@drawable/ic_shellac_24" />
 
         <!--
         SHELLAC HOST. Hosts the active skin and nothing else.
@@ -64,6 +64,9 @@
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <!-- Moved off .MainActivity: this is the entry point that declares us a
+                     music player, so it must be the one the system opens. -->
+                <action android:name="android.intent.action.MUSIC_PLAYER" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.APP_MUSIC" />
@@ -71,24 +74,56 @@
         </activity>
 
         <!--
-        SHELLAC SETTINGS - buildspec 3.7.
-        Its own LAUNCHER entry is deliberate and load-bearing: it must be reachable when the
-        active skin crashes on launch or renders an unusable interface. If it were only
-        reachable from inside a skin, a bad skin would mean reinstalling the app. This
-        Activity never composes a skin.
+        SHELLAC SETTINGS - buildspec 3.7. Never composes a skin.
+
+        NO LAUNCHER ENTRY, deliberately - and this reverses an earlier decision, so the
+        reasoning matters.
+
+        It used to have its own LAUNCHER entry so it stayed reachable when the active skin
+        was unusable. But it shipped with the SAME icon as the host and a near-identical
+        label, so the launcher showed two indistinguishable "Shellac" icons. Users opened the
+        wrong one, landed on a settings screen that composes no skin, changed a theme and saw
+        nothing happen, then pressed back and got dumped out of the app - because this
+        Activity was its own task root. That is a guaranteed daily papercut traded against a
+        rare recovery case.
+
+        The recovery case is already covered without a launcher icon: SkinRegistry
+        quarantines a skin that crashed while composing and rewrites the stored preference to
+        the fallback (DebugSkinA), which itself exposes a settings link. So a crashing skin
+        self-recovers to a skin that can reach this screen.
+
+        Still exported, so `adb shell am start` can reach it if a skin ever renders an
+        unusable-but-non-crashing UI - the one gap the fallback path does not close.
+
+        launchMode is singleTop, NOT singleTask. The Activity decides what back does by
+        asking isTaskRoot: true means it was launched standalone and back should go to the
+        host, false means a skin opened it and back should return there. singleTask lets the
+        system host this Activity in a task of its own, which would report isTaskRoot=true
+        while the host was alive and below it - the exact case the check exists to tell
+        apart. singleTop keeps it in the caller's task, so the signal stays truthful.
         -->
+        <!--
+        FIRST-RUN SETUP. Grants the music folders Shellac scans.
+
+        No launcher entry and not exported: it is only ever reached from ShellacActivity's
+        first-run gate or from the "Music folders" row in settings, both in-process.
+
+        launchMode is the default (standard) on purpose. It is started from two different
+        tasks - the host's, and settings' own when settings was launched standalone - and in
+        both cases it should sit on top of whoever started it so that finish() returns there.
+        -->
+        <activity
+            android:name=".shellac.host.OnboardingActivity"
+            android:exported="false"
+            android:label="Shellac setup"
+            android:windowSoftInputMode="adjustNothing" />
+
         <activity
             android:name=".shellac.host.ShellacSettingsActivity"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="Shellac Settings"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:launchMode="singleTop" />
 
         <activity
             android:name=".MainActivity"
@@ -99,20 +134,22 @@
             android:roundIcon="@mipmap/ic_launcher"
             android:windowSoftInputMode="adjustNothing">
 
-            <intent-filter>
-                <!-- Expose that we are a music player. -->
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.MUSIC_PLAYER" />
+            <!--
+            NO LAUNCHER ENTRY. This is Shellac's original pre-Shellac UI, kept only so it stays
+            testable and so the "Shuffle All" launcher shortcut (Shellac.kt) keeps working -
+            ShellacActivity does not yet parse intent actions, so repointing that shortcut
+            here would silently do nothing.
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.APP_MUSIC" />
-            </intent-filter>
+            Its MAIN/LAUNCHER/MUSIC_PLAYER filter moved to .ShellacActivity. Leaving it here
+            put a THIRD icon in the launcher that opened an entirely different interface from
+            the other two, with no skin and no route to Shellac settings.
 
+            Reachable by explicit intent, which is all the shortcut needs.
+            -->
             <intent-filter>
                 <!--
                 Signal that we can take audio of *any* format, file or content. This is important,
-                as some apps use this to determine if Auxio is eligible to be a default music
+                as some apps use this to determine if Shellac is eligible to be a default music
                 player.
                 -->
                 <action android:name="android.intent.action.VIEW" />
@@ -136,7 +173,7 @@
         Service handling music playback, system components, and state saving.
         -->
         <service
-            android:name=".AuxioService"
+            android:name=".ShellacService"
             android:foregroundServiceType="mediaPlayback"
             android:icon="@mipmap/ic_launcher"
             android:exported="true"
@@ -148,7 +185,7 @@
         </service>
 
         <!--
-        Expose Auxio's cover data to the android system
+        Expose Shellac's cover data to the android system
         -->
         <provider
             android:name=".image.CoverProvider"
