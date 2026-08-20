@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2026 Shellac Project
+ * WheelZone.kt is part of Shellac.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
 package org.shellac.skin.wheel
 
 import kotlin.math.atan2
@@ -15,11 +33,12 @@ enum class WheelZone {
 /**
  * Resolves an angle measured clockwise from the top of the wheel.
  *
- * The intervals are half-open: MENU owns [315, 360) and [0, 45), NEXT owns
- * [45, 135), PLAY_PAUSE owns [135, 225), and PREVIOUS owns [225, 315).
+ * The intervals are half-open: MENU owns [315, 360) and [0, 45), NEXT owns [45, 135), PLAY_PAUSE
+ * owns [135, 225), and PREVIOUS owns [225, 315).
  */
 internal fun zoneForAngle(degreesClockwiseFromTop: Float): WheelZone {
-    val degrees = ((degreesClockwiseFromTop % DEGREES_PER_TURN) + DEGREES_PER_TURN) % DEGREES_PER_TURN
+    val degrees =
+        ((degreesClockwiseFromTop % DEGREES_PER_TURN) + DEGREES_PER_TURN) % DEGREES_PER_TURN
     return when {
         degrees < 45f -> WheelZone.MENU
         degrees < 135f -> WheelZone.NEXT
@@ -30,8 +49,8 @@ internal fun zoneForAngle(degreesClockwiseFromTop: Float): WheelZone {
 }
 
 /**
- * Resolves a point relative to the wheel centre, or returns null outside the wheel.
- * Screen coordinates are used: positive X is right and positive Y is down.
+ * Resolves a point relative to the wheel centre, or returns null outside the wheel. Screen
+ * coordinates are used: positive X is right and positive Y is down.
  */
 internal fun zoneForPoint(
     dx: Float,

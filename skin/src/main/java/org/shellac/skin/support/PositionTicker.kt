@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2026 Shellac Project
+ * PositionTicker.kt is part of Shellac.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
 package org.shellac.skin.support
 
 import androidx.compose.runtime.Composable
@@ -14,8 +32,8 @@ private const val SEEK_RESYNC_THRESHOLD_MS = 500L
 /**
  * Returns a frame-clock-driven position between the playback engine's coarse updates.
  *
- * The engine position remains the source of truth: interpolation is reset on every
- * meaningful engine update and is clamped to the current track duration.
+ * The engine position remains the source of truth: interpolation is reset on every meaningful
+ * engine update and is clamped to the current track duration.
  */
 @Composable
 fun rememberInterpolatedPosition(state: SkinPlaybackState): State<Long> {
@@ -26,7 +44,8 @@ fun rememberInterpolatedPosition(state: SkinPlaybackState): State<Long> {
         }
 
     LaunchedEffect(state.song?.id) {
-        var lastEnginePositionMs = clampPosition(latestState.value.positionMs, latestState.value.durationMs)
+        var lastEnginePositionMs =
+            clampPosition(latestState.value.positionMs, latestState.value.durationMs)
         var lastEngineUpdateUptimeMs = Long.MIN_VALUE
         var lastObservedEnginePositionMs = lastEnginePositionMs
         var lastDurationMs = latestState.value.durationMs.coerceAtLeast(0L)
@@ -76,18 +95,21 @@ fun rememberInterpolatedPosition(state: SkinPlaybackState): State<Long> {
                                 lastEngineUpdateUptimeMs,
                                 nowUptimeMs,
                                 isPlaying = true,
-                                durationMs = durationMs)
+                                durationMs = durationMs,
+                            )
 
-                        if (distanceExceedsThreshold(
+                        if (
+                            distanceExceedsThreshold(
                                 enginePositionMs,
                                 interpolatedBeforeUpdate,
-                                SEEK_RESYNC_THRESHOLD_MS)) {
+                                SEEK_RESYNC_THRESHOLD_MS,
+                            )
+                        ) {
                             // A seek is allowed to move the display in either direction.
                             displayedPositionMs = enginePositionMs
                         } else {
                             // Do not let small polling jitter move normal playback backwards.
-                            displayedPositionMs =
-                                maxOf(displayedPositionMs, enginePositionMs)
+                            displayedPositionMs = maxOf(displayedPositionMs, enginePositionMs)
                         }
 
                         lastEnginePositionMs = enginePositionMs
@@ -101,7 +123,8 @@ fun rememberInterpolatedPosition(state: SkinPlaybackState): State<Long> {
                             lastEngineUpdateUptimeMs,
                             nowUptimeMs,
                             isPlaying = true,
-                            durationMs = durationMs)
+                            durationMs = durationMs,
+                        )
                     displayedPositionMs = maxOf(displayedPositionMs, interpolatedPositionMs)
                 }
 
@@ -114,15 +137,15 @@ fun rememberInterpolatedPosition(state: SkinPlaybackState): State<Long> {
 }
 
 /**
- * Interpolates a single engine sample to [nowUptimeMs]. The result is always in the
- * range 0..[durationMs], and paused playback returns the engine sample unchanged.
+ * Interpolates a single engine sample to [nowUptimeMs]. The result is always in the range
+ * 0..[durationMs], and paused playback returns the engine sample unchanged.
  */
 internal fun interpolate(
     lastEnginePositionMs: Long,
     lastEngineUpdateUptimeMs: Long,
     nowUptimeMs: Long,
     isPlaying: Boolean,
-    durationMs: Long
+    durationMs: Long,
 ): Long {
     val duration = durationMs.coerceAtLeast(0L)
     if (duration == 0L) return 0L

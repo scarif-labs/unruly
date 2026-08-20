@@ -1,39 +1,53 @@
+/*
+ * Copyright (c) 2026 Shellac Project
+ * TouchWheelSkin.kt is part of Shellac.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
 package org.shellac.skin.wheel
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import org.shellac.skin.AppSkin
@@ -45,10 +59,8 @@ import org.shellac.skin.SkinPlaylist
 import org.shellac.skin.SkinSession
 import org.shellac.skin.SkinSong
 import org.shellac.skin.support.SkinBackStack
-import org.shellac.skin.support.SkinColors
 import org.shellac.skin.support.SkinLibraryGate
 import org.shellac.skin.support.SkinTheme
-import org.shellac.skin.support.SkinTypography
 
 private enum class RootItem {
     MUSIC,
@@ -210,7 +222,7 @@ class TouchWheelSkin : AppSkin {
                         MusicItem.SONGS -> WheelDestination.Songs
                         MusicItem.GENRES -> WheelDestination.Genres
                         MusicItem.PLAYLISTS -> WheelDestination.Playlists
-                    },
+                    }
                 )
             },
         ) { selectedIndex ->
@@ -227,7 +239,8 @@ class TouchWheelSkin : AppSkin {
 
     @Composable
     private fun artistsScreen(session: SkinSession) {
-        val artists = remember(session.library) { session.library.artists() }.collectAsLazyPagingItems()
+        val artists =
+            remember(session.library) { session.library.artists() }.collectAsLazyPagingItems()
         pagedLibraryScreen(
             session = session,
             destination = WheelDestination.Artists,
@@ -244,7 +257,8 @@ class TouchWheelSkin : AppSkin {
 
     @Composable
     private fun albumsScreen(session: SkinSession) {
-        val albums = remember(session.library) { session.library.albums() }.collectAsLazyPagingItems()
+        val albums =
+            remember(session.library) { session.library.albums() }.collectAsLazyPagingItems()
         pagedLibraryScreen(
             session = session,
             destination = WheelDestination.Albums,
@@ -278,7 +292,8 @@ class TouchWheelSkin : AppSkin {
 
     @Composable
     private fun genresScreen(session: SkinSession) {
-        val genres = remember(session.library) { session.library.genres() }.collectAsLazyPagingItems()
+        val genres =
+            remember(session.library) { session.library.genres() }.collectAsLazyPagingItems()
         pagedLibraryScreen(
             session = session,
             destination = WheelDestination.Genres,
@@ -287,15 +302,14 @@ class TouchWheelSkin : AppSkin {
             items = genres,
             itemLabel = SkinGenre::name,
             itemKey = SkinGenre::id,
-            onCenter = { genre, _ ->
-                navigateTo(WheelDestination.GenreSongs(genre.id, genre.name))
-            },
+            onCenter = { genre, _ -> navigateTo(WheelDestination.GenreSongs(genre.id, genre.name)) },
         )
     }
 
     @Composable
     private fun playlistsScreen(session: SkinSession) {
-        val playlists = remember(session.library) { session.library.playlists() }.collectAsLazyPagingItems()
+        val playlists =
+            remember(session.library) { session.library.playlists() }.collectAsLazyPagingItems()
         pagedLibraryScreen(
             session = session,
             destination = WheelDestination.Playlists,
@@ -317,8 +331,9 @@ class TouchWheelSkin : AppSkin {
     ) {
         val albums =
             remember(session.library, destination.artistId) {
-                session.library.albumsByArtist(destination.artistId)
-            }.collectAsLazyPagingItems()
+                    session.library.albumsByArtist(destination.artistId)
+                }
+                .collectAsLazyPagingItems()
         pagedLibraryScreen(
             session = session,
             destination = destination,
@@ -334,14 +349,12 @@ class TouchWheelSkin : AppSkin {
     }
 
     @Composable
-    private fun albumSongsScreen(
-        session: SkinSession,
-        destination: WheelDestination.AlbumSongs,
-    ) {
+    private fun albumSongsScreen(session: SkinSession, destination: WheelDestination.AlbumSongs) {
         val songs by
             remember(session.library, destination.albumId) {
-                session.library.songsByAlbum(destination.albumId)
-            }.collectAsState(initial = emptyList())
+                    session.library.songsByAlbum(destination.albumId)
+                }
+                .collectAsState(initial = emptyList())
         listLibraryScreen(
             session = session,
             destination = destination,
@@ -357,14 +370,12 @@ class TouchWheelSkin : AppSkin {
     }
 
     @Composable
-    private fun genreSongsScreen(
-        session: SkinSession,
-        destination: WheelDestination.GenreSongs,
-    ) {
+    private fun genreSongsScreen(session: SkinSession, destination: WheelDestination.GenreSongs) {
         val songs =
             remember(session.library, destination.genreId) {
-                session.library.songsByGenre(destination.genreId)
-            }.collectAsLazyPagingItems()
+                    session.library.songsByGenre(destination.genreId)
+                }
+                .collectAsLazyPagingItems()
         pagedLibraryScreen(
             session = session,
             destination = destination,
@@ -386,8 +397,9 @@ class TouchWheelSkin : AppSkin {
     ) {
         val songs by
             remember(session.library, destination.playlistId) {
-                session.library.songsByPlaylist(destination.playlistId)
-            }.collectAsState(initial = emptyList())
+                    session.library.songsByPlaylist(destination.playlistId)
+                }
+                .collectAsState(initial = emptyList())
         listLibraryScreen(
             session = session,
             destination = destination,
@@ -443,7 +455,7 @@ class TouchWheelSkin : AppSkin {
                         queueIndex = index,
                         songId = song.id,
                         title = song.title,
-                    ),
+                    )
                 )
             },
             scaffold = { itemCount, initialSelection, resolveSelected, onCenter, body ->
@@ -476,8 +488,9 @@ class TouchWheelSkin : AppSkin {
                         backStack.pop()
                     }
                     QueueAction.MOVE_UP -> {
-                        if (destination.queueIndex > 0 &&
-                            destination.queueIndex <= playback.queue.lastIndex
+                        if (
+                            destination.queueIndex > 0 &&
+                                destination.queueIndex <= playback.queue.lastIndex
                         ) {
                             val nextDestination =
                                 destination.copy(queueIndex = destination.queueIndex - 1)
@@ -579,7 +592,9 @@ class TouchWheelSkin : AppSkin {
             scanning = { loaded, explored ->
                 statusScreen(session, destination, title, scanningMessage(loaded, explored))
             },
-            failed = { message -> statusScreen(session, destination, title, "Load failed: $message") },
+            failed = { message ->
+                statusScreen(session, destination, title, "Load failed: $message")
+            },
             empty = { statusScreen(session, destination, title, "Library is empty") },
             ready = {
                 wheelScaffold(
@@ -621,7 +636,9 @@ class TouchWheelSkin : AppSkin {
             scanning = { loaded, explored ->
                 statusScreen(session, destination, title, scanningMessage(loaded, explored))
             },
-            failed = { message -> statusScreen(session, destination, title, "Load failed: $message") },
+            failed = { message ->
+                statusScreen(session, destination, title, "Load failed: $message")
+            },
             empty = { statusScreen(session, destination, title, "Library is empty") },
             ready = {
                 wheelScaffold(
@@ -661,9 +678,7 @@ class TouchWheelSkin : AppSkin {
             itemLabel = { it.title },
             onCenter = { _, _ -> },
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize().background(colors.background).padding(20.dp),
-            ) {
+            Column(modifier = Modifier.fillMaxSize().background(colors.background).padding(20.dp)) {
                 BasicText(title, style = typography.title.copy(color = colors.onBackground))
                 BasicText(
                     message,
@@ -728,32 +743,29 @@ class TouchWheelSkin : AppSkin {
                 // move with it. Just an enter animation - the outgoing screen has already
                 // left the composition by the time the new one runs, so there is nothing
                 // left to animate out, and a slide-in alone reads correctly.
-                val slide =
-                    remember(destination) { Animatable(if (navigatingForward) 1f else -1f) }
+                val slide = remember(destination) { Animatable(if (navigatingForward) 1f else -1f) }
                 LaunchedEffect(destination) {
                     slide.animateTo(0f, animationSpec = tween(durationMillis = 170))
                 }
                 Box(
-                    modifier = Modifier
-                        .width(faceWidth)
-                        .height(screenHeight)
-                        .border(1.dp, BodyBezel)
-                        .background(colors.background)
-                        .clipToBounds(),
+                    modifier =
+                        Modifier.width(faceWidth)
+                            .height(screenHeight)
+                            .border(1.dp, BodyBezel)
+                            .background(colors.background)
+                            .clipToBounds()
                 ) {
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .graphicsLayer { translationX = slide.value * size.width },
+                        modifier =
+                            Modifier.fillMaxSize().graphicsLayer {
+                                translationX = slide.value * size.width
+                            }
                     ) {
                         body(wheelState.selectedIndex)
                     }
                 }
                 Spacer(modifier = Modifier.height(gap))
-                Box(
-                    modifier = Modifier.size(wheelDiameter),
-                    contentAlignment = Alignment.Center,
-                ) {
+                Box(modifier = Modifier.size(wheelDiameter), contentAlignment = Alignment.Center) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         TouchWheel(
                             modifier = Modifier.fillMaxSize(),
@@ -766,7 +778,8 @@ class TouchWheelSkin : AppSkin {
                                     WheelZone.PLAY_PAUSE -> session.commands.playPause()
                                     WheelZone.CENTER -> {
                                         if (itemCount > 0) {
-                                            val index = wheelState.selectedIndex.coerceIn(0, itemCount - 1)
+                                            val index =
+                                                wheelState.selectedIndex.coerceIn(0, itemCount - 1)
                                             resolveSelected(index)?.let { onCenter(it, index) }
                                         }
                                     }

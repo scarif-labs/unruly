@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2026 Shellac Project
+ * TouchWheel.kt is part of Shellac.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
 package org.shellac.skin.wheel
 
 import androidx.compose.foundation.Canvas
@@ -13,9 +31,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
+import kotlin.math.min
 import org.shellac.skin.support.SkinTheme
 import org.shellac.skin.support.rotaryInput
-import kotlin.math.min
 
 private const val OUTER_RADIUS_FRACTION = 1f
 
@@ -25,9 +43,8 @@ fun wheelDiameterFor(maxWidth: Dp, maxHeight: Dp): Dp = minOf(maxWidth, maxHeigh
 /**
  * Draws and handles geometry for the Touch Wheel.
  *
- * Taps and drags use separate pointer-input blocks. The tap block is applied
- * before [rotaryInput]; crossing the drag slop cancels the tap, while a tap
- * never reaches rotaryInput's drag callback.
+ * Taps and drags use separate pointer-input blocks. The tap block is applied before [rotaryInput];
+ * crossing the drag slop cancels the tap, while a tap never reaches rotaryInput's drag callback.
  */
 @Composable
 fun TouchWheel(
@@ -39,26 +56,28 @@ fun TouchWheel(
     val textMeasurer = rememberTextMeasurer()
     val clampedInnerFraction = innerRadiusFraction.coerceIn(0f, OUTER_RADIUS_FRACTION)
 
-    val gestureModifier = modifier
-        .pointerInput(clampedInnerFraction, onZonePressed) {
-            detectTapGestures { position ->
-                val width = size.width.toFloat()
-                val height = size.height.toFloat()
-                val outerRadius = min(width, height) / 2f
-                val center = Offset(width / 2f, height / 2f)
-                zoneForPoint(
-                    dx = position.x - center.x,
-                    dy = position.y - center.y,
-                    outerRadius = outerRadius,
-                    innerRadius = clampedInnerFraction * outerRadius,
-                )?.let(onZonePressed)
+    val gestureModifier =
+        modifier
+            .pointerInput(clampedInnerFraction, onZonePressed) {
+                detectTapGestures { position ->
+                    val width = size.width.toFloat()
+                    val height = size.height.toFloat()
+                    val outerRadius = min(width, height) / 2f
+                    val center = Offset(width / 2f, height / 2f)
+                    zoneForPoint(
+                            dx = position.x - center.x,
+                            dy = position.y - center.y,
+                            outerRadius = outerRadius,
+                            innerRadius = clampedInnerFraction * outerRadius,
+                        )
+                        ?.let(onZonePressed)
+                }
             }
-        }
-        .rotaryInput(
-            innerRadiusFraction = clampedInnerFraction,
-            outerRadiusFraction = OUTER_RADIUS_FRACTION,
-            onClick = onRotate,
-        )
+            .rotaryInput(
+                innerRadiusFraction = clampedInnerFraction,
+                outerRadiusFraction = OUTER_RADIUS_FRACTION,
+                onClick = onRotate,
+            )
 
     // SkinTheme.typography is a @Composable @ReadOnlyComposable getter, so it must be read
     // here and not inside the Canvas draw block - a DrawScope is not composable scope.
@@ -73,11 +92,12 @@ fun TouchWheel(
         // The ring is a shallow radial gradient and the centre button is flat and lighter,
         // which is what reads as a dished physical wheel rather than two flat discs.
         drawCircle(
-            brush = Brush.radialGradient(
-                colors = listOf(wheelRingInner, wheelRingOuter),
-                center = center,
-                radius = outerRadius,
-            ),
+            brush =
+                Brush.radialGradient(
+                    colors = listOf(wheelRingInner, wheelRingOuter),
+                    center = center,
+                    radius = outerRadius,
+                ),
             radius = outerRadius,
             center = center,
         )
@@ -118,9 +138,6 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawWheelLabel(
     val point = center + displacement
     drawText(
         textLayoutResult = layout,
-        topLeft = Offset(
-            point.x - layout.size.width / 2f,
-            point.y - layout.size.height / 2f,
-        ),
+        topLeft = Offset(point.x - layout.size.width / 2f, point.y - layout.size.height / 2f),
     )
 }

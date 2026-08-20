@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2026 Shellac Project
+ * WheelQueue.kt is part of Shellac.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
 package org.shellac.skin.wheel
 
 import androidx.compose.foundation.background
@@ -30,13 +48,9 @@ internal enum class QueueAction(val label: String) {
 internal fun WheelQueue(
     session: SkinSession,
     onCenter: (SkinSong, Int) -> Unit,
-    scaffold: @Composable (
-        Int,
-        Int,
-        (Int) -> SkinSong?,
-        (SkinSong, Int) -> Unit,
-        @Composable (Int) -> Unit,
-    ) -> Unit,
+    scaffold:
+        @Composable
+        (Int, Int, (Int) -> SkinSong?, (SkinSong, Int) -> Unit, @Composable (Int) -> Unit) -> Unit,
 ) {
     val playback by session.playback.collectAsState()
     val queue = playback.queue
@@ -45,16 +59,11 @@ internal fun WheelQueue(
             if (queue.isEmpty()) 0 else playback.queueIndex.coerceIn(0, queue.lastIndex)
         }
 
-    scaffold(
-        queue.size,
-        initialSelection,
-        queue::getOrNull,
-        onCenter,
-    ) { selectedIndex ->
+    scaffold(queue.size, initialSelection, queue::getOrNull, onCenter) { selectedIndex ->
         val colors = SkinTheme.colors
         val typography = SkinTheme.typography
         Column(
-            modifier = Modifier.fillMaxSize().background(colors.background).padding(top = 16.dp),
+            modifier = Modifier.fillMaxSize().background(colors.background).padding(top = 16.dp)
         ) {
             BasicText(
                 "Queue",
@@ -86,12 +95,13 @@ internal fun WheelQueue(
                                 modifier =
                                     Modifier.fillMaxWidth()
                                         .background(
-                                            if (isSelected) colors.accent else colors.surface,
+                                            if (isSelected) colors.accent else colors.surface
                                         )
                                         .padding(horizontal = 20.dp, vertical = 10.dp),
                                 style =
                                     typography.body.copy(
-                                        color = if (isSelected) colors.onAccent else colors.onSurface,
+                                        color =
+                                            if (isSelected) colors.onAccent else colors.onSurface,
                                         fontWeight =
                                             if (isSelected) FontWeight.Medium else FontWeight.Normal,
                                     ),
@@ -108,25 +118,18 @@ internal fun WheelQueue(
 internal fun WheelQueueActions(
     destination: WheelDestination.QueueActions,
     onAction: (QueueAction, Int) -> Unit,
-    scaffold: @Composable (
-        Int,
-        Int,
-        (Int) -> QueueAction?,
-        (QueueAction, Int) -> Unit,
-        @Composable (Int) -> Unit,
-    ) -> Unit,
+    scaffold:
+        @Composable
+        (
+            Int, Int, (Int) -> QueueAction?, (QueueAction, Int) -> Unit, @Composable (Int) -> Unit,
+        ) -> Unit,
 ) {
     val actions = QueueAction.entries.toList()
-    scaffold(
-        actions.size,
-        0,
-        actions::getOrNull,
-        onAction,
-    ) { selectedIndex ->
+    scaffold(actions.size, 0, actions::getOrNull, onAction) { selectedIndex ->
         val colors = SkinTheme.colors
         val typography = SkinTheme.typography
         Column(
-            modifier = Modifier.fillMaxSize().background(colors.background).padding(top = 16.dp),
+            modifier = Modifier.fillMaxSize().background(colors.background).padding(top = 16.dp)
         ) {
             BasicText(
                 "Queue: ${destination.title}",

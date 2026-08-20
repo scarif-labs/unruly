@@ -1,9 +1,27 @@
+/*
+ * Copyright (c) 2026 Shellac Project
+ * RotaryGesture.kt is part of Shellac.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
 package org.shellac.skin.support
 
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 // detectDragGestures lives in foundation.gestures, NOT ui.input.pointer.
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -11,14 +29,14 @@ import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
- * Detects clockwise/counter-clockwise rotation in a ring around the composable's centre.
- * Clockwise movement emits positive clicks.
+ * Detects clockwise/counter-clockwise rotation in a ring around the composable's centre. Clockwise
+ * movement emits positive clicks.
  */
 fun Modifier.rotaryInput(
     degreesPerClick: Float = 13f,
     innerRadiusFraction: Float = 0.30f,
     outerRadiusFraction: Float = 1.0f,
-    onClick: (delta: Int) -> Unit
+    onClick: (delta: Int) -> Unit,
 ): Modifier =
     pointerInput(degreesPerClick, innerRadiusFraction, outerRadiusFraction, onClick) {
         val clickSize = degreesPerClick
@@ -94,12 +112,11 @@ fun Modifier.rotaryInput(
                     onClick(-1)
                     accumulatedDegrees += clickSize
                 }
-            })
+            },
+        )
     }
 
-/**
- * Returns the shortest signed distance from [fromDegrees] to [toDegrees] in (-180, 180].
- */
+/** Returns the shortest signed distance from [fromDegrees] to [toDegrees] in (-180, 180]. */
 internal fun angleDeltaDegrees(fromDegrees: Float, toDegrees: Float): Float {
     var delta = (toDegrees - fromDegrees) % 360f
     if (delta <= -180f) delta += 360f

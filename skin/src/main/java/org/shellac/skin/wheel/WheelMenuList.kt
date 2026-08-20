@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2026 Shellac Project
+ * WheelMenuList.kt is part of Shellac.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
 package org.shellac.skin.wheel
 
 import androidx.compose.foundation.gestures.scrollBy
@@ -22,28 +40,28 @@ import androidx.paging.compose.itemKey
 /**
  * The reusable list primitive the whole Touch Wheel skin is built on.
  *
- * **The list is anchored to the top and the highlight moves down it.** The content only
- * scrolls once the selection would leave the viewport, and then by the smallest amount that
- * brings it back into view. This is how the hardware being matched behaves, and it is why
- * short menus sit flush at the top rather than floating in the middle of the screen.
+ * **The list is anchored to the top and the highlight moves down it.** The content only scrolls
+ * once the selection would leave the viewport, and then by the smallest amount that brings it back
+ * into view. This is how the hardware being matched behaves, and it is why short menus sit flush at
+ * the top rather than floating in the middle of the screen.
  *
- * (An earlier revision pinned the selection to the vertical centre and slid the list beneath
- * it. That was a deliberate choice, but it left a blank half-screen above every short menu
- * and did not match the reference hardware. The scroll-into-view behaviour here replaced it.)
+ * (An earlier revision pinned the selection to the vertical centre and slid the list beneath it.
+ * That was a deliberate choice, but it left a blank half-screen above every short menu and did not
+ * match the reference hardware. The scroll-into-view behaviour here replaced it.)
  *
- * Selection is driven exclusively by rotation (see [WheelMenuState.onRotate]); the
- * [LazyColumn] is not independently finger-scrollable.
+ * Selection is driven exclusively by rotation (see [WheelMenuState.onRotate]); the [LazyColumn] is
+ * not independently finger-scrollable.
  *
- * The caller owns the selection and hands it in as [selectedIndex]; this component only
- * renders and scrolls. That keeps the state logic unit-testable (see [clampIndex]) while the
- * layout stays a pure function of its inputs.
+ * The caller owns the selection and hands it in as [selectedIndex]; this component only renders and
+ * scrolls. That keeps the state logic unit-testable (see [clampIndex]) while the layout stays a
+ * pure function of its inputs.
  *
  * @param items The rows, in display order.
- * @param selectedIndex Index of the highlighted row. It is clamped into range locally, so a
- *   filter that shrinks the list under the selection can never crash the scroll.
+ * @param selectedIndex Index of the highlighted row. It is clamped into range locally, so a filter
+ *   that shrinks the list under the selection can never crash the scroll.
  * @param modifier Applied to the viewport.
- * @param key Optional stable key per item (e.g. `{ it.id }`) so rows are reused rather than
- *   rebuilt on scroll.
+ * @param key Optional stable key per item (e.g. `{ it.id }`) so rows are reused rather than rebuilt
+ *   on scroll.
  * @param itemContent Renders one row, receiving the item and whether it is selected.
  */
 @Composable
@@ -78,46 +96,41 @@ fun <T> WheelMenuList(
                 // Reference-compare the row against the item at the selected index. Cheap and
                 // allocation-free (no per-frame object is created in the item path).
                 val isSelected = item === items[effectiveIndex]
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    itemContent(item, isSelected)
-                }
+                Box(modifier = Modifier.fillMaxWidth()) { itemContent(item, isSelected) }
             }
         }
     }
 
-    LaunchedEffect(effectiveIndex, items.size) {
-        listState.revealItem(effectiveIndex)
-    }
+    LaunchedEffect(effectiveIndex, items.size) { listState.revealItem(effectiveIndex) }
 }
 
 /**
- * Paged counterpart of the [List]-based [WheelMenuList] above. Same top-anchored behaviour;
- * the differences are all consequences of never holding the whole collection.
+ * Paged counterpart of the [List]-based [WheelMenuList] above. Same top-anchored behaviour; the
+ * differences are all consequences of never holding the whole collection.
  *
- * **Never materialise [items].** An earlier version reached the plain-`List` overload by
- * calling `items[itemCount - 1]`, which tells Paging to load every page up to the end - so
- * each screen pulled the entire library into memory. That is invisible on a 2,000-track
- * device and a hard failure at the 20,000 this project targets. Rows are fetched by index
- * inside the item lambda instead, so Paging loads only around the visible window.
+ * **Never materialise [items].** An earlier version reached the plain-`List` overload by calling
+ * `items[itemCount - 1]`, which tells Paging to load every page up to the end - so each screen
+ * pulled the entire library into memory. That is invisible on a 2,000-track device and a hard
+ * failure at the 20,000 this project targets. Rows are fetched by index inside the item lambda
+ * instead, so Paging loads only around the visible window.
  *
  * Two consequences for callers:
- *
  * 1. **[itemContent] receives `T?`.** A row whose page has not loaded yet is null; render a
  *    placeholder of the same height, or the list will jump when it arrives.
- * 2. **Selection is decided by index**, not by identity. The `List` overload can compare
- *    `item === items[effectiveIndex]`; here that would mark *every* unloaded row selected,
- *    since all null placeholders are equal.
+ * 2. **Selection is decided by index**, not by identity. The `List` overload can compare `item ===
+ *    items[effectiveIndex]`; here that would mark *every* unloaded row selected, since all null
+ *    placeholders are equal.
  *
  * To resolve the selected item outside composition (activating it, say), use
- * `LazyPagingItems.peek(index)` rather than `get`: `peek` does not register a load, so
- * pressing a button cannot itself trigger a fetch. It returns null for an unloaded row, which
- * callers should treat as "do nothing".
+ * `LazyPagingItems.peek(index)` rather than `get`: `peek` does not register a load, so pressing a
+ * button cannot itself trigger a fetch. It returns null for an unloaded row, which callers should
+ * treat as "do nothing".
  *
  * @param items The paged rows, in display order.
  * @param selectedIndex Index of the highlighted row, clamped into range locally.
  * @param modifier Applied to the viewport.
- * @param key Optional stable key per item, wrapped via `LazyPagingItems.itemKey` so
- *   placeholders get a positional key instead of colliding on null.
+ * @param key Optional stable key per item, wrapped via `LazyPagingItems.itemKey` so placeholders
+ *   get a positional key instead of colliding on null.
  * @param itemContent Renders one row, receiving the item (null if unloaded) and whether it is
  *   selected.
  */
@@ -142,10 +155,7 @@ fun <T : Any> WheelMenuList(
             modifier = Modifier.fillMaxSize(),
             userScrollEnabled = false,
         ) {
-            items(
-                count = items.itemCount,
-                key = itemKey,
-            ) { index ->
+            items(count = items.itemCount, key = itemKey) { index ->
                 val item = items[index]
                 Box(modifier = Modifier.fillMaxWidth()) {
                     itemContent(item, index == effectiveIndex)
@@ -154,19 +164,17 @@ fun <T : Any> WheelMenuList(
         }
     }
 
-    LaunchedEffect(effectiveIndex, items.itemCount) {
-        listState.revealItem(effectiveIndex)
-    }
+    LaunchedEffect(effectiveIndex, items.itemCount) { listState.revealItem(effectiveIndex) }
 }
 
 /**
- * Scrolls the minimum distance needed to bring [index] fully into view, and nothing when it
- * is already visible.
+ * Scrolls the minimum distance needed to bring [index] fully into view, and nothing when it is
+ * already visible.
  *
- * Deliberately not `scrollToItem(index)`: that would snap the row to the top of the viewport
- * on every click, so the highlight would never appear to move. Walking down a menu has to
- * leave the list still while the selection travels, and only push it when the selection
- * reaches the bottom edge.
+ * Deliberately not `scrollToItem(index)`: that would snap the row to the top of the viewport on
+ * every click, so the highlight would never appear to move. Walking down a menu has to leave the
+ * list still while the selection travels, and only push it when the selection reaches the bottom
+ * edge.
  *
  * `scrollBy` rather than `animateScrollBy`: at one item per wheel click the move must feel
  * immediate, and queued animations lag behind fast rotation.
@@ -193,9 +201,9 @@ private suspend fun LazyListState.revealItem(index: Int) {
 /**
  * Pure, Compose-free selection driver for a wheel list.
  *
- * The index is read back via [selectedIndex]. Moving is done exclusively through [onRotate],
- * which advances by [delta] and **clamps at both ends - it never wraps**: at index 0 a
- * negative delta stays at 0, at the last index a positive delta stays put.
+ * The index is read back via [selectedIndex]. Moving is done exclusively through [onRotate], which
+ * advances by [delta] and **clamps at both ends - it never wraps**: at index 0 a negative delta
+ * stays at 0, at the last index a positive delta stays put.
  *
  * @param initialIndex Where the wheel starts; defaults to the top of the list.
  */
@@ -204,12 +212,13 @@ class WheelMenuState(initialIndex: Int = 0) {
     private var _selectedIndex by mutableStateOf(initialIndex.coerceAtLeast(0))
 
     /** The currently selected row index. Always in `0..itemCount-1` after any rotate. */
-    val selectedIndex: Int get() = _selectedIndex
+    val selectedIndex: Int
+        get() = _selectedIndex
 
     /**
-     * Moves the selection by [delta] items, saturated at both ends of a [itemCount]-item
-     * list. Passing `delta = 0` with a fresh [itemCount] is a safe way to re-clamp after the
-     * library shrank under the selection - clampIndex handles that for you.
+     * Moves the selection by [delta] items, saturated at both ends of a [itemCount]-item list.
+     * Passing `delta = 0` with a fresh [itemCount] is a safe way to re-clamp after the library
+     * shrank under the selection - clampIndex handles that for you.
      */
     fun onRotate(delta: Int, itemCount: Int) {
         _selectedIndex = clampIndex(_selectedIndex, delta, itemCount)
@@ -234,9 +243,9 @@ fun rememberWheelMenuState(initialIndex: Int = 0): WheelMenuState {
  * [itemCount] is non-positive (empty list), so a wheel over no items stays at zero.
  *
  * Examples:
- *  - `(0, -1, 10) -> 0`, `(9, +1, 10) -> 9` (saturating at each end)
- *  - `(5, +100, 10) -> 9`, `(5, -100, 10) -> 0` (massive deltas saturate)
- *  - `(3, 0, 0) -> 0` (empty list), `(50, 0, 10) -> 9` (index past the end clamps down)
+ * - `(0, -1, 10) -> 0`, `(9, +1, 10) -> 9` (saturating at each end)
+ * - `(5, +100, 10) -> 9`, `(5, -100, 10) -> 0` (massive deltas saturate)
+ * - `(3, 0, 0) -> 0` (empty list), `(50, 0, 10) -> 9` (index past the end clamps down)
  */
 internal fun clampIndex(current: Int, delta: Int, itemCount: Int): Int {
     if (itemCount <= 0) return 0

@@ -1,8 +1,28 @@
+/*
+ * Copyright (c) 2026 Shellac Project
+ * ZuneScreens.kt is part of Shellac.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
 package org.shellac.skin.zune
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -15,23 +35,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,8 +57,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.delay
@@ -48,7 +66,6 @@ import kotlinx.coroutines.launch
 import org.shellac.skin.SkinAlbum
 import org.shellac.skin.SkinSearchResults
 import org.shellac.skin.SkinSession
-import org.shellac.skin.SkinSong
 import org.shellac.skin.support.SkinAlbumArt
 import org.shellac.skin.support.SkinLibraryGate
 import org.shellac.skin.support.SkinNoResults
@@ -76,7 +93,9 @@ internal fun ZuneSkin.libraryScreen(session: SkinSession) {
                 content = {
                     SectionLabel("indexing")
                     BasicText(
-                        text = if (loaded == null || explored == null) "scanning" else "$loaded / $explored",
+                        text =
+                            if (loaded == null || explored == null) "scanning"
+                            else "$loaded / $explored",
                         style = SkinTheme.typography.body,
                     )
                 },
@@ -93,10 +112,13 @@ internal fun ZuneSkin.libraryScreen(session: SkinSession) {
             )
         },
         empty = {
-            BlackFrame(title = "music", content = {
-                EmptyMessage("nothing here yet")
-                AccentLink(text = "settings", onClick = session.openAppSettings)
-            })
+            BlackFrame(
+                title = "music",
+                content = {
+                    EmptyMessage("nothing here yet")
+                    AccentLink(text = "settings", onClick = session.openAppSettings)
+                },
+            )
         },
         ready = {
             val pagerState = rememberPagerState(pageCount = { Pivot.entries.size })
@@ -106,27 +128,24 @@ internal fun ZuneSkin.libraryScreen(session: SkinSession) {
                 utility = {
                     AccentLink(text = "search", onClick = { navigateToSearch() })
                     AccentLink(text = "queue", onClick = { navigateToQueue() })
-                    AccentLink(
-                        text = "now playing",
-                        onClick = { navigateToNowPlaying() },
-                    )
+                    AccentLink(text = "now playing", onClick = { navigateToNowPlaying() })
                     AccentLink(text = "settings", onClick = session.openAppSettings)
                 },
                 content = {
-                PivotHeadings(
-                    pagerState = pagerState,
-                    onSelect = { page ->
-                        pagerScope.launch { pagerState.animateScrollToPage(page) }
-                    },
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.fillMaxSize(),
-                    pageContent = { page ->
-                        PivotPage(session = session, pivot = Pivot.entries[page])
-                    },
-                )
+                    PivotHeadings(
+                        pagerState = pagerState,
+                        onSelect = { page ->
+                            pagerScope.launch { pagerState.animateScrollToPage(page) }
+                        },
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier.fillMaxSize(),
+                        pageContent = { page ->
+                            PivotPage(session = session, pivot = Pivot.entries[page])
+                        },
+                    )
                 },
             )
         },
@@ -152,14 +171,15 @@ private fun PivotHeadings(
                 maxLines = 1,
                 softWrap = false,
                 overflow = TextOverflow.Clip,
-                modifier = Modifier
-                    .padding(end = if (active) 18.dp else 14.dp)
-                    .clickable(onClick = { onSelect(index) }),
-                style = if (active) {
-                    SkinTheme.typography.title.copy(fontSize = 29.sp, lineHeight = 30.sp)
-                } else {
-                    SkinTheme.typography.label.copy(fontSize = 17.sp, color = Color(0xFF555555))
-                },
+                modifier =
+                    Modifier.padding(end = if (active) 18.dp else 14.dp)
+                        .clickable(onClick = { onSelect(index) }),
+                style =
+                    if (active) {
+                        SkinTheme.typography.title.copy(fontSize = 29.sp, lineHeight = 30.sp)
+                    } else {
+                        SkinTheme.typography.label.copy(fontSize = 17.sp, color = Color(0xFF555555))
+                    },
             )
         }
     }
@@ -178,7 +198,9 @@ private fun ZuneSkin.PivotPage(session: SkinSession, pivot: Pivot) {
 
 @Composable
 private fun ZuneSkin.artistsPivot(session: SkinSession) {
-    val artists = remember(session.library, calculation = { session.library.artists() }).collectAsLazyPagingItems()
+    val artists =
+        remember(session.library, calculation = { session.library.artists() })
+            .collectAsLazyPagingItems()
     LazyColumn(
         contentPadding = PaddingValues(bottom = 24.dp),
         content = {
@@ -189,7 +211,8 @@ private fun ZuneSkin.artistsPivot(session: SkinSession) {
                     artists[index]?.let { artist ->
                         LibraryRow(
                             title = artist.name,
-                            subtitle = "${plural(artist.albumCount, "album")}  ·  ${plural(artist.songCount, "song")}",
+                            subtitle =
+                                "${plural(artist.albumCount, "album")}  ·  ${plural(artist.songCount, "song")}",
                             onClick = { open(SkinDestination.ArtistAlbums(artist.id, artist.name)) },
                         )
                     }
@@ -201,7 +224,9 @@ private fun ZuneSkin.artistsPivot(session: SkinSession) {
 
 @Composable
 private fun ZuneSkin.albumsPivot(session: SkinSession) {
-    val albums = remember(session.library, calculation = { session.library.albums() }).collectAsLazyPagingItems()
+    val albums =
+        remember(session.library, calculation = { session.library.albums() })
+            .collectAsLazyPagingItems()
     LazyColumn(
         contentPadding = PaddingValues(bottom = 24.dp),
         content = {
@@ -223,7 +248,9 @@ private fun ZuneSkin.albumsPivot(session: SkinSession) {
 
 @Composable
 private fun ZuneSkin.songsPivot(session: SkinSession) {
-    val songs = remember(session.library, calculation = { session.library.songs() }).collectAsLazyPagingItems()
+    val songs =
+        remember(session.library, calculation = { session.library.songs() })
+            .collectAsLazyPagingItems()
     LazyColumn(
         contentPadding = PaddingValues(bottom = 24.dp),
         content = {
@@ -249,7 +276,9 @@ private fun ZuneSkin.songsPivot(session: SkinSession) {
 
 @Composable
 private fun ZuneSkin.genresPivot(session: SkinSession) {
-    val genres = remember(session.library, calculation = { session.library.genres() }).collectAsLazyPagingItems()
+    val genres =
+        remember(session.library, calculation = { session.library.genres() })
+            .collectAsLazyPagingItems()
     LazyColumn(
         contentPadding = PaddingValues(bottom = 24.dp),
         content = {
@@ -272,7 +301,9 @@ private fun ZuneSkin.genresPivot(session: SkinSession) {
 
 @Composable
 private fun ZuneSkin.playlistsPivot(session: SkinSession) {
-    val playlists = remember(session.library, calculation = { session.library.playlists() }).collectAsLazyPagingItems()
+    val playlists =
+        remember(session.library, calculation = { session.library.playlists() })
+            .collectAsLazyPagingItems()
     LazyColumn(
         contentPadding = PaddingValues(bottom = 24.dp),
         content = {
@@ -283,7 +314,8 @@ private fun ZuneSkin.playlistsPivot(session: SkinSession) {
                     playlists[index]?.let { playlist ->
                         LibraryRow(
                             title = playlist.name,
-                            subtitle = "${playlist.songCount} songs  ·  ${formatDuration(playlist.durationMs)}",
+                            subtitle =
+                                "${playlist.songCount} songs  ·  ${formatDuration(playlist.durationMs)}",
                             onClick = {
                                 open(SkinDestination.PlaylistSongs(playlist.id, playlist.name))
                             },
@@ -298,10 +330,7 @@ private fun ZuneSkin.playlistsPivot(session: SkinSession) {
 @Composable
 private fun AlbumRow(album: SkinAlbum, onClick: () -> Unit) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 9.dp),
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 9.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         SkinAlbumArt(
@@ -337,43 +366,50 @@ internal fun ZuneSkin.artistAlbumsScreen(
     session: SkinSession,
     destination: SkinDestination.ArtistAlbums,
 ) {
-    val albums = remember(
-        session.library,
-        destination.artistId,
-        calculation = { session.library.albumsByArtist(destination.artistId) },
-    ).collectAsLazyPagingItems()
+    val albums =
+        remember(
+                session.library,
+                destination.artistId,
+                calculation = { session.library.albumsByArtist(destination.artistId) },
+            )
+            .collectAsLazyPagingItems()
     LibraryBackFrame(
         title = destination.artistName,
         onSettings = session.openAppSettings,
         onBack = { navigateBack() },
         content = {
-        SkinLibraryGate(
-            loadState = session.library.loadState.collectAsState().value,
-            scanning = { _, _ -> EmptyMessage("scanning") },
-            failed = { message -> EmptyMessage(message) },
-            empty = { EmptyMessage("no albums") },
-            ready = {
-                LazyColumn(
-                    contentPadding = PaddingValues(bottom = 24.dp),
-                    content = {
-                        items(
-                            count = albums.itemCount,
-                            key = { index -> albums.peek(index)?.id ?: index },
-                            itemContent = { index ->
-                                albums[index]?.let { album ->
-                                    AlbumRow(
-                                        album = album,
-                                        onClick = {
-                                            open(SkinDestination.AlbumSongs(album.id, album.title))
-                                        },
-                                    )
-                                }
-                            },
-                        )
-                    },
-                )
-            },
-        )
+            SkinLibraryGate(
+                loadState = session.library.loadState.collectAsState().value,
+                scanning = { _, _ -> EmptyMessage("scanning") },
+                failed = { message -> EmptyMessage(message) },
+                empty = { EmptyMessage("no albums") },
+                ready = {
+                    LazyColumn(
+                        contentPadding = PaddingValues(bottom = 24.dp),
+                        content = {
+                            items(
+                                count = albums.itemCount,
+                                key = { index -> albums.peek(index)?.id ?: index },
+                                itemContent = { index ->
+                                    albums[index]?.let { album ->
+                                        AlbumRow(
+                                            album = album,
+                                            onClick = {
+                                                open(
+                                                    SkinDestination.AlbumSongs(
+                                                        album.id,
+                                                        album.title,
+                                                    )
+                                                )
+                                            },
+                                        )
+                                    }
+                                },
+                            )
+                        },
+                    )
+                },
+            )
         },
     )
 }
@@ -383,41 +419,48 @@ internal fun ZuneSkin.albumSongsScreen(
     session: SkinSession,
     destination: SkinDestination.AlbumSongs,
 ) {
-    val songsFlow = remember(
-        session.library,
-        destination.albumId,
-        calculation = { session.library.songsByAlbum(destination.albumId) },
-    )
+    val songsFlow =
+        remember(
+            session.library,
+            destination.albumId,
+            calculation = { session.library.songsByAlbum(destination.albumId) },
+        )
     val songs by songsFlow.collectAsState(initial = emptyList())
     LibraryBackFrame(
         title = destination.albumTitle,
         onSettings = session.openAppSettings,
         onBack = { navigateBack() },
         content = {
-        libraryContentGate(session = session, content = {
-            if (songs.isEmpty()) {
-                EmptyMessage("no songs")
-            } else {
-                LazyColumn(
-                    contentPadding = PaddingValues(bottom = 24.dp),
-                    content = {
-                        items(
-                            items = songs,
-                            key = { song -> song.id },
-                            itemContent = { song ->
-                                SongRow(
-                                    song = song,
-                                    onClick = {
-                                        session.commands.playSongFromAlbum(song.id, destination.albumId)
-                                        open(SkinDestination.NowPlaying)
+            libraryContentGate(
+                session = session,
+                content = {
+                    if (songs.isEmpty()) {
+                        EmptyMessage("no songs")
+                    } else {
+                        LazyColumn(
+                            contentPadding = PaddingValues(bottom = 24.dp),
+                            content = {
+                                items(
+                                    items = songs,
+                                    key = { song -> song.id },
+                                    itemContent = { song ->
+                                        SongRow(
+                                            song = song,
+                                            onClick = {
+                                                session.commands.playSongFromAlbum(
+                                                    song.id,
+                                                    destination.albumId,
+                                                )
+                                                open(SkinDestination.NowPlaying)
+                                            },
+                                        )
                                     },
                                 )
                             },
                         )
-                    },
-                )
-            }
-        })
+                    }
+                },
+            )
         },
     )
 }
@@ -427,44 +470,49 @@ internal fun ZuneSkin.genreSongsScreen(
     session: SkinSession,
     destination: SkinDestination.GenreSongs,
 ) {
-    val songs = remember(
-        session.library,
-        destination.genreId,
-        calculation = { session.library.songsByGenre(destination.genreId) },
-    ).collectAsLazyPagingItems()
+    val songs =
+        remember(
+                session.library,
+                destination.genreId,
+                calculation = { session.library.songsByGenre(destination.genreId) },
+            )
+            .collectAsLazyPagingItems()
     LibraryBackFrame(
         title = destination.genreName,
         onSettings = session.openAppSettings,
         onBack = { navigateBack() },
         content = {
-        SkinLibraryGate(
-            loadState = session.library.loadState.collectAsState().value,
-            scanning = { _, _ -> EmptyMessage("scanning") },
-            failed = { message -> EmptyMessage(message) },
-            empty = { EmptyMessage("no songs") },
-            ready = {
-                LazyColumn(
-                    contentPadding = PaddingValues(bottom = 24.dp),
-                    content = {
-                        items(
-                            count = songs.itemCount,
-                            key = { index -> songs.peek(index)?.id ?: index },
-                            itemContent = { index ->
-                                songs[index]?.let { song ->
-                                    SongRow(
-                                        song = song,
-                                        onClick = {
-                                            session.commands.playSongFromGenre(song.id, destination.genreId)
-                                            open(SkinDestination.NowPlaying)
-                                        },
-                                    )
-                                }
-                            },
-                        )
-                    },
-                )
-            },
-        )
+            SkinLibraryGate(
+                loadState = session.library.loadState.collectAsState().value,
+                scanning = { _, _ -> EmptyMessage("scanning") },
+                failed = { message -> EmptyMessage(message) },
+                empty = { EmptyMessage("no songs") },
+                ready = {
+                    LazyColumn(
+                        contentPadding = PaddingValues(bottom = 24.dp),
+                        content = {
+                            items(
+                                count = songs.itemCount,
+                                key = { index -> songs.peek(index)?.id ?: index },
+                                itemContent = { index ->
+                                    songs[index]?.let { song ->
+                                        SongRow(
+                                            song = song,
+                                            onClick = {
+                                                session.commands.playSongFromGenre(
+                                                    song.id,
+                                                    destination.genreId,
+                                                )
+                                                open(SkinDestination.NowPlaying)
+                                            },
+                                        )
+                                    }
+                                },
+                            )
+                        },
+                    )
+                },
+            )
         },
     )
 }
@@ -474,41 +522,48 @@ internal fun ZuneSkin.playlistSongsScreen(
     session: SkinSession,
     destination: SkinDestination.PlaylistSongs,
 ) {
-    val songsFlow = remember(
-        session.library,
-        destination.playlistId,
-        calculation = { session.library.songsByPlaylist(destination.playlistId) },
-    )
+    val songsFlow =
+        remember(
+            session.library,
+            destination.playlistId,
+            calculation = { session.library.songsByPlaylist(destination.playlistId) },
+        )
     val songs by songsFlow.collectAsState(initial = emptyList())
     LibraryBackFrame(
         title = destination.playlistName,
         onSettings = session.openAppSettings,
         onBack = { navigateBack() },
         content = {
-        libraryContentGate(session = session, content = {
-            if (songs.isEmpty()) {
-                EmptyMessage("no songs")
-            } else {
-                LazyColumn(
-                    contentPadding = PaddingValues(bottom = 24.dp),
-                    content = {
-                        items(
-                            items = songs,
-                            key = { song -> song.id },
-                            itemContent = { song ->
-                                SongRow(
-                                    song = song,
-                                    onClick = {
-                                        session.commands.playSongFromPlaylist(song.id, destination.playlistId)
-                                        open(SkinDestination.NowPlaying)
+            libraryContentGate(
+                session = session,
+                content = {
+                    if (songs.isEmpty()) {
+                        EmptyMessage("no songs")
+                    } else {
+                        LazyColumn(
+                            contentPadding = PaddingValues(bottom = 24.dp),
+                            content = {
+                                items(
+                                    items = songs,
+                                    key = { song -> song.id },
+                                    itemContent = { song ->
+                                        SongRow(
+                                            song = song,
+                                            onClick = {
+                                                session.commands.playSongFromPlaylist(
+                                                    song.id,
+                                                    destination.playlistId,
+                                                )
+                                                open(SkinDestination.NowPlaying)
+                                            },
+                                        )
                                     },
                                 )
                             },
                         )
-                    },
-                )
-            }
-        })
+                    }
+                },
+            )
         },
     )
 }
@@ -534,64 +589,74 @@ private fun LibraryBackFrame(
 internal fun ZuneSkin.searchScreen(session: SkinSession) {
     var query by remember { mutableStateOf("") }
     var debouncedQuery by remember { mutableStateOf("") }
-    LaunchedEffect(query, block = {
-        delay(250L)
-        debouncedQuery = query
-    })
-    val searchFlow = remember(
-        session.library,
-        debouncedQuery,
-        calculation = { session.library.search(debouncedQuery) },
+    LaunchedEffect(
+        query,
+        block = {
+            delay(250L)
+            debouncedQuery = query
+        },
     )
+    val searchFlow =
+        remember(
+            session.library,
+            debouncedQuery,
+            calculation = { session.library.search(debouncedQuery) },
+        )
     val results by searchFlow.collectAsState(initial = SkinSearchResults())
     LibraryBackFrame(
         title = "search",
         onSettings = session.openAppSettings,
         onBack = { navigateBack() },
         content = {
-        BasicTextField(
-            value = query,
-            onValueChange = { query = it },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 18.dp),
-            textStyle = SkinTheme.typography.body.copy(color = SkinTheme.colors.onBackground),
-            singleLine = true,
-            decorationBox = { innerTextField ->
-                Column {
-                    if (query.isEmpty()) {
-                        BasicText(
-                            text = "type to search",
-                            style = SkinTheme.typography.body.copy(color = SkinTheme.colors.onSurface),
+            BasicTextField(
+                value = query,
+                onValueChange = { query = it },
+                modifier = Modifier.fillMaxWidth().padding(bottom = 18.dp),
+                textStyle = SkinTheme.typography.body.copy(color = SkinTheme.colors.onBackground),
+                singleLine = true,
+                decorationBox = { innerTextField ->
+                    Column {
+                        if (query.isEmpty()) {
+                            BasicText(
+                                text = "type to search",
+                                style =
+                                    SkinTheme.typography.body.copy(
+                                        color = SkinTheme.colors.onSurface
+                                    ),
+                            )
+                        }
+                        innerTextField()
+                        Box(
+                            modifier =
+                                Modifier.fillMaxWidth()
+                                    .padding(top = 7.dp)
+                                    .height(1.dp)
+                                    .background(SkinTheme.colors.accent)
                         )
                     }
-                    innerTextField()
-                    Box(
-                        modifier = Modifier.fillMaxWidth().padding(top = 7.dp).height(1.dp)
-                            .background(SkinTheme.colors.accent),
-                    )
-                }
-            },
-        )
-        libraryContentGate(session = session, content = {
-            if (debouncedQuery.isEmpty()) {
-                EmptyMessage("search your library")
-            } else if (results.isEmpty) {
-                SkinNoResults(
-                    query = debouncedQuery,
-                    content = { value -> EmptyMessage("no results for $value") },
-                )
-            } else {
-                SearchResults(session = session, results = results)
-            }
-        })
+                },
+            )
+            libraryContentGate(
+                session = session,
+                content = {
+                    if (debouncedQuery.isEmpty()) {
+                        EmptyMessage("search your library")
+                    } else if (results.isEmpty) {
+                        SkinNoResults(
+                            query = debouncedQuery,
+                            content = { value -> EmptyMessage("no results for $value") },
+                        )
+                    } else {
+                        SearchResults(session = session, results = results)
+                    }
+                },
+            )
         },
     )
 }
 
 @Composable
-private fun libraryContentGate(
-    session: SkinSession,
-    content: @Composable () -> Unit,
-) {
+private fun libraryContentGate(session: SkinSession, content: @Composable () -> Unit) {
     val loadState by session.library.loadState.collectAsState()
     SkinLibraryGate(
         loadState = loadState,
@@ -616,7 +681,10 @@ private fun ZuneSkin.SearchResults(session: SkinSession, results: SkinSearchResu
                         SongRow(
                             song = song,
                             onClick = {
-                                session.commands.playSongs(results.songs, results.songs.indexOf(song))
+                                session.commands.playSongs(
+                                    results.songs,
+                                    results.songs.indexOf(song),
+                                )
                                 open(SkinDestination.NowPlaying)
                             },
                         )
@@ -644,7 +712,8 @@ private fun ZuneSkin.SearchResults(session: SkinSession, results: SkinSearchResu
                     itemContent = { artist ->
                         LibraryRow(
                             title = artist.name,
-                            subtitle = "${plural(artist.albumCount, "album")}  ·  ${plural(artist.songCount, "song")}",
+                            subtitle =
+                                "${plural(artist.albumCount, "album")}  ·  ${plural(artist.songCount, "song")}",
                             onClick = { open(SkinDestination.ArtistAlbums(artist.id, artist.name)) },
                         )
                     },
@@ -672,7 +741,8 @@ private fun ZuneSkin.SearchResults(session: SkinSession, results: SkinSearchResu
                     itemContent = { playlist ->
                         LibraryRow(
                             title = playlist.name,
-                            subtitle = "${playlist.songCount} songs  ·  ${formatDuration(playlist.durationMs)}",
+                            subtitle =
+                                "${playlist.songCount} songs  ·  ${formatDuration(playlist.durationMs)}",
                             onClick = {
                                 open(SkinDestination.PlaylistSongs(playlist.id, playlist.name))
                             },
@@ -713,51 +783,59 @@ internal fun ZuneSkin.nowPlayingScreen(session: SkinSession) {
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop,
                         fallback = {
-                            Box(modifier = Modifier.fillMaxSize().background(SkinPaletteColors.surface))
+                            Box(
+                                modifier =
+                                    Modifier.fillMaxSize().background(SkinPaletteColors.surface)
+                            )
                         },
                     )
 
                     // Scrim, so the text stays legible over a cover of any brightness. Without
                     // it the layout works on dark art and is unreadable on pale art.
                     Box(
-                        modifier = Modifier.fillMaxSize().background(
-                            // Reaches near-solid well above the text block. An earlier,
-                            // gentler ramp left the cover's own lettering showing through
-                            // behind the progress bar, which read as two sets of type
-                            // fighting each other.
-                            Brush.verticalGradient(
-                                0.00f to Color(0x00000000),
-                                0.35f to Color(0x40000000),
-                                0.55f to Color(0xB3000000),
-                                0.70f to Color(0xF0000000),
-                                1.00f to Color(0xFF000000),
-                            ),
-                        ),
+                        modifier =
+                            Modifier.fillMaxSize()
+                                .background(
+                                    // Reaches near-solid well above the text block. An earlier,
+                                    // gentler ramp left the cover's own lettering showing through
+                                    // behind the progress bar, which read as two sets of type
+                                    // fighting each other.
+                                    Brush.verticalGradient(
+                                        0.00f to Color(0x00000000),
+                                        0.35f to Color(0x40000000),
+                                        0.55f to Color(0xB3000000),
+                                        0.70f to Color(0xF0000000),
+                                        1.00f to Color(0xFF000000),
+                                    )
+                                )
                     )
 
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(top = 20.dp, end = 14.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                    // These sit on bare artwork - the scrim above is transparent at the top -
+                    // so they get their own dark capsule. Orange label text over a pale or
+                    // busy cover was simply not readable, and looked like part of the sleeve
+                    // design rather than something you could tap.
+                    UtilityIsland(
+                        modifier =
+                            Modifier.align(Alignment.TopEnd).padding(top = 16.dp, end = 12.dp)
                     ) {
-                        AccentLink(text = "queue", onClick = { navigateToQueue() })
-                        AccentLink(text = "lyrics", onClick = { navigateToLyrics() })
-                        AccentLink(text = "settings", onClick = session.openAppSettings)
+                        AccentLinkTarget(text = "queue", onClick = { navigateToQueue() })
+                        AccentLinkTarget(text = "lyrics", onClick = { navigateToLyrics() })
+                        AccentLinkTarget(text = "settings", onClick = session.openAppSettings)
                     }
 
                     Column(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .fillMaxWidth()
-                            .padding(start = 28.dp, end = 20.dp, bottom = 26.dp),
+                        modifier =
+                            Modifier.align(Alignment.BottomStart)
+                                .fillMaxWidth()
+                                .padding(start = 28.dp, end = 20.dp, bottom = 26.dp)
                     ) {
                         BasicText(
                             text = song.title,
-                            style = SkinTheme.typography.title.copy(
-                                fontSize = 30.sp,
-                                lineHeight = 33.sp,
-                            ),
+                            style =
+                                SkinTheme.typography.title.copy(
+                                    fontSize = 30.sp,
+                                    lineHeight = 33.sp,
+                                ),
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
                         )
@@ -797,17 +875,24 @@ internal fun ZuneSkin.nowPlayingScreen(session: SkinSession) {
                         // margin. The controls are the one thing here you reach for without
                         // looking, so they sit under the thumb rather than following the
                         // type.
+                        //
+                        // The words "previous / pause / next" were placeholders: three
+                        // identical-weight labels give no hint which one is the primary
+                        // action, and reading a control you already know the shape of is
+                        // slower than recognising it. The glyphs live in ZuneIcons.kt so
+                        // this composable stays readable.
                         Row(
-                            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                            modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
                             horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            AccentLink(text = "previous", onClick = session.commands::previous)
-                            AccentLink(
-                                text = if (playback.isPlaying) "pause" else "play",
+                            PreviousButton(onClick = session.commands::previous)
+                            PlayPauseButton(
+                                isPlaying = playback.isPlaying,
                                 onClick = session.commands::playPause,
-                                modifier = Modifier.padding(horizontal = 18.dp),
+                                modifier = Modifier.padding(horizontal = 10.dp),
                             )
-                            AccentLink(text = "next", onClick = session.commands::next)
+                            NextButton(onClick = session.commands::next)
                         }
                     }
                 }
@@ -829,41 +914,53 @@ private fun ScrubbableProgress(
     val shownPositionMs = dragPositionMs ?: positionMs
     val duration = durationMs.coerceAtLeast(0L)
     val progress =
-        if (duration == 0L) 0f else (shownPositionMs.toFloat() / duration.toFloat()).coerceIn(0f, 1f)
+        if (duration == 0L) 0f
+        else (shownPositionMs.toFloat() / duration.toFloat()).coerceIn(0f, 1f)
     BoxWithConstraints(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(18.dp)
-            .pointerInput(durationMs, block = {
-                var target = latestPositionMs.coerceIn(0L, duration)
-                fun positionAt(x: Float): Long {
-                    if (duration == 0L || size.width <= 0) return 0L
-                    return (duration.toDouble() * (x / size.width).coerceIn(0f, 1f)).toLong()
-                }
-                detectDragGestures(
-                    onDragStart = { offset ->
-                        target = positionAt(offset.x)
-                        dragPositionMs = target
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(18.dp)
+                .pointerInput(
+                    durationMs,
+                    block = {
+                        var target = latestPositionMs.coerceIn(0L, duration)
+                        fun positionAt(x: Float): Long {
+                            if (duration == 0L || size.width <= 0) return 0L
+                            return (duration.toDouble() * (x / size.width).coerceIn(0f, 1f))
+                                .toLong()
+                        }
+                        detectDragGestures(
+                            onDragStart = { offset ->
+                                target = positionAt(offset.x)
+                                dragPositionMs = target
+                            },
+                            onDrag = { change, _ ->
+                                target = positionAt(change.position.x)
+                                dragPositionMs = target
+                            },
+                            onDragEnd = {
+                                dragPositionMs = null
+                                commitSeek(target)
+                            },
+                            onDragCancel = { dragPositionMs = null },
+                        )
                     },
-                    onDrag = { change, _ ->
-                        target = positionAt(change.position.x)
-                        dragPositionMs = target
-                    },
-                    onDragEnd = {
-                        dragPositionMs = null
-                        commitSeek(target)
-                    },
-                    onDragCancel = { dragPositionMs = null },
                 )
-            }),
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth().height(3.dp).align(Alignment.CenterStart)
-                .background(SkinTheme.colors.surface),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .height(3.dp)
+                    .align(Alignment.CenterStart)
+                    .background(SkinTheme.colors.surface)
         )
         Box(
-            modifier = Modifier.fillMaxWidth(progress).height(3.dp).align(Alignment.CenterStart)
-                .background(SkinTheme.colors.accent),
+            modifier =
+                Modifier.fillMaxWidth(progress)
+                    .height(3.dp)
+                    .align(Alignment.CenterStart)
+                    .background(SkinTheme.colors.accent)
         )
     }
 }
@@ -875,28 +972,29 @@ internal fun ZuneSkin.queueScreen(session: SkinSession) {
         title = "queue",
         utility = { AccentLink(text = "settings", onClick = session.openAppSettings) },
         content = {
-        if (playback.queue.isEmpty()) {
-            EmptyMessage("queue is empty")
-        } else {
-            LazyColumn(
-                contentPadding = PaddingValues(bottom = 24.dp),
-                content = {
-                    items(
-                        count = playback.queue.size,
-                        key = { index -> "${playback.queue[index].id}-$index" },
-                        itemContent = { index ->
-                            val song = playback.queue[index]
-                            SongRow(
-                                song = song,
-                                index = index,
-                                trailing = if (index == playback.queueIndex) "playing" else null,
-                                onClick = { session.commands.playQueueItem(index) },
-                            )
-                        },
-                    )
-                },
-            )
-        }
+            if (playback.queue.isEmpty()) {
+                EmptyMessage("queue is empty")
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(bottom = 24.dp),
+                    content = {
+                        items(
+                            count = playback.queue.size,
+                            key = { index -> "${playback.queue[index].id}-$index" },
+                            itemContent = { index ->
+                                val song = playback.queue[index]
+                                SongRow(
+                                    song = song,
+                                    index = index,
+                                    trailing =
+                                        if (index == playback.queueIndex) "playing" else null,
+                                    onClick = { session.commands.playQueueItem(index) },
+                                )
+                            },
+                        )
+                    },
+                )
+            }
         },
     )
 }

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2026 Shellac Project
+ * SkinCommands.kt is part of Shellac.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
 package org.shellac.skin
 
 /**
@@ -6,16 +24,14 @@ package org.shellac.skin
  * ## How `playX` maps to the engine
  *
  * The engine DOES provide collection-level play methods, taking objects rather than ids:
- * `play(album: Album)`, `play(artist: Artist)`, `play(genre: Genre)`,
- * `play(playlist: Playlist)`, `play(songs: List<Song>)`, plus `playNext` equivalents.
- * So `playAlbum(albumId)` is: resolve id -> `Album` -> `play(album)`. **Prefer these** over
- * hand-rolling "first song + PlaySong.FromAlbum", which risks diverging from Auxio's own
- * shuffle and queue-construction semantics.
+ * `play(album: Album)`, `play(artist: Artist)`, `play(genre: Genre)`, `play(playlist: Playlist)`,
+ * `play(songs: List<Song>)`, plus `playNext` equivalents. So `playAlbum(albumId)` is: resolve id ->
+ * `Album` -> `play(album)`. **Prefer these** over hand-rolling "first song + PlaySong.FromAlbum",
+ * which risks diverging from Auxio's own shuffle and queue-construction semantics.
  *
  * (An earlier revision of this doc claimed these overloads did not exist. They do.)
  *
  * For song-level playback with a browsing context, the engine uses:
- *
  * ```kotlin
  * PlaybackViewModel.play(song: Song, with: PlaySong)
  *
@@ -29,15 +45,15 @@ package org.shellac.skin
  * }
  * ```
  *
- * Here the browsing context is a *parameter*, not a method set — used when a skin plays one
- * song from within an album/artist/genre listing. Either way, all id-to-object resolution
- * lives entirely in the adapter (DECISION D4).
+ * Here the browsing context is a *parameter*, not a method set — used when a skin plays one song
+ * from within an album/artist/genre listing. Either way, all id-to-object resolution lives entirely
+ * in the adapter (DECISION D4).
  *
  * ## Empty collections
  *
- * Every `playX` is a **no-op** when the target is empty or the id is unknown. It does not
- * throw. A skin driving a wheel or remote cannot usefully handle an exception mid-gesture,
- * and silently doing nothing matches what a physical player does.
+ * Every `playX` is a **no-op** when the target is empty or the id is unknown. It does not throw. A
+ * skin driving a wheel or remote cannot usefully handle an exception mid-gesture, and silently
+ * doing nothing matches what a physical player does.
  */
 interface SkinCommands {
     fun playPause()

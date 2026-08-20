@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2026 Shellac Project
+ * WheelSearch.kt is part of Shellac.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
 package org.shellac.skin.wheel
 
 import androidx.compose.foundation.background
@@ -35,14 +53,14 @@ private const val SEARCH_DEBOUNCE_MS = 250L
 /**
  * Which list the wheel is currently driving.
  *
- * A wheel has one axis of input, so a screen that both composes a query and browses its
- * results has to say which of the two the wheel is moving. The first implementation put the
- * alphabet and the results in a **single** list, alphabet first: after typing one letter the
- * results sat 38 rows below the selection, and typing a second letter meant rotating all the
- * way back. That is the "search is majorly broken" report.
+ * A wheel has one axis of input, so a screen that both composes a query and browses its results has
+ * to say which of the two the wheel is moving. The first implementation put the alphabet and the
+ * results in a **single** list, alphabet first: after typing one letter the results sat 38 rows
+ * below the selection, and typing a second letter meant rotating all the way back. That is the
+ * "search is majorly broken" report.
  *
- * MENU switches focus, which is what the hardware did. Results stay visible in the side panel
- * while typing, so the query can be refined without changing focus at all.
+ * MENU switches focus, which is what the hardware did. Results stay visible in the side panel while
+ * typing, so the query can be refined without changing focus at all.
  */
 private enum class SearchFocus {
     CHARACTERS,
@@ -81,16 +99,14 @@ internal sealed interface WheelSearchItem {
 }
 
 private val SEARCH_CHARACTERS =
-    ('A'..'Z').map(Char::toString) +
-        ('0'..'9').map(Char::toString) +
-        listOf(" ", "DEL")
+    ('A'..'Z').map(Char::toString) + ('0'..'9').map(Char::toString) + listOf(" ", "DEL")
 
 /**
- * @param query The current query. Held by the skin rather than here, so leaving the screen
- *   and coming back does not lose what was typed.
+ * @param query The current query. Held by the skin rather than here, so leaving the screen and
+ *   coming back does not lose what was typed.
  * @param onQueryChange Reports edits back to the owner.
- * @param registerMenuOverride Lets this screen intercept MENU (and system back) while it is
- *   on screen. Returns true when it handled the press.
+ * @param registerMenuOverride Lets this screen intercept MENU (and system back) while it is on
+ *   screen. Returns true when it handled the press.
  */
 @Composable
 internal fun WheelSearch(
@@ -101,12 +117,14 @@ internal fun WheelSearch(
     onSong: (SkinSong) -> Unit,
     onAlbum: (SkinAlbum) -> Unit,
     onArtist: (SkinArtist) -> Unit,
-    scaffold: @Composable (
-        Int,
-        (Int) -> WheelSearchItem?,
-        (WheelSearchItem, Int) -> Unit,
-        @Composable (Int) -> Unit,
-    ) -> Unit,
+    scaffold:
+        @Composable
+        (
+            Int,
+            (Int) -> WheelSearchItem?,
+            (WheelSearchItem, Int) -> Unit,
+            @Composable (Int) -> Unit,
+        ) -> Unit,
 ) {
     val loadState by session.library.loadState.collectAsState()
     SkinLibraryGate(
@@ -122,9 +140,7 @@ internal fun WheelSearch(
         failed = { message ->
             searchStatus(scaffold = scaffold, message = "Load failed: $message")
         },
-        empty = {
-            searchStatus(scaffold = scaffold, message = "Library is empty")
-        },
+        empty = { searchStatus(scaffold = scaffold, message = "Library is empty") },
         ready = {
             readySearch(
                 session = session,
@@ -149,12 +165,14 @@ private fun readySearch(
     onSong: (SkinSong) -> Unit,
     onAlbum: (SkinAlbum) -> Unit,
     onArtist: (SkinArtist) -> Unit,
-    scaffold: @Composable (
-        Int,
-        (Int) -> WheelSearchItem?,
-        (WheelSearchItem, Int) -> Unit,
-        @Composable (Int) -> Unit,
-    ) -> Unit,
+    scaffold:
+        @Composable
+        (
+            Int,
+            (Int) -> WheelSearchItem?,
+            (WheelSearchItem, Int) -> Unit,
+            @Composable (Int) -> Unit,
+        ) -> Unit,
 ) {
     var results by remember { mutableStateOf(SkinSearchResults()) }
     var searching by remember { mutableStateOf(false) }
@@ -196,8 +214,7 @@ private fun readySearch(
         onDispose { registerMenuOverride(null) }
     }
 
-    val characterItems =
-        remember { SEARCH_CHARACTERS.map(WheelSearchItem::Character) }
+    val characterItems = remember { SEARCH_CHARACTERS.map(WheelSearchItem::Character) }
     val items: List<WheelSearchItem> =
         if (focus == SearchFocus.CHARACTERS) characterItems else resultItems
 
@@ -208,12 +225,13 @@ private fun readySearch(
             when (item) {
                 is WheelSearchItem.Character ->
                     onQueryChange(
-                        if (item.value == "DEL") query.dropLast(1) else query + item.value,
+                        if (item.value == "DEL") query.dropLast(1) else query + item.value
                     )
                 is WheelSearchItem.SongResult -> onSong(item.song)
                 is WheelSearchItem.AlbumResult -> onAlbum(item.album)
                 is WheelSearchItem.ArtistResult -> onArtist(item.artist)
-                is WheelSearchItem.Section, is WheelSearchItem.Message -> Unit
+                is WheelSearchItem.Section,
+                is WheelSearchItem.Message -> Unit
             }
         },
     ) { selectedIndex ->
@@ -242,18 +260,19 @@ private fun SearchBody(
 
         // The query is the point of the screen, so it gets the largest type on it.
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFFF2F2F2))
-                .padding(horizontal = 8.dp, vertical = 6.dp),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .background(Color(0xFFF2F2F2))
+                    .padding(horizontal = 8.dp, vertical = 6.dp)
         ) {
             BasicText(
                 if (query.isEmpty()) "type a query" else query,
-                style = ClassicTypography.title.copy(
-                    color = if (query.isEmpty()) Color(0xFF9A9A9A) else Color.Black,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                ),
+                style =
+                    ClassicTypography.title.copy(
+                        color = if (query.isEmpty()) Color(0xFF9A9A9A) else Color.Black,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                    ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -263,10 +282,7 @@ private fun SearchBody(
             modifier = Modifier.weight(1f),
             panel = {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color(0xFFEDEDED))
-                        .padding(6.dp),
+                    modifier = Modifier.fillMaxSize().background(Color(0xFFEDEDED)).padding(6.dp)
                 ) {
                     // Results stay visible while typing, so the query can be refined without
                     // switching focus at all.
@@ -301,18 +317,19 @@ private fun SearchBody(
                         if (item is WheelSearchItem.Section) {
                             BasicText(
                                 item.label,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(Color(0xFFE0E0E0))
-                                    .padding(horizontal = 8.dp, vertical = 3.dp),
+                                modifier =
+                                    Modifier.fillMaxWidth()
+                                        .background(Color(0xFFE0E0E0))
+                                        .padding(horizontal = 8.dp, vertical = 3.dp),
                                 style = ClassicTypography.label.copy(color = Color(0xFF4A4A4A)),
                             )
                         } else {
                             ClassicMenuRow(
                                 label = item.label,
                                 isSelected = isSelected,
-                                showChevron = item is WheelSearchItem.AlbumResult ||
-                                    item is WheelSearchItem.ArtistResult,
+                                showChevron =
+                                    item is WheelSearchItem.AlbumResult ||
+                                        item is WheelSearchItem.ArtistResult,
                             )
                         }
                     }
@@ -367,19 +384,17 @@ private fun resultSummary(
 
 @Composable
 private fun searchStatus(
-    scaffold: @Composable (
-        Int,
-        (Int) -> WheelSearchItem?,
-        (WheelSearchItem, Int) -> Unit,
-        @Composable (Int) -> Unit,
-    ) -> Unit,
+    scaffold:
+        @Composable
+        (
+            Int,
+            (Int) -> WheelSearchItem?,
+            (WheelSearchItem, Int) -> Unit,
+            @Composable (Int) -> Unit,
+        ) -> Unit,
     message: String,
 ) {
-    scaffold(
-        0,
-        { _: Int -> null },
-        { _, _ -> },
-    ) {
+    scaffold(0, { _: Int -> null }, { _, _ -> }) {
         val colors = SkinTheme.colors
         val typography = SkinTheme.typography
         Column(modifier = Modifier.fillMaxSize().background(colors.background)) {

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2026 Shellac Project
+ * WheelChrome.kt is part of Shellac.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
 package org.shellac.skin.wheel
 
 import androidx.compose.foundation.Canvas
@@ -31,37 +49,40 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.shellac.skin.SkinSong
+import org.shellac.skin.support.ShellacMark
 import org.shellac.skin.support.SkinAlbumArt
 import org.shellac.skin.support.SkinColors
 import org.shellac.skin.support.SkinTypography
 
 /**
  * Chrome for the Touch Wheel skin, styled after the classic hard-drive music players of the
- * mid-2000s: a grey title bar, a white menu list with a blue gradient selection and chevrons,
- * and a split menu/artwork layout.
+ * mid-2000s: a grey title bar, a white menu list with a blue gradient selection and chevrons, and a
+ * split menu/artwork layout.
  *
  * Identifiers here are deliberately vendor-neutral ("Classic", not a brand name). The visual
- * language is a widely-copied convention; the trademarks around it are not, and keeping them
- * out of the source costs nothing.
+ * language is a widely-copied convention; the trademarks around it are not, and keeping them out of
+ * the source costs nothing.
  *
  * These are presentation primitives only - no state, no engine access.
  */
 
 /** White background, black text, deep blue selection. */
-internal val ClassicColors = SkinColors(
-    background = Color(0xFFFFFFFF),
-    surface = Color(0xFFFFFFFF),
-    onBackground = Color(0xFF000000),
-    onSurface = Color(0xFF000000),
-    accent = Color(0xFF2A5DA8),
-    onAccent = Color(0xFFFFFFFF),
-)
+internal val ClassicColors =
+    SkinColors(
+        background = Color(0xFFFFFFFF),
+        surface = Color(0xFFFFFFFF),
+        onBackground = Color(0xFF000000),
+        onSurface = Color(0xFF000000),
+        accent = Color(0xFF2A5DA8),
+        onAccent = Color(0xFFFFFFFF),
+    )
 
-internal val ClassicTypography = SkinTypography(
-    title = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold),
-    body = TextStyle(fontSize = 15.sp),
-    label = TextStyle(fontSize = 12.sp),
-)
+internal val ClassicTypography =
+    SkinTypography(
+        title = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold),
+        body = TextStyle(fontSize = 15.sp),
+        label = TextStyle(fontSize = 12.sp),
+    )
 
 // Vertical gradients. The originals were subtle - a light top edge falling to a saturated
 // base - which is what stops a flat fill from looking like a modern list highlight.
@@ -102,8 +123,8 @@ internal val BodyBezel = Color(0xFF6E6E6E)
 /**
  * Grey gradient title bar: play state at the left, centred title, battery at the right.
  *
- * The title is centred within the whole bar rather than in the leftover space, so it does
- * not drift as the side elements change width.
+ * The title is centred within the whole bar rather than in the leftover space, so it does not drift
+ * as the side elements change width.
  */
 @Composable
 internal fun ClassicTitleBar(
@@ -113,18 +134,16 @@ internal fun ClassicTitleBar(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(TitleBarHeight)
-            .background(Brush.verticalGradient(TitleBarGradient)),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(TitleBarHeight)
+                .background(Brush.verticalGradient(TitleBarGradient))
     ) {
         BasicText(
             title,
             modifier = Modifier.fillMaxWidth().align(Alignment.Center),
-            style = ClassicTypography.title.copy(
-                color = Color.Black,
-                textAlign = TextAlign.Center,
-            ),
+            style = ClassicTypography.title.copy(color = Color.Black, textAlign = TextAlign.Center),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
@@ -132,7 +151,13 @@ internal fun ClassicTitleBar(
             modifier = Modifier.fillMaxSize().padding(horizontal = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            // Left cluster: brand mark, then the play indicator when there is a song. The
+            // mark is tinted to the same ink as the rest of the bar's glyphs - the full
+            // five-colour palette at 9dp reads as a smudge of noise beside a monochrome
+            // battery, and the bar is meant to be the quietest thing on screen.
+            ShellacMark(height = 9.dp, tint = Color(0xFF3C3C3C))
             if (hasSong) {
+                Box(modifier = Modifier.width(6.dp))
                 PlayStateGlyph(isPlaying = isPlaying)
             }
             Box(modifier = Modifier.weight(1f))
@@ -140,11 +165,11 @@ internal fun ClassicTitleBar(
         }
         // Hairline under the bar, as on the originals.
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .align(Alignment.BottomCenter)
-                .background(HairlineGrey),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .height(1.dp)
+                    .align(Alignment.BottomCenter)
+                    .background(HairlineGrey)
         )
     }
 }
@@ -155,12 +180,13 @@ private fun PlayStateGlyph(isPlaying: Boolean) {
     Canvas(modifier = Modifier.width(10.dp).height(10.dp)) {
         val blue = ProgressGradient.last()
         if (isPlaying) {
-            val path = androidx.compose.ui.graphics.Path().apply {
-                moveTo(0f, 0f)
-                lineTo(size.width, size.height / 2f)
-                lineTo(0f, size.height)
-                close()
-            }
+            val path =
+                androidx.compose.ui.graphics.Path().apply {
+                    moveTo(0f, 0f)
+                    lineTo(size.width, size.height / 2f)
+                    lineTo(0f, size.height)
+                    close()
+                }
             drawPath(path, color = blue)
         } else {
             val barWidth = size.width / 3f
@@ -197,7 +223,11 @@ private fun BatteryGlyph() {
         drawRoundRect(
             color = Color(0xFF5BA85B),
             topLeft = Offset(inset, inset),
-            size = Size((bodyWidth - inset * 2f).coerceAtLeast(0f), (size.height - inset * 2f).coerceAtLeast(0f)),
+            size =
+                Size(
+                    (bodyWidth - inset * 2f).coerceAtLeast(0f),
+                    (size.height - inset * 2f).coerceAtLeast(0f),
+                ),
             cornerRadius = CornerRadius(1.dp.toPx()),
         )
     }
@@ -206,8 +236,8 @@ private fun BatteryGlyph() {
 /**
  * One menu row: white with black text, or the blue gradient with white text when selected.
  *
- * [showChevron] marks rows that descend into another screen, as the originals did - it is
- * the only affordance distinguishing "opens a submenu" from "does something".
+ * [showChevron] marks rows that descend into another screen, as the originals did - it is the only
+ * affordance distinguishing "opens a submenu" from "does something".
  */
 @Composable
 internal fun ClassicMenuRow(
@@ -216,17 +246,19 @@ internal fun ClassicMenuRow(
     showChevron: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val background = if (isSelected) {
-        Brush.verticalGradient(SelectionGradient)
-    } else {
-        Brush.verticalGradient(listOf(Color.White, Color.White))
-    }
+    val background =
+        if (isSelected) {
+            Brush.verticalGradient(SelectionGradient)
+        } else {
+            Brush.verticalGradient(listOf(Color.White, Color.White))
+        }
     val contentColor = if (isSelected) Color.White else Color.Black
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(background)
-            .padding(horizontal = 8.dp, vertical = 6.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(background)
+                .padding(horizontal = 8.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         BasicText(
@@ -248,8 +280,8 @@ internal fun ClassicMenuRow(
 /**
  * Menu on the left, artwork panel on the right, divided by a hairline.
  *
- * The split is the signature of the later models. [menuWeight] is the menu's share; the
- * panel takes the rest.
+ * The split is the signature of the later models. [menuWeight] is the menu's share; the panel takes
+ * the rest.
  */
 @Composable
 internal fun ClassicSplitLayout(
@@ -261,16 +293,13 @@ internal fun ClassicSplitLayout(
     Row(modifier = modifier.fillMaxSize().background(Color.White)) {
         Column(modifier = Modifier.weight(menuWeight).fillMaxHeight(), content = menu)
         Box(modifier = Modifier.width(1.dp).fillMaxHeight().background(HairlineGrey))
-        Box(
-            modifier = Modifier.weight(1f - menuWeight).fillMaxHeight(),
-            content = panel,
-        )
+        Box(modifier = Modifier.weight(1f - menuWeight).fillMaxHeight(), content = panel)
     }
 }
 
 /**
- * The artwork panel beside the menu. Shows the current track's cover, falling back to a flat
- * grey square so the split does not collapse when nothing is playing.
+ * The artwork panel beside the menu. Shows the current track's cover, falling back to a flat grey
+ * square so the split does not collapse when nothing is playing.
  */
 @Composable
 internal fun ClassicArtPanel(song: SkinSong?, modifier: Modifier = Modifier) {
@@ -279,10 +308,7 @@ internal fun ClassicArtPanel(song: SkinSong?, modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
     ) {
         if (song == null) {
-            BasicText(
-                "",
-                style = ClassicTypography.label.copy(color = Color(0xFF9A9A9A)),
-            )
+            BasicText("", style = ClassicTypography.label.copy(color = Color(0xFF9A9A9A)))
         } else {
             SkinAlbumArt(
                 uri = song.albumArtUri,
@@ -290,10 +316,8 @@ internal fun ClassicArtPanel(song: SkinSong?, modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth().aspectRatio(1f),
                 fallback = {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .background(Color(0xFFD5D5D5)),
+                        modifier =
+                            Modifier.fillMaxWidth().aspectRatio(1f).background(Color(0xFFD5D5D5))
                     )
                 },
             )
@@ -314,11 +338,12 @@ internal fun ClassicProgressBar(fraction: Float, modifier: Modifier = Modifier) 
         val filled = size.width * fraction.coerceIn(0f, 1f)
         if (filled > 0f) {
             drawRoundRect(
-                brush = Brush.verticalGradient(
-                    colors = ProgressGradient,
-                    startY = 0f,
-                    endY = size.height,
-                ),
+                brush =
+                    Brush.verticalGradient(
+                        colors = ProgressGradient,
+                        startY = 0f,
+                        endY = size.height,
+                    ),
                 size = Size(filled, size.height),
                 cornerRadius = radius,
             )
@@ -360,10 +385,7 @@ internal fun ClassicTimeRow(
     elapsedColor: Color,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
+    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         BasicText(elapsed, style = ClassicTypography.label.copy(color = elapsedColor))
         BasicText(remaining, style = ClassicTypography.label.copy(color = Color(0xFF5A5A5A)))
     }

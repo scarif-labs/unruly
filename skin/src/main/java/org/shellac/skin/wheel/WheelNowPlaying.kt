@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2026 Shellac Project
+ * WheelNowPlaying.kt is part of Shellac.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+ 
 package org.shellac.skin.wheel
 
 import androidx.compose.foundation.background
@@ -28,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.shellac.skin.SkinSession
 import org.shellac.skin.support.SkinAlbumArt
-import org.shellac.skin.support.SkinTheme
 import org.shellac.skin.support.rememberInterpolatedPosition
 
 private const val SCRUB_IDLE_MS = 300L
@@ -49,11 +66,7 @@ internal class WheelNowPlayingState {
     var seekHoldMs by mutableStateOf<Long?>(null)
         private set
 
-    fun update(
-        songId: String?,
-        durationMs: Long,
-        livePositionMs: Long,
-    ) {
+    fun update(songId: String?, durationMs: Long, livePositionMs: Long) {
         if (this.songId != songId) {
             scrubTargetMs = null
             seekHoldMs = null
@@ -68,12 +81,13 @@ internal class WheelNowPlayingState {
 
         val basePositionMs = scrubTargetMs ?: seekHoldMs ?: livePositionMs
         val stepMs = scrubStepMs(durationMs)
-        scrubTargetMs = moveScrubTarget(
-            basePositionMs = basePositionMs,
-            delta = delta,
-            stepMs = stepMs,
-            durationMs = durationMs,
-        )
+        scrubTargetMs =
+            moveScrubTarget(
+                basePositionMs = basePositionMs,
+                delta = delta,
+                stepMs = stepMs,
+                durationMs = durationMs,
+            )
     }
 
     fun commitScrub(targetMs: Long) {
@@ -94,19 +108,12 @@ internal fun rememberWheelNowPlayingState(): WheelNowPlayingState = remember {
 }
 
 @Composable
-internal fun WheelNowPlaying(
-    session: SkinSession,
-    state: WheelNowPlayingState,
-) {
+internal fun WheelNowPlaying(session: SkinSession, state: WheelNowPlayingState) {
     val playback by session.playback.collectAsState()
     val song = playback.song
     val livePositionMs by rememberInterpolatedPosition(playback)
     val durationMs = playback.durationMs.coerceAtLeast(0L)
-    state.update(
-        songId = song?.id,
-        durationMs = durationMs,
-        livePositionMs = livePositionMs,
-    )
+    state.update(songId = song?.id, durationMs = durationMs, livePositionMs = livePositionMs)
 
     val scrubTargetMs = state.scrubTargetMs?.coerceIn(0L, durationMs)
 
@@ -150,10 +157,7 @@ internal fun WheelNowPlaying(
             hasSong = song != null,
         )
         if (song == null) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 BasicText(
                     "Nothing playing",
                     style = ClassicTypography.body.copy(color = Color(0xFF5A5A5A)),
@@ -166,9 +170,7 @@ internal fun WheelNowPlaying(
                 // art on the left, text beside it, transport information underneath.
                 val artWidth = maxWidth * 0.38f
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 10.dp, vertical = 8.dp),
+                    modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp, vertical = 8.dp)
                 ) {
                     ClassicCaption(queuePositionText(playback.queueIndex, playback.queue.size))
 
@@ -183,18 +185,13 @@ internal fun WheelNowPlaying(
                                 contentScale = ContentScale.Crop,
                                 fallback = {
                                     Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .background(Color(0xFFD5D5D5)),
+                                        modifier =
+                                            Modifier.fillMaxSize().background(Color(0xFFD5D5D5))
                                     )
                                 },
                             )
                         }
-                        Column(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(start = 10.dp),
-                        ) {
+                        Column(modifier = Modifier.weight(1f).padding(start = 10.dp)) {
                             BasicText(
                                 song.title,
                                 style = ClassicTypography.title.copy(color = Color.Black),
@@ -256,8 +253,7 @@ internal fun progressFraction(positionMs: Long, durationMs: Long): Float {
 }
 
 internal fun scrubStepMs(durationMs: Long): Long =
-    if (durationMs <= 0L) 0L
-    else maxOf(MIN_SCRUB_STEP_MS, durationMs / SCRUB_PERCENT_DENOMINATOR)
+    if (durationMs <= 0L) 0L else maxOf(MIN_SCRUB_STEP_MS, durationMs / SCRUB_PERCENT_DENOMINATOR)
 
 private fun twoDigits(value: Long): String = value.toString().padStart(2, '0')
 
@@ -270,12 +266,10 @@ private fun moveScrubTarget(
     val base = basePositionMs.coerceIn(0L, durationMs)
     return if (delta > 0) {
         val clicks = delta.toLong()
-        if (clicks > (durationMs - base) / stepMs) durationMs
-        else base + clicks * stepMs
+        if (clicks > (durationMs - base) / stepMs) durationMs else base + clicks * stepMs
     } else {
         val clicks = -delta.toLong()
-        if (clicks > base / stepMs) 0L
-        else base - clicks * stepMs
+        if (clicks > base / stepMs) 0L else base - clicks * stepMs
     }
 }
 
@@ -285,10 +279,11 @@ private fun queuePositionText(queueIndex: Int, queueSize: Int): String {
 }
 
 private fun hasReachedSeekTarget(enginePositionMs: Long, targetMs: Long): Boolean {
-    val distance = if (enginePositionMs >= targetMs) {
-        enginePositionMs - targetMs
-    } else {
-        targetMs - enginePositionMs
-    }
+    val distance =
+        if (enginePositionMs >= targetMs) {
+            enginePositionMs - targetMs
+        } else {
+            targetMs - enginePositionMs
+        }
     return distance <= SEEK_HANDOVER_TOLERANCE_MS
 }
