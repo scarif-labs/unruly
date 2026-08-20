@@ -53,15 +53,25 @@ plugins {
 }
 
 spotless {
+    // Shellac's own code: the host and the skin layer. Carries the Shellac header in NOTICE.
     kotlin {
-        target "*/src/**/*.kt"
+        target "app/src/**/*.kt", "skin/src/**/*.kt"
         ktfmt().kotlinlangStyle()
         licenseHeaderFile("NOTICE")
+    }
+
+    // musikr is Auxio's indexer, vendored unmodified, and keeps Auxio's copyright header
+    // (musikr/NOTICE). Formatting is still enforced, but never the attribution - rewriting
+    // upstream headers to say "Shellac Project" would misattribute someone else's GPL code.
+    format("musikrKotlin", com.diffplug.gradle.spotless.KotlinExtension) {
+        target "musikr/src/**/*.kt"
+        ktfmt().kotlinlangStyle()
+        licenseHeaderFile("musikr/NOTICE")
     }
 
     cpp {
         target("*/src/**/cpp/*.cpp", "*/src/**/cpp/*.h", "*/src/**/cpp/*.hpp")
         eclipseCdt().configFile("eclipse-cdt.xml")
-        licenseHeaderFile("NOTICE")
+        licenseHeaderFile("musikr/NOTICE")
     }
 }
