@@ -6,7 +6,7 @@ release/
 
 # Studio
 .idea/
-.DS_Store/
+.DS_Store
 captures/
 
 # Other
@@ -16,3 +16,9 @@ captures/
 .kotlin
 .aider*
 .env
+
+# Shellac
+*.apk
+*.aab
+.claude/settings.local.json
+docs/agents/logs/
