@@ -1,4 +1,4 @@
-Build a second complete skin for the Shellac Android project, styled after the Zune HD music
+Build a second complete skin for the Unruly Android project, styled after the Zune HD music
 player (buildspec Phase 6.1 "second skin").
 
 Working directory is the repo root.
@@ -15,25 +15,25 @@ checksum in those fixtures.
 It is the proof that the skin contract is genuinely general. The existing skin is a
 wheel-driven hierarchy modelled on a click-wheel device. This one must share **nothing** with
 it: different navigation model, different input model, different visual language. If you find
-yourself wanting to import anything from `org.shellac.skin.wheel`, stop — that is the signal
+yourself wanting to import anything from `org.unruly.skin.wheel`, stop — that is the signal
 the contract is being bypassed.
 
 ## Where the code goes
 
-New package: `skin/src/main/java/org/shellac/skin/zune/`
+New package: `skin/src/main/java/org/unruly/skin/zune/`
 
 Suggested split (adjust if you have a better one):
 - `ZuneSkin.kt`       — the `AppSkin` implementation and navigation
 - `ZuneTheme.kt`      — palette, typography, shared visual primitives
 - `ZuneScreens.kt`    — the individual screens
 
-Do NOT modify anything outside that package. Not `org.shellac.skin.wheel`, not the contract,
+Do NOT modify anything outside that package. Not `org.unruly.skin.wheel`, not the contract,
 not `support/`, not any `build.gradle`. Registration in the host is handled separately — just
 export a `class ZuneSkin : AppSkin`.
 
 ## Hard constraints
 
-1. **Only `org.shellac.skin` types plus Compose/Kotlin/Paging.** Do NOT import
+1. **Only `org.unruly.skin` types plus Compose/Kotlin/Paging.** Do NOT import
    `org.oxycblt.auxio` or `org.oxycblt.musikr`. Do not read `app/` or `musikr/` at all.
 2. `collectAsStateWithLifecycle` is NOT available. Use `collectAsState()`.
 3. Pass function-typed arguments **by name** when a function takes more than one — a trailing
@@ -46,11 +46,11 @@ Pinned: Kotlin 2.3.10, Compose BOM 2026.06.01, paging 3.5.0, minSdk 24, Java 21.
 
 ## Read these first and use their REAL signatures
 
-- `skin/src/main/java/org/shellac/skin/AppSkin.kt` — `AppSkin`, `SkinSession`
-- `skin/src/main/java/org/shellac/skin/SkinLibrary.kt`
-- `skin/src/main/java/org/shellac/skin/SkinCommands.kt`
-- `skin/src/main/java/org/shellac/skin/SkinModels.kt`
-- `skin/src/main/java/org/shellac/skin/support/` — all of it; reuse these rather than
+- `skin/src/main/java/org/unruly/skin/AppSkin.kt` — `AppSkin`, `SkinSession`
+- `skin/src/main/java/org/unruly/skin/SkinLibrary.kt`
+- `skin/src/main/java/org/unruly/skin/SkinCommands.kt`
+- `skin/src/main/java/org/unruly/skin/SkinModels.kt`
+- `skin/src/main/java/org/unruly/skin/support/` — all of it; reuse these rather than
   reimplementing (`SkinTheme`, `SkinAlbumArt`, `SkinBackStack`, `SkinStates`,
   `PositionTicker`)
 
@@ -129,7 +129,7 @@ You CANNOT run Gradle in this sandbox — it fails with
 
 Re-read your files and check every symbol against its declaration: exact parameter names,
 order, nullability, and whether something returns `Flow`, `StateFlow`, `PagingData`, or a
-plain `List`. Confirm the isolation gate: `grep -rn "org.oxycblt" skin/src/main/java/org/shellac/skin/zune/`
+plain `List`. Confirm the isolation gate: `grep -rn "org.oxycblt" skin/src/main/java/org/unruly/skin/zune/`
 must return nothing.
 
 ## Report to stdout

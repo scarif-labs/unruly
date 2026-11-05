@@ -10,14 +10,14 @@ plugins {
 }
 
 android {
-    // Shellac implicitly depends on the native modules, explicitly specify it
+    // Unruly implicitly depends on the native modules, explicitly specify it
     // here so the libraries are still stripped.
     ndkVersion ndk_version
-    namespace "com.merklegroot.shellac"
+    namespace "com.merklegroot.unruly"
 
     defaultConfig {
-        // Published package identity for the Shellac app.
-        applicationId "com.merklegroot.shellac"
+        // Published package identity for the Unruly app.
+        applicationId "com.merklegroot.unruly"
         versionName "4.1.5"
         versionCode 75
 
@@ -69,6 +69,12 @@ android {
         }
     }
 
+    sourceSets {
+        // The web-skin bridge's JS half lives with the skin-authoring kit, so the browser preview
+        // and the app run the very same file. Only that one directory is packaged.
+        main.assets.srcDirs += ['../skills/create-unruly-skin/runtime']
+    }
+
     buildFeatures {
         viewBinding true
         buildConfig true
@@ -93,11 +99,11 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-guava:$kotlin_coroutines_version"
 
-    // --- SHELLAC ---
-    // The skin contract. :skin does NOT depend back on :app, so skins cannot see Shellac types.
+    // --- UNRULY ---
+    // The skin contract. :skin does NOT depend back on :app, so skins cannot see Unruly types.
     implementation project(":skin")
 
-    // --- SHELLAC: COMPOSE SKIN LAYER ---
+    // --- UNRULY: COMPOSE SKIN LAYER ---
     // The BOM pins every androidx.compose.* version, so those are declared without one.
     implementation platform("androidx.compose:compose-bom:$compose_bom_version")
     implementation "androidx.compose.ui:ui"
@@ -106,6 +112,8 @@ dependencies {
     implementation "androidx.compose.material3:material3"
     implementation "androidx.compose.runtime:runtime"
     implementation "androidx.activity:activity-compose:$activity_compose_version"
+    // Web skins (user-loadable): WebViewAssetLoader, origin-scoped message listener and start script.
+    implementation "androidx.webkit:webkit:1.14.0"
     // collectAsStateWithLifecycle - required for lifecycle-aware StateFlow collection
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_compose_version"
     // Pinned explicitly: something (activity-compose / material3) pulls 2.11.0 transitively,

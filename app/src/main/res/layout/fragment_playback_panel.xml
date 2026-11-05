@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.merklegroot.shellac.ui.ShellacToolbar
+    <com.merklegroot.unruly.ui.UnrulyToolbar
         android:id="@+id/playback_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         tools:subtitle="@string/lbl_all_songs" />
 
     <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/shellac_compose"
+        android:id="@+id/unruly_compose"
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:background="?attr/colorSurface"
@@ -33,7 +33,7 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/playback_pager"
-        style="@style/Widget.Shellac.Image.Full"
+        style="@style/Widget.Unruly.Image.Full"
         android:layout_marginVertical="@dimen/spacing_small"
         app:enablePlaybackIndicator="false"
         app:enableSelectionBadge="false"
@@ -59,7 +59,7 @@
 
         <TextView
             android:id="@+id/playback_song"
-            style="@style/Widget.Shellac.TextView.Primary.Compact"
+            style="@style/Widget.Unruly.TextView.Primary.Compact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fallbackLineSpacing="false"
@@ -67,14 +67,14 @@
 
         <TextView
             android:id="@+id/playback_artist"
-            style="@style/Widget.Shellac.TextView.Secondary.Compact"
+            style="@style/Widget.Unruly.TextView.Secondary.Compact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fallbackLineSpacing="false"
             tools:text="Artist Name" />
 
     </LinearLayout>
-    <com.merklegroot.shellac.playback.ui.ForcedLTRFrameLayout
+    <com.merklegroot.unruly.playback.ui.ForcedLTRFrameLayout
         android:id="@+id/playback_controls_wrapper"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -86,32 +86,32 @@
         app:layout_constraintStart_toEndOf="@+id/playback_pager"
         app:layout_constraintTop_toBottomOf="@+id/playback_info_container">
 
-        <com.merklegroot.shellac.playback.ui.button.ScaledPlaybackButtonGroup
+        <com.merklegroot.unruly.playback.ui.button.ScaledPlaybackButtonGroup
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:spacing="@dimen/spacing_tiny">
 
-            <com.merklegroot.shellac.playback.ui.button.ScaledPlaybackButton
+            <com.merklegroot.unruly.playback.ui.button.ScaledPlaybackButton
                 android:id="@+id/playback_repeat"
-                style="@style/Widget.Shellac.Button.Playback.Toggle"
+                style="@style/Widget.Unruly.Button.Playback.Toggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/desc_change_repeat"
                 app:icon="@drawable/ic_repeat_off_24"
                 app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Medium" />
 
-            <com.merklegroot.shellac.playback.ui.button.ScaledPlaybackButton
+            <com.merklegroot.unruly.playback.ui.button.ScaledPlaybackButton
                 android:id="@+id/playback_skip_prev"
-                style="@style/Widget.Shellac.Button.Playback.Skip"
+                style="@style/Widget.Unruly.Button.Playback.Skip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/desc_skip_prev"
                 app:icon="@drawable/ic_skip_prev_24"
                 app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Large.Narrow" />
 
-            <com.merklegroot.shellac.playback.ui.button.ScaledPlaybackButton
+            <com.merklegroot.unruly.playback.ui.button.ScaledPlaybackButton
                 android:id="@+id/playback_play_pause"
-                style="@style/Widget.Shellac.Button.Playback.PlayPause"
+                style="@style/Widget.Unruly.Button.Playback.PlayPause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/desc_play_pause"
@@ -119,18 +119,18 @@
                 app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Large"
                 tools:icon="@drawable/ic_play_24" />
 
-            <com.merklegroot.shellac.playback.ui.button.ScaledPlaybackButton
+            <com.merklegroot.unruly.playback.ui.button.ScaledPlaybackButton
                 android:id="@+id/playback_skip_next"
-                style="@style/Widget.Shellac.Button.Playback.Skip"
+                style="@style/Widget.Unruly.Button.Playback.Skip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/desc_skip_next"
                 app:icon="@drawable/ic_skip_next_24"
                 app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Large.Narrow" />
 
-            <com.merklegroot.shellac.playback.ui.button.ScaledPlaybackButton
+            <com.merklegroot.unruly.playback.ui.button.ScaledPlaybackButton
                 android:id="@+id/playback_shuffle"
-                style="@style/Widget.Shellac.Button.Playback.Toggle"
+                style="@style/Widget.Unruly.Button.Playback.Toggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/desc_shuffle"
@@ -138,8 +138,8 @@
                 app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Medium"
                 app:tint="@color/sel_activatable_icon" />
 
-        </com.merklegroot.shellac.playback.ui.button.ScaledPlaybackButtonGroup>
+        </com.merklegroot.unruly.playback.ui.button.ScaledPlaybackButtonGroup>
 
-    </com.merklegroot.shellac.playback.ui.ForcedLTRFrameLayout>
+    </com.merklegroot.unruly.playback.ui.ForcedLTRFrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

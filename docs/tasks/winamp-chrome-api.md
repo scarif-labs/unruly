@@ -4,14 +4,14 @@
 classic late-90s skinnable desktop media player. Two agents are working in parallel:
 
 - **codex** owns `RetroChrome.kt` (the primitives) **and** `OnboardingActivity.kt`
-- **cline** owns `ShellacSettingsActivity.kt`
+- **cline** owns `UnrulySettingsActivity.kt`
 
 They must not edit each other's files. This document is the contract between them: codex
 **implements** exactly these signatures, cline **calls** them and assumes they exist.
 Neither agent may change a signature listed here.
 
-Package for everything below: `com.merklegroot.shellac.shellac.host`
-File for the primitives: `app/src/main/java/com/merklegroot/shellac/shellac/host/RetroChrome.kt`
+Package for everything below: `com.merklegroot.unruly.unruly.host`
+File for the primitives: `app/src/main/java/com/merklegroot/unruly/unruly/host/RetroChrome.kt`
 (replace its current contents entirely; the object is renamed `Retro` -> `Winamp`).
 
 ---
@@ -134,7 +134,7 @@ fun WinampRadio(selected: Boolean, modifier: Modifier = Modifier)
 fun WinampSectionHeader(title: String, modifier: Modifier = Modifier)
 ```
 
-**Everything above must be public** (no `private`/`internal`) so `ShellacSettingsActivity`
+**Everything above must be public** (no `private`/`internal`) so `UnrulySettingsActivity`
 can call it from the same package.
 
 ## Rules for both agents
@@ -146,8 +146,8 @@ can call it from the same package.
    and `BasicText` where practical; `androidx.compose.material3.Text` is fine.
 3. No new Gradle dependencies. No new resource files. No image assets - everything is drawn
    with `Canvas`, `background`, `border` and `Brush.verticalGradient`.
-4. Keep `org.shellac.skin.support.ShellacLogo` / `ShellacMark` available for the brand mark;
+4. Keep `org.unruly.skin.support.UnrulyLogo` / `UnrulyMark` available for the brand mark;
    the small four-colour mark stays as the app's badge.
 5. Comments explain *why* a decision was made, not what the line does. No comment narrating
    the restyle itself and no "changed X to Y" notes.
-6. The build must pass `./gradlew :app:assembleDebug` from `/Users/0x1379/Work/shellac/repo`.
+6. The build must pass `./gradlew :app:assembleDebug` from `/Users/0x1379/Work/unruly/repo`.

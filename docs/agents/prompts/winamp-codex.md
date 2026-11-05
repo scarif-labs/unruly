@@ -1,17 +1,17 @@
-You are restyling the Shellac Android app's first-run setup flow to resemble a classic
+You are restyling the Unruly Android app's first-run setup flow to resemble a classic
 late-1990s skinnable desktop media player (Winamp-era). Kotlin + Jetpack Compose.
 
-Working directory: /Users/0x1379/Work/shellac/repo
+Working directory: /Users/0x1379/Work/unruly/repo
 
 READ FIRST, IN FULL:
-  /Users/0x1379/Work/shellac/docs/tasks/winamp-chrome-api.md
-That file is a binding contract. Another agent is editing ShellacSettingsActivity.kt in
+  /Users/0x1379/Work/unruly/docs/tasks/winamp-chrome-api.md
+That file is a binding contract. Another agent is editing UnrulySettingsActivity.kt in
 parallel against the exact signatures listed there. Implement them verbatim - same names,
 same parameter names, same order, same defaults, all public.
 
 YOU OWN EXACTLY TWO FILES. Do not touch any others:
-  app/src/main/java/com/merklegroot/shellac/shellac/host/RetroChrome.kt
-  app/src/main/java/com/merklegroot/shellac/shellac/host/OnboardingActivity.kt
+  app/src/main/java/com/merklegroot/unruly/unruly/host/RetroChrome.kt
+  app/src/main/java/com/merklegroot/unruly/unruly/host/OnboardingActivity.kt
 
 TASK 1 - RetroChrome.kt
 Replace its entire contents with the Winamp chrome primitives from the contract. Rename the
@@ -34,14 +34,14 @@ notification-permission launcher, `isNeeded`, `markComplete`, `commit`, and the
 delete the file VinylRecord.kt is NOT yours - just stop calling it; leave the file alone.
 
 Screen 1, WelcomeStep - "boot-up", the classic player face as the welcome:
-  A WinampWindow titled "SHELLAC" with menuItems File/Play/Options/View. Inside, an
+  A WinampWindow titled "UNRULY" with menuItems File/Play/Options/View. Inside, an
   LcdPanel containing: a large phosphor time readout "21:26"; small pale "KBPS 33  KHZ 22"
   labels and a boxed "MONO" tag to its right; a row of ~14 green visualiser bars of varied
   heights under those labels; and below, "PLAY" at the left with a scrolling-marquee-style
   title "★ NOW READING YOUR LIBRARY ★" clipped at the right edge. Under the LCD, a recessed
   seek trough with a raised bevelled thumb about a third of the way along. Under that, a row
   of five bevelled transport buttons with glyphs ◀◀ ▶ ❚❚ ■ ▶▶, and the four-colour
-  ShellacMark at the right end of that row. Below the window, centred: the `shellac`
+  UnrulyMark at the right end of that row. Below the window, centred: the `unruly`
   wordmark in phosphor green, then "YOUR FILES · YOUR STEREO" in letter-spaced pale caps,
   then a wide WinampButton "POWER ON" with a ▶ glyph that calls the existing onContinue.
   The visualiser bars must animate - drive them from a `rememberInfiniteTransition` so the
@@ -75,5 +75,5 @@ CONSTRAINTS
 - Comments explain why, never what. Do not write comments about this restyle or about what
   the code used to be.
 - You MUST leave the build green. Run `./gradlew :app:assembleDebug` from
-  /Users/0x1379/Work/shellac/repo and fix every compile error before you finish. Do not
+  /Users/0x1379/Work/unruly/repo and fix every compile error before you finish. Do not
   report success without a passing build.

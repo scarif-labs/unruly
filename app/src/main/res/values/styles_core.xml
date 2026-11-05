@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Master parent theme -->
-    <style name="Theme.Shellac" parent="Theme.Material3Expressive.DynamicColors.DayNight" />
+    <style name="Theme.Unruly" parent="Theme.Material3Expressive.DynamicColors.DayNight" />
     <!-- Adds nicer selector attributes not supported on lollipop -->
-    <style name="Theme.Shellac.V23" parent="Theme.Shellac" />
+    <style name="Theme.Unruly.V23" parent="Theme.Unruly" />
     <!-- Handles edge-to-edge on other styles variants -->
-    <style name="Theme.Shellac.V27" parent="Theme.Shellac.V23">
+    <style name="Theme.Unruly.V27" parent="Theme.Unruly.V23">
         <item name="android:statusBarColor">@color/chrome_translucent</item>
         <item name="android:navigationBarColor">@color/chrome_translucent</item>
     </style>
     <!-- Adds fully transparent system bars -->
-    <style name="Theme.Shellac.V29" parent="Theme.Shellac.V27" />
+    <style name="Theme.Unruly.V29" parent="Theme.Unruly.V27" />
     <!-- Adds an animated splash screen. -->
-    <style name="Theme.Shellac.V31" parent="Theme.Shellac.V29" />
+    <style name="Theme.Unruly.V31" parent="Theme.Unruly.V29" />
 
     <!-- Base theme -->
-    <style name="Theme.Shellac.Base" parent="Theme.Shellac.V31">
+    <style name="Theme.Unruly.Base" parent="Theme.Unruly.V31">
 
         <!-- Material configuration -->
 <!--        <item name="colorOutline">@color/overlay_stroke</item>-->
@@ -29,17 +29,17 @@
         </item>
         <item name="motionSpringSlowSpatial">@style/Motion.Material3.Spring.Standard.Slow.Spatial</item>
         <item name="motionSpringSlowEffects">@style/Motion.Material3.Spring.Standard.Slow.Effects</item>
-        <item name="appBarLayoutStyle">@style/Widget.Shellac.AppBarLayout</item>
-        <item name="toolbarStyle">@style/Widget.Shellac.Toolbar</item>
-        <item name="tabStyle">@style/Widget.Shellac.TabLayout</item>
-        <item name="tabSecondaryStyle">@style/Widget.Shellac.TabLayout.Secondary</item>
-        <item name="materialButtonStyle">@style/Widget.Shellac.Button</item>
-        <item name="materialButtonTonalStyle">@style/Widget.Shellac.Button.TonalButton</item>
-        <item name="materialButtonOutlinedStyle">@style/Widget.Shellac.Button.OutlinedButton</item>
-        <item name="materialButtonElevatedStyle">@style/Widget.Shellac.Button.ElevatedButton</item>
-        <item name="borderlessButtonStyle">@style/Widget.Shellac.Button.TextButton</item>
-        <item name="snackbarButtonStyle">@style/Widget.Shellac.Button.TextButton.Snackbar</item>
-        <item name="materialIconButtonStyle">@style/Widget.Shellac.Button.Icon.Base</item>
+        <item name="appBarLayoutStyle">@style/Widget.Unruly.AppBarLayout</item>
+        <item name="toolbarStyle">@style/Widget.Unruly.Toolbar</item>
+        <item name="tabStyle">@style/Widget.Unruly.TabLayout</item>
+        <item name="tabSecondaryStyle">@style/Widget.Unruly.TabLayout.Secondary</item>
+        <item name="materialButtonStyle">@style/Widget.Unruly.Button</item>
+        <item name="materialButtonTonalStyle">@style/Widget.Unruly.Button.TonalButton</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.Unruly.Button.OutlinedButton</item>
+        <item name="materialButtonElevatedStyle">@style/Widget.Unruly.Button.ElevatedButton</item>
+        <item name="borderlessButtonStyle">@style/Widget.Unruly.Button.TextButton</item>
+        <item name="snackbarButtonStyle">@style/Widget.Unruly.Button.TextButton.Snackbar</item>
+        <item name="materialIconButtonStyle">@style/Widget.Unruly.Button.Icon.Base</item>
         <item name="materialIconButtonOutlinedStyle">
             @style/Widget.Material3Expressive.Button.IconButton.Outlined
         </item>
@@ -49,63 +49,63 @@
         <item name="materialIconButtonFilledTonalStyle">
             @style/Widget.Material3Expressive.Button.IconButton.Tonal
         </item>
-        <item name="materialSplitButtonStyle">@style/Widget.Shellac.SplitButton</item>
+        <item name="materialSplitButtonStyle">@style/Widget.Unruly.SplitButton</item>
         <item name="materialSplitButtonLeadingFilledStyle">
-            @style/Widget.Shellac.SplitButton.LeadingButton.Filled
+            @style/Widget.Unruly.SplitButton.LeadingButton.Filled
         </item>
         <item name="materialSplitButtonLeadingFilledTonalStyle">
-            @style/Widget.Shellac.SplitButton.LeadingButton.Filled.Tonal
+            @style/Widget.Unruly.SplitButton.LeadingButton.Filled.Tonal
         </item>
         <item name="materialSplitButtonIconFilledStyle">
-            @style/Widget.Shellac.SplitButton.IconButton.Filled
+            @style/Widget.Unruly.SplitButton.IconButton.Filled
         </item>
         <item name="materialSplitButtonIconFilledTonalStyle">
-            @style/Widget.Shellac.SplitButton.IconButton.Filled.Tonal
+            @style/Widget.Unruly.SplitButton.IconButton.Filled.Tonal
         </item>
-        <item name="materialAlertDialogTheme">@style/Theme.Shellac.Dialog</item>
-        <item name="sliderStyle">@style/Widget.Shellac.Slider</item>
-        <item name="linearProgressIndicatorStyle">@style/Widget.Shellac.LinearProgressIndicator</item>
-        <item name="bottomSheetStyle">@style/Widget.Shellac.BottomSheet</item>
-        <item name="bottomSheetDialogTheme">@style/Widget.Shellac.BottomSheet.Dialog</item>
-        <item name="bottomSheetDragHandleStyle">@style/Widget.Shellac.BottomSheet.Handle</item>
+        <item name="materialAlertDialogTheme">@style/Theme.Unruly.Dialog</item>
+        <item name="sliderStyle">@style/Widget.Unruly.Slider</item>
+        <item name="linearProgressIndicatorStyle">@style/Widget.Unruly.LinearProgressIndicator</item>
+        <item name="bottomSheetStyle">@style/Widget.Unruly.BottomSheet</item>
+        <item name="bottomSheetDialogTheme">@style/Widget.Unruly.BottomSheet.Dialog</item>
+        <item name="bottomSheetDragHandleStyle">@style/Widget.Unruly.BottomSheet.Handle</item>
 
         <!-- typography -->
         <!-- some of it is non-standard because the default material typography isnt actually
         using emphasized styles when they are supposed to, and it just looks bad. -->
-        <item name="textAppearanceDisplayLarge">@style/TextAppearance.Shellac.DisplayLarge</item>
-        <item name="textAppearanceDisplayMedium">@style/TextAppearance.Shellac.DisplayMedium</item>
-        <item name="textAppearanceDisplaySmall">@style/TextAppearance.Shellac.DisplaySmall</item>
-        <item name="textAppearanceDisplayLargeEmphasized">@style/TextAppearance.Shellac.DisplayLarge.Emphasized</item>
-        <item name="textAppearanceDisplayMediumEmphasized">@style/TextAppearance.Shellac.DisplayMedium.Emphasized</item>
-        <item name="textAppearanceDisplaySmallEmphasized">@style/TextAppearance.Shellac.DisplaySmall.Emphasized</item>
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.Unruly.DisplayLarge</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.Unruly.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.Unruly.DisplaySmall</item>
+        <item name="textAppearanceDisplayLargeEmphasized">@style/TextAppearance.Unruly.DisplayLarge.Emphasized</item>
+        <item name="textAppearanceDisplayMediumEmphasized">@style/TextAppearance.Unruly.DisplayMedium.Emphasized</item>
+        <item name="textAppearanceDisplaySmallEmphasized">@style/TextAppearance.Unruly.DisplaySmall.Emphasized</item>
 
-        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Shellac.HeadlineLarge</item>
-        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.Shellac.HeadlineMedium</item>
-        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Shellac.HeadlineSmall</item>
-        <item name="textAppearanceHeadlineLargeEmphasized">@style/TextAppearance.Shellac.HeadlineLarge.Emphasized</item>
-        <item name="textAppearanceHeadlineMediumEmphasized">@style/TextAppearance.Shellac.HeadlineMedium.Emphasized</item>
-        <item name="textAppearanceHeadlineSmallEmphasized">@style/TextAppearance.Shellac.HeadlineSmall.Emphasized</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Unruly.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.Unruly.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Unruly.HeadlineSmall</item>
+        <item name="textAppearanceHeadlineLargeEmphasized">@style/TextAppearance.Unruly.HeadlineLarge.Emphasized</item>
+        <item name="textAppearanceHeadlineMediumEmphasized">@style/TextAppearance.Unruly.HeadlineMedium.Emphasized</item>
+        <item name="textAppearanceHeadlineSmallEmphasized">@style/TextAppearance.Unruly.HeadlineSmall.Emphasized</item>
 
-        <item name="textAppearanceTitleLarge">@style/TextAppearance.Shellac.TitleLarge</item>
-        <item name="textAppearanceTitleMedium">@style/TextAppearance.Shellac.TitleMedium</item>
-        <item name="textAppearanceTitleSmall">@style/TextAppearance.Shellac.TitleSmall</item>
-        <item name="textAppearanceTitleLargeEmphasized">@style/TextAppearance.Shellac.TitleLarge.Emphasized</item>
-        <item name="textAppearanceTitleMediumEmphasized">@style/TextAppearance.Shellac.TitleMedium.Emphasized</item>
-        <item name="textAppearanceTitleSmallEmphasized">@style/TextAppearance.Shellac.TitleSmall.Emphasized</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.Unruly.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Unruly.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.Unruly.TitleSmall</item>
+        <item name="textAppearanceTitleLargeEmphasized">@style/TextAppearance.Unruly.TitleLarge.Emphasized</item>
+        <item name="textAppearanceTitleMediumEmphasized">@style/TextAppearance.Unruly.TitleMedium.Emphasized</item>
+        <item name="textAppearanceTitleSmallEmphasized">@style/TextAppearance.Unruly.TitleSmall.Emphasized</item>
 
-        <item name="textAppearanceLabelLarge">@style/TextAppearance.Shellac.LabelLarge</item>
-        <item name="textAppearanceLabelMedium">@style/TextAppearance.Shellac.LabelMedium</item>
-        <item name="textAppearanceLabelSmall">@style/TextAppearance.Shellac.LabelSmall</item>
-        <item name="textAppearanceLabelLargeEmphasized">@style/TextAppearance.Shellac.LabelLarge.Emphasized</item>
-        <item name="textAppearanceLabelMediumEmphasized">@style/TextAppearance.Shellac.LabelMedium.Emphasized</item>
-        <item name="textAppearanceLabelSmallEmphasized">@style/TextAppearance.Shellac.LabelSmall.Emphasized</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.Unruly.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.Unruly.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.Unruly.LabelSmall</item>
+        <item name="textAppearanceLabelLargeEmphasized">@style/TextAppearance.Unruly.LabelLarge.Emphasized</item>
+        <item name="textAppearanceLabelMediumEmphasized">@style/TextAppearance.Unruly.LabelMedium.Emphasized</item>
+        <item name="textAppearanceLabelSmallEmphasized">@style/TextAppearance.Unruly.LabelSmall.Emphasized</item>
 
-        <item name="textAppearanceBodyLarge">@style/TextAppearance.Shellac.BodyLarge</item>
-        <item name="textAppearanceBodyMedium">@style/TextAppearance.Shellac.BodyMedium</item>
-        <item name="textAppearanceBodySmall">@style/TextAppearance.Shellac.BodySmall</item>
-        <item name="textAppearanceBodyLargeEmphasized">@style/TextAppearance.Shellac.BodyLarge.Emphasized</item>
-        <item name="textAppearanceBodyMediumEmphasized">@style/TextAppearance.Shellac.BodyMedium.Emphasized</item>
-        <item name="textAppearanceBodySmallEmphasized">@style/TextAppearance.Shellac.BodySmall.Emphasized</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.Unruly.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Unruly.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.Unruly.BodySmall</item>
+        <item name="textAppearanceBodyLargeEmphasized">@style/TextAppearance.Unruly.BodyLarge.Emphasized</item>
+        <item name="textAppearanceBodyMediumEmphasized">@style/TextAppearance.Unruly.BodyMedium.Emphasized</item>
+        <item name="textAppearanceBodySmallEmphasized">@style/TextAppearance.Unruly.BodySmall.Emphasized</item>
 
         <!-- Fix dumb default android behavior -->
         <item name="android:scrollbars">none</item>
@@ -119,21 +119,21 @@
         <item name="android:textColorHighlight">@color/overlay_text_highlight</item>
         <item name="android:textColorHighlightInverse">@color/overlay_text_highlight_inverse</item>
 
-        <item name="preferenceTheme">@style/PreferenceTheme.Shellac</item>
-        <item name="preferenceStyle">@style/Preference.Shellac</item>
-        <item name="preferenceCategoryStyle">@style/Preference.Shellac.PreferenceCategory</item>
-        <item name="dialogPreferenceStyle">@style/Preference.Shellac.DialogPreference</item>
-        <item name="switchPreferenceCompatStyle">@style/Preference.Shellac.SwitchPreferenceCompat
+        <item name="preferenceTheme">@style/PreferenceTheme.Unruly</item>
+        <item name="preferenceStyle">@style/Preference.Unruly</item>
+        <item name="preferenceCategoryStyle">@style/Preference.Unruly.PreferenceCategory</item>
+        <item name="dialogPreferenceStyle">@style/Preference.Unruly.DialogPreference</item>
+        <item name="switchPreferenceCompatStyle">@style/Preference.Unruly.SwitchPreferenceCompat
         </item>
-        <item name="materialButtonGroupStyle">@style/Widget.Shellac.MaterialButtonGroup</item>
+        <item name="materialButtonGroupStyle">@style/Widget.Unruly.MaterialButtonGroup</item>
     </style>
 
     <!-- Make sure blue is the default style instead of material purple -->
-    <style name="Theme.Shellac.App" parent="@style/Theme.Shellac.Blue" />
+    <style name="Theme.Unruly.App" parent="@style/Theme.Unruly.Blue" />
 
     <!--
     Theming widgets is technically possible below Android 12, but I *really* don't care enough
     to bother with it.
     -->
-    <style name="Theme.Shellac.Widget" parent="@style/Theme.Shellac.Blue" />
+    <style name="Theme.Unruly.Widget" parent="@style/Theme.Unruly.Blue" />
 </resources>

@@ -7,9 +7,9 @@
     android:padding="@dimen/spacing_tiny"
     android:theme="@style/ThemeOverlay.Accent">
 
-    <com.merklegroot.shellac.ui.RippleFixMaterialButton
+    <com.merklegroot.unruly.ui.RippleFixMaterialButton
         android:id="@+id/accent"
-        style="@style/Widget.Shellac.Button.Icon.Small"
+        style="@style/Widget.Unruly.Button.Icon.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

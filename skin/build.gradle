@@ -1,4 +1,4 @@
-// Shellac skin contract.
+// Unruly skin contract.
 //
 // ARCHITECTURAL BOUNDARY: this module MUST NOT depend on ':app' or ':musikr'.
 // That is what makes buildspec Phase 3's grep gate structurally true rather than a
@@ -16,7 +16,7 @@ plugins {
 }
 
 android {
-    namespace 'org.shellac.skin'
+    namespace 'org.unruly.skin'
     compileSdk target_sdk
 
     defaultConfig {

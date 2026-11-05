@@ -1,104 +1,99 @@
 <p align="center"><img src="docs/logo.png" width="150"></p>
-<h1 align="center"><b>Shellac</b></h1>
+<h1 align="center"><b>Unruly</b></h1>
 <h4 align="center">A music player whose entire interface is a swappable skin.</h4>
 <p align="center">
-    <a href="https://www.gnu.org/licenses/gpl-3.0">
-        <img src="https://img.shields.io/badge/license-GPL%20v3-2B6DBE.svg?style=flat">
-    </a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/app-GPL%20v3-2B6DBE.svg?style=flat"></a>
+    <a href="skills/create-unruly-skin/LICENSE"><img src="https://img.shields.io/badge/skin%20kit-MIT-3DA639.svg?style=flat"></a>
     <img alt="Minimum SDK Version" src="https://img.shields.io/badge/API-24%2B-1450A8?style=flat">
 </p>
-<h4 align="center"><a href="/CHANGELOG.md">Changelog</a> | <a href="/ARCHITECTURE-NOTES.md">Architecture</a> | <a href="/buildspec.md">Buildspec</a></h4>
+<h4 align="center"><a href="CHANGELOG.md">Changelog</a> | <a href="ARCHITECTURE-NOTES.md">Architecture</a> | <a href="buildspec.md">Buildspec</a></h4>
 
 ## About
 
-Shellac is a fork of [Auxio](https://github.com/OxygenCobalt/Auxio) reduced to a headless audio
-engine, with a skin layer on top that owns the entire user interface.
+In Unruly a skin is the whole app: browsing, search, queue, now playing, lyrics, and the way you
+move between them. An iPod click wheel and a Zune pivot don't share a layout, so Unruly doesn't
+make them.
 
-A skin here is not a theme. It is not a colour palette or an icon pack laid over a fixed set of
-screens. A skin defines **every** screen — browsing, search, queue, now-playing — and the
-navigation model that connects them, because the way you move through a music library is part of
-that interface's identity. An iPod-style wheel and a flat scrolling page have nothing useful to
-share, so Shellac does not force them to.
+Built-in skins: **iPod**, **Zune HD**, **PSP XMB**, **iOS 6 Music** and **Winamp 2**. You can
+also load your own.
 
-Two skins ship today:
+Playback and indexing come from [Auxio](https://github.com/OxygenCobalt/Auxio), unchanged.
 
-| Skin | What it is |
+## Make your own skin
+
+A user skin is a web page: HTML, CSS and JS zipped into a `.unruly` file. It talks to the player
+through `window.unruly` and loads from **settings → skin → Load skin**, or by opening the file
+on your phone.
+
+The quickest way to make one is to ask a coding agent. This repo ships an agent skill,
+[`create-unruly-skin`](skills/create-unruly-skin/SKILL.md), that takes a brief like *"make me
+a skin that looks like a Walkman"* to a packed, tested `.unruly` file.
+
+**Claude Code / Codex:** clone this repo and ask. The skill is already linked into
+`.claude/skills/` and `.agents/skills/`. To use it in other projects, copy it:
+
+```sh
+cp -r skills/create-unruly-skin ~/.claude/skills/
+```
+
+**By hand:** the kit works without an agent too.
+
+| | |
 |---|---|
-| **Touch Wheel** | An iPod-style click wheel: a fixed cursor, a rotary gesture, a hierarchical menu, and haptics on each tick. |
-| **Zune** | A flat, typographic interface built around large headings and album art. |
+| [`reference/unruly.d.ts`](skills/create-unruly-skin/reference/unruly.d.ts) | The full skin API |
+| [`template/`](skills/create-unruly-skin/template) | A small working skin to start from |
+| `scripts/preview.mjs` | Run a skin in a desktop browser with a mock player and library |
+| `scripts/shot.mjs` | Phone-sized headless screenshots, with scripted taps |
+| `scripts/pack.mjs` | Validate like the app does and write the `.unruly` file |
+| `scripts/push.mjs` | Install on a USB-connected phone (debug builds) |
 
-Underneath, playback and music indexing are Auxio's, untouched. That was the point of forking
-Auxio rather than starting fresh: the audio path and the tag indexer are the parts that are hard
-to get right, and they are the parts Shellac does not rewrite.
-
-## Architecture
-
-```
-app/      Host: playback control, service, indexer glue, app-native settings.
-          Package com.merklegroot.shellac
-skin/     The skin contract, the support layer, and the shipped skins.
-          Package org.shellac.skin — no dependency on :app or :musikr
-musikr/   The indexer and all music models, with native taglib under src/main/cpp
-media/    Patched Media3 fork (submodule), plus a nested ffmpeg decoder
-```
-
-The engine is **read-only** to skins, and the module graph enforces it: `:skin` cannot see
-`com.merklegroot.shellac` or `org.oxycblt.musikr`, so a skin physically cannot reach into
-playback or indexing. When a skin needs something the engine does not expose, the fix is to
-extend the contract in [`AppSkin.kt`](skin/src/main/java/org/shellac/skin/AppSkin.kt) — never to
-edit the engine.
-
-A skin is handed a `SkinSession` — playback state, the library, a command surface, lyrics, and a
-way to open app-native settings — and returns a composable. That is its whole universe.
-[`ARCHITECTURE-NOTES.md`](ARCHITECTURE-NOTES.md) documents the engine surface it draws from,
-every symbol cited to a source line.
-
-If a skin throws while rendering, the host catches it, falls back to a known-good skin, and
-surfaces the failure. Settings are also reachable from a system-level entry point, so a broken
-skin can never lock you out of switching away from it.
+You need Node 18+ and a Chromium-based browser for screenshots. The kit is MIT-licensed, so use
+it however you like.
 
 ## Building
 
-Shellac cannot be built on Windows — the patched Media3 dependency runs unix shell scripts. Use
-Linux, macOS, or WSL2.
+Linux, macOS or WSL2. Windows won't work because the patched Media3 build runs shell scripts.
 
-Requirements:
-
-- **JDK 21** (not 17)
-- Android SDK Platform 36, Build Tools
-- **NDK 28.2.13676358** — that exact version, via SDK Manager → SDK Tools → "Show Package Details"
+- JDK 21
+- Android SDK Platform 36 and Build Tools
+- NDK 28.2.13676358 (exactly this version)
 - `cmake` and `ninja`
 
-```bash
-git clone --recurse-submodules https://github.com/merkle-groot/shellac.git
-cd shellac
+```sh
+git clone --recurse-submodules https://github.com/scarif-labs/unruly.git
+cd unruly
 (cd media && git apply ../patches/media-consumer-proguard-agp9.patch)
 ./gradlew assembleDebug
 ```
 
-There are **no product flavors** — the task is `assembleDebug`, not `assembleFullDebug`. The
-first build compiles native code and takes 10–30 minutes; do not interrupt it.
+The first build compiles native code and takes 10–30 minutes. Re-apply the patch after any
+`git submodule update`; [`patches/README.md`](patches/README.md) explains why.
 
-The patch step is required. See [`patches/README.md`](patches/README.md) for why, and
-re-apply it after any `git submodule update`.
+## Layout
 
-Install on a real device with a real library. Emulators flatter the indexer.
+```
+app/      Host: playback, service, indexer glue, settings, the web-skin runtime
+skin/     The skin contract (AppSkin) and the built-in Compose skins
+musikr/   Indexer and music models, native taglib
+media/    Patched Media3 (submodule)
+skills/   The create-unruly-skin agent skill and authoring kit
+```
 
-## Writing a skin
+Skins can't touch the engine: `:skin` has no dependency on `:app` or `:musikr`. A skin gets a
+`SkinSession` (playback state, library, commands, lyrics) and draws everything else. If a skin
+crashes, Unruly falls back to a working one and tells you. See
+[`ARCHITECTURE-NOTES.md`](ARCHITECTURE-NOTES.md) for details.
 
-1. Add a class in `skin/src/main/java/org/shellac/skin/` implementing `AppSkin`.
-2. Give it a stable `id` — it is persisted as the user's preference and must never change once
-   shipped — and a `displayName` for the settings list.
-3. Register it in `SkinRegistry`.
-
-Read the KDoc on `AppSkin` before you start. It documents the rules the host relies on,
-including the one exception to "hold state in `rememberSaveable`": navigation state that
-`onBackPressed` must act on has to live in a field, because `onBackPressed` is not a composable.
+To add a built-in Compose skin, implement `AppSkin` in `skin/src/main/java/org/unruly/skin/`,
+give it a stable `id` (it's persisted, so never change it), and register it in `SkinRegistry`.
+The KDoc on [`AppSkin`](skin/src/main/java/org/unruly/skin/AppSkin.kt) lists the rules.
 
 ## License
 
-Shellac is licensed under the [GNU General Public License v3](LICENSE), inherited from Auxio.
+The app is [GPL-3.0](LICENSE), inherited from Auxio. The skin kit in
+[`skills/create-unruly-skin/`](skills/create-unruly-skin) is [MIT](skills/create-unruly-skin/LICENSE),
+so skins you make with it are yours to license however you want.
 
-Auxio is copyright the Auxio Project, and remains the source of everything under `musikr/`, the
-`media/` submodule, and the playback engine in `app/`. Shellac is not affiliated with or endorsed
-by the Auxio project — please direct issues with Shellac here, not upstream.
+Auxio is copyright the Auxio Project and remains the source of `musikr/`, the `media/` submodule
+and the playback engine. Unruly isn't affiliated with Auxio; please report Unruly bugs here, not
+upstream.

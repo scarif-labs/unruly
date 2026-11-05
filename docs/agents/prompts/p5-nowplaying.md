@@ -1,4 +1,4 @@
-Build the now-playing view for the Touch Wheel skin in the Shellac Android project
+Build the now-playing view for the Touch Wheel skin in the Unruly Android project
 (buildspec Phase 5f).
 
 Working directory is the repo root.
@@ -10,13 +10,13 @@ or comments.
 
 ## What exists now
 
-`skin/src/main/java/org/shellac/skin/wheel/TouchWheelSkin.kt` has a placeholder
+`skin/src/main/java/org/unruly/skin/wheel/TouchWheelSkin.kt` has a placeholder
 `nowPlayingScreen(session)` that renders title/artist/album/`n of m` as plain text. Replace
 its body. Phase 5e deliberately scoped art, progress and scrubbing out; this is that work.
 
 ## Where the code goes
 
-- New file: `skin/src/main/java/org/shellac/skin/wheel/WheelNowPlaying.kt`
+- New file: `skin/src/main/java/org/unruly/skin/wheel/WheelNowPlaying.kt`
 - Edit `TouchWheelSkin.kt` only to delegate `nowPlayingScreen` to it and to route rotation
   (see "Scrubbing" below).
 
@@ -25,7 +25,7 @@ the contract, anything under `support/`, or any `build.gradle`.
 
 ## Hard constraints
 
-1. **Only `org.shellac.skin` types plus Compose/Kotlin stdlib.** Do NOT import
+1. **Only `org.unruly.skin` types plus Compose/Kotlin stdlib.** Do NOT import
    `org.oxycblt.auxio` or `org.oxycblt.musikr`. Do not read `app/` or `musikr/` at all.
 2. `collectAsStateWithLifecycle` is NOT available. Use `collectAsState()`.
 3. Pass function-typed arguments **by name** when a function takes more than one — a
@@ -35,14 +35,14 @@ Pinned: Kotlin 2.3.10, Compose BOM 2026.06.01, paging 3.5.0, minSdk 24, Java 21.
 
 ## Read these first and use their REAL signatures
 
-- `skin/src/main/java/org/shellac/skin/SkinModels.kt` — `SkinPlaybackState`, `SkinSong`
-- `skin/src/main/java/org/shellac/skin/SkinCommands.kt` — note `seekTo(positionMs: Long)`
-- `skin/src/main/java/org/shellac/skin/support/PositionTicker.kt` —
+- `skin/src/main/java/org/unruly/skin/SkinModels.kt` — `SkinPlaybackState`, `SkinSong`
+- `skin/src/main/java/org/unruly/skin/SkinCommands.kt` — note `seekTo(positionMs: Long)`
+- `skin/src/main/java/org/unruly/skin/support/PositionTicker.kt` —
   `rememberInterpolatedPosition(state: SkinPlaybackState): State<Long>`
-- `skin/src/main/java/org/shellac/skin/support/SkinAlbumArt.kt` —
+- `skin/src/main/java/org/unruly/skin/support/SkinAlbumArt.kt` —
   `SkinAlbumArt(uri, contentDescription, modifier, contentScale, fallback)`
-- `skin/src/main/java/org/shellac/skin/support/SkinTheme.kt`
-- `skin/src/main/java/org/shellac/skin/wheel/TouchWheelSkin.kt`
+- `skin/src/main/java/org/unruly/skin/support/SkinTheme.kt`
+- `skin/src/main/java/org/unruly/skin/wheel/TouchWheelSkin.kt`
 
 ## What to display
 

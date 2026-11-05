@@ -9,19 +9,19 @@
     android:transitionGroup="true"
     tools:context=".settings.AboutFragment">
 
-    <com.merklegroot.shellac.ui.CoordinatorAppBarLayout
+    <com.merklegroot.unruly.ui.CoordinatorAppBarLayout
         android:id="@+id/about_appbar"
-        style="@style/Widget.Shellac.AppBarLayout"
+        style="@style/Widget.Unruly.AppBarLayout"
         app:liftOnScroll="true">
 
-        <com.merklegroot.shellac.ui.ShellacToolbar
+        <com.merklegroot.unruly.ui.UnrulyToolbar
             android:id="@+id/about_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:navigationIcon="@drawable/ic_back_24"
             app:title="@string/lbl_about" />
 
-    </com.merklegroot.shellac.ui.CoordinatorAppBarLayout>
+    </com.merklegroot.unruly.ui.CoordinatorAppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/about_contents"
@@ -46,10 +46,10 @@
                     android:paddingBottom="@dimen/spacing_tiny">
 
                     <ImageView
-                        android:id="@+id/about_shellac_icon"
-                        style="@style/Widget.Shellac.Image.Small"
+                        android:id="@+id/about_unruly_icon"
+                        style="@style/Widget.Unruly.Image.Small"
                         android:layout_marginTop="@dimen/spacing_medium"
-                        android:contentDescription="@string/desc_shellac_icon"
+                        android:contentDescription="@string/desc_unruly_icon"
                         android:src="@mipmap/ic_launcher"
                         app:layout_constraintEnd_toStartOf="@+id/about_app_name"
                         app:layout_constraintHorizontal_chainStyle="packed"
@@ -63,10 +63,10 @@
                         android:layout_marginStart="@dimen/spacing_medium"
                         android:text="@string/info_app_name"
                         android:textAppearance="?attr/textAppearanceTitleLargeEmphasized"
-                        app:layout_constraintBottom_toBottomOf="@+id/about_shellac_icon"
+                        app:layout_constraintBottom_toBottomOf="@+id/about_unruly_icon"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/about_shellac_icon"
-                        app:layout_constraintTop_toTopOf="@+id/about_shellac_icon" />
+                        app:layout_constraintStart_toEndOf="@+id/about_unruly_icon"
+                        app:layout_constraintTop_toTopOf="@+id/about_unruly_icon" />
 
                     <TextView
                         android:id="@+id/about_desc"
@@ -80,7 +80,7 @@
                         android:textAppearance="?attr/textAppearanceBodyLarge"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/about_shellac_icon" />
+                        app:layout_constraintTop_toBottomOf="@+id/about_unruly_icon" />
 
 
                     <ImageView
@@ -118,7 +118,7 @@
 
                     <TextView
                         android:id="@+id/about_code"
-                        style="@style/Widget.Shellac.TextView.Icon.Clickable"
+                        style="@style/Widget.Unruly.TextView.Icon.Clickable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_mid_medium"
@@ -131,7 +131,7 @@
 
                     <TextView
                         android:id="@+id/about_wiki"
-                        style="@style/Widget.Shellac.TextView.Icon.Clickable"
+                        style="@style/Widget.Unruly.TextView.Icon.Clickable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/lbl_wiki"
@@ -143,7 +143,7 @@
 
                     <TextView
                         android:id="@+id/about_licenses"
-                        style="@style/Widget.Shellac.TextView.Icon.Clickable"
+                        style="@style/Widget.Unruly.TextView.Icon.Clickable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/lbl_licenses"
@@ -169,7 +169,7 @@
 
                     <TextView
                         android:id="@+id/about_author"
-                        style="@style/Widget.Shellac.TextView.Header"
+                        style="@style/Widget.Unruly.TextView.Header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/lbl_author"
@@ -178,7 +178,7 @@
 
                     <TextView
                         android:id="@+id/about_profile"
-                        style="@style/Widget.Shellac.TextView.Icon.Clickable"
+                        style="@style/Widget.Unruly.TextView.Icon.Clickable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/lbl_author_name"
@@ -190,7 +190,7 @@
 
                     <TextView
                         android:id="@+id/about_donate"
-                        style="@style/Widget.Shellac.TextView.Icon.Clickable"
+                        style="@style/Widget.Unruly.TextView.Icon.Clickable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/lbl_donate"
@@ -219,7 +219,7 @@
 
                     <TextView
                         android:id="@+id/about_supporters"
-                        style="@style/Widget.Shellac.TextView.Header"
+                        style="@style/Widget.Unruly.TextView.Header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/lbl_supporters"
@@ -228,7 +228,7 @@
 
                     <TextView
                         android:id="@+id/about_supporters_bkkellyh"
-                        style="@style/Widget.Shellac.TextView.Icon.Clickable"
+                        style="@style/Widget.Unruly.TextView.Icon.Clickable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/sup_bkkellyh"
@@ -239,7 +239,7 @@
 
                     <TextView
                         android:id="@+id/about_supporters_gruntstumper"
-                        style="@style/Widget.Shellac.TextView.Icon.Clickable"
+                        style="@style/Widget.Unruly.TextView.Icon.Clickable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/sup_gruntstumper"
@@ -250,7 +250,7 @@
 
                     <TextView
                         android:id="@+id/about_supporters_promo"
-                        style="@style/Widget.Shellac.TextView.Icon.Clickable"
+                        style="@style/Widget.Unruly.TextView.Icon.Clickable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/lng_supporters_promo"
@@ -277,7 +277,7 @@
 
                     <TextView
                         android:id="@+id/about_feedback"
-                        style="@style/Widget.Shellac.TextView.Header"
+                        style="@style/Widget.Unruly.TextView.Header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/lbl_feedback"
@@ -286,7 +286,7 @@
 
                     <TextView
                         android:id="@+id/about_feedback_github"
-                        style="@style/Widget.Shellac.TextView.Icon.Clickable"
+                        style="@style/Widget.Unruly.TextView.Icon.Clickable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/lbl_github"
@@ -298,7 +298,7 @@
 
                     <TextView
                         android:id="@+id/about_feedback_email"
-                        style="@style/Widget.Shellac.TextView.Icon.Clickable"
+                        style="@style/Widget.Unruly.TextView.Icon.Clickable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/lbl_email"
@@ -324,7 +324,7 @@
 
                     <TextView
                         android:id="@+id/about_library_counts"
-                        style="@style/Widget.Shellac.TextView.Header"
+                        style="@style/Widget.Unruly.TextView.Header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/lbl_library_counts"
@@ -333,7 +333,7 @@
 
                     <TextView
                         android:id="@+id/about_song_count"
-                        style="@style/Widget.Shellac.TextView.Icon"
+                        style="@style/Widget.Unruly.TextView.Icon"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:drawableStartCompat="@drawable/ic_song_24"
@@ -344,7 +344,7 @@
 
                     <TextView
                         android:id="@+id/about_album_count"
-                        style="@style/Widget.Shellac.TextView.Icon"
+                        style="@style/Widget.Unruly.TextView.Icon"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:drawableStartCompat="@drawable/ic_album_24"
@@ -355,7 +355,7 @@
 
                     <TextView
                         android:id="@+id/about_artist_count"
-                        style="@style/Widget.Shellac.TextView.Icon"
+                        style="@style/Widget.Unruly.TextView.Icon"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:drawableStartCompat="@drawable/ic_artist_24"
@@ -366,7 +366,7 @@
 
                     <TextView
                         android:id="@+id/about_genre_count"
-                        style="@style/Widget.Shellac.TextView.Icon"
+                        style="@style/Widget.Unruly.TextView.Icon"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:drawableStartCompat="@drawable/ic_genre_24"
@@ -377,7 +377,7 @@
 
                     <TextView
                         android:id="@+id/about_total_duration"
-                        style="@style/Widget.Shellac.TextView.Icon"
+                        style="@style/Widget.Unruly.TextView.Icon"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:drawableStartCompat="@drawable/ic_time_24"
@@ -388,7 +388,7 @@
 
                     <TextView
                         android:id="@+id/about_total_size"
-                        style="@style/Widget.Shellac.TextView.Icon"
+                        style="@style/Widget.Unruly.TextView.Icon"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:drawableStartCompat="@drawable/ic_file_24"

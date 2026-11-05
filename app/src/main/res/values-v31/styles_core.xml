@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Shellac.V31" parent="Theme.Shellac.V29">
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_anim</item>
-        <item name="android:windowSplashScreenAnimationDuration">1000</item>
+    <style name="Theme.Unruly.V31" parent="Theme.Unruly.V29">
+        <!-- The loading screen: the kicked u on Unruly red, the wordmark set in Inter Black below.
+             Same mark as the launcher icon (logo direction L2-D). -->
+        <item name="android:windowSplashScreenBackground">#E3191B</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">#E3191B</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/ic_splash_wordmark</item>
     </style>
 
     <!-- Use dynamic colors since that's assumed to be the setting used. -->
-    <style name="Theme.Shellac.App" parent="Theme.Shellac.Base" />
+    <style name="Theme.Unruly.App" parent="Theme.Unruly.Base" />
 
-    <style name="Theme.Shellac.Widget" parent="@android:style/Theme.DeviceDefault.DayNight">
+    <style name="Theme.Unruly.Widget" parent="@android:style/Theme.DeviceDefault.DayNight">
         <item name="colorPrimary">?android:attr/colorAccent</item>
         <item name="colorOnPrimary">?attr/colorSurface</item>
 

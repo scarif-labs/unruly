@@ -127,7 +127,7 @@ gestures. The whole component depends on that.
 The skin's title bar drew underneath the Android status bar, hiding the drawn battery behind
 the system one — despite `TouchWheelSkin.supportsEdgeToEdge = false`.
 
-`ShellacActivity` honoured the flag with:
+`UnrulyActivity` honoured the flag with:
 
 ```kotlin
 WindowCompat.setDecorFitsSystemWindows(window, !skin.supportsEdgeToEdge)
@@ -255,3 +255,37 @@ Scrolling **by hand** also removes the synthetic-input artefact above.
 
 - Font treatment — currently the platform default at classic sizes
 - Release-build profiler pass (see §9; needs the manual folder grant)
+
+## 11. Closer match pass (2026-10-20, uncommitted)
+
+The user asked for the skin to be as close to the reference hardware as possible, without its
+trademarks. Built and checked on device in portrait.
+
+- **Face:** the body is an anodised silver diagonal gradient (`BodyBrush`), and the lit screen
+  sits in a black glass mask (`ScreenSurround`, `ScreenSurroundInset`).
+- **Wheel:** white satin ring with a recessed edge and a silver centre button. The transport
+  controls are drawn paths, not Unicode text, which never sat at the right weight.
+- **Rows:** bold 16sp on a fixed grid. `ClassicRowGrid` stretches the row height so a whole
+  number of rows fills the screen; the originals never show a half-cut row. The selection has a
+  gloss break and dark top and bottom edges. Chevrons are drawn.
+- **Split vs. full width:** only the root and Music menus are split. Library lists, the queue
+  and its actions run full width, with `ClassicScrollbar` when they overflow (`showScrollbar` on
+  `WheelMenuList`).
+- **Art panel:** a pan-and-zoom slideshow of every album cover in the library, shuffled, which
+  crossfades every 7 s. (`albums()` arrives as one page holding the whole library, so the
+  snapshot is complete; a genuinely lazy source would narrow it to the loaded pages.) Highlighting Now Playing swaps in the playing cover. The menu casts a
+  shadow onto the panel.
+- **Now Playing:** cover with a mirrored, fading reflection (`ClassicReflectedArt`); a diamond
+  marks the scrub target while scrubbing.
+- **Menu order** follows the hardware: Music, Queue, Lyrics, Settings, Shuffle Songs, Now
+  Playing; Music lists Playlists first and Search last.
+- Queue, queue actions and the scanning/empty status screen moved onto the classic chrome; they
+  were plain lists before.
+- **Lyrics on Now Playing:** the centre button pages between the cover and the lyric sheet, as
+  the hardware did. The caption and progress bar stay; the wheel still scrubs. The sheet is
+  `WheelLyricsSheet`, split out of the Lyrics screen, and only looks lyrics up while shown. The
+  chosen page is a skin field (`nowPlayingShowsLyrics`), so it survives leaving the screen.
+
+Still open: the Unruly mark in the title bar (the hardware has none there), the scrub diamond
+only shows during the 300 ms before the seek commits, landscape and 2× font are unchecked, and
+the Lyrics and Search screens were not restyled beyond the shared chrome.

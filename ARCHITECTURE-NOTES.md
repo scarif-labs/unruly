@@ -1,6 +1,6 @@
 # ARCHITECTURE-NOTES.md
 
-Engine reference for Shellac. **Paste this into every prompt that touches Auxio internals.**
+Engine reference for Unruly. **Paste this into every prompt that touches Auxio internals.**
 
 Every symbol below was read in source and cited `path:line`. Anything unverified is marked
 ⚠️. If you need something not listed here, **read the source — do not invent it.**

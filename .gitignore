@@ -17,8 +17,10 @@ captures/
 .aider*
 .env
 
-# Shellac
+# Unruly
 *.apk
 *.aab
 .claude/settings.local.json
 docs/agents/logs/
+.claude/scheduled_tasks.lock
+__pycache__/

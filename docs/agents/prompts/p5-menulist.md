@@ -1,4 +1,4 @@
-Build the menu list component for the "Touch Wheel" skin in the Shellac Android project
+Build the menu list component for the "Touch Wheel" skin in the Unruly Android project
 (buildspec Phase 5d). This is the reusable list primitive the whole skin is built on, so it
 matters more than its size suggests.
 
@@ -11,17 +11,17 @@ The skin is called **Touch Wheel**, never "iPod" and never "click wheel". Use
 
 ## Where the code goes
 
-Create ONE new file: `skin/src/main/java/org/shellac/skin/wheel/WheelMenuList.kt`
+Create ONE new file: `skin/src/main/java/org/unruly/skin/wheel/WheelMenuList.kt`
 
 Do NOT create `TouchWheel.kt` or `WheelZone.kt` — another agent is writing those right now.
 Do not modify any existing file. Do not touch any `build.gradle`.
 
 ## Hard constraints
 
-1. **Only `org.shellac.skin` types plus Compose/Kotlin stdlib.** Do NOT import
+1. **Only `org.unruly.skin` types plus Compose/Kotlin stdlib.** Do NOT import
    `org.oxycblt.auxio` or `org.oxycblt.musikr`. Do not read `app/` or `musikr/`.
 2. `collectAsStateWithLifecycle` is NOT available. Use `collectAsState()`.
-3. Read `skin/src/main/java/org/shellac/skin/support/SkinTheme.kt` and take colours and text
+3. Read `skin/src/main/java/org/unruly/skin/support/SkinTheme.kt` and take colours and text
    styles from `SkinTheme.colors` / `SkinTheme.typography` rather than hardcoding.
 
 Pinned: Kotlin 2.3.10, Compose BOM 2026.06.01, paging 3.5.0, minSdk 24, Java 21.

@@ -1,7 +1,7 @@
-# Contributing to Shellac
+# Contributing to Unruly
 
-Shellac is a fork of [Auxio](https://github.com/OxygenCobalt/Auxio). Please file issues about
-Shellac here — not upstream. If a bug reproduces in stock Auxio, it belongs upstream instead.
+Unruly is a fork of [Auxio](https://github.com/OxygenCobalt/Auxio). Please file issues about
+Unruly here — not upstream. If a bug reproduces in stock Auxio, it belongs upstream instead.
 
 ## Bugs and crashes
 
@@ -22,9 +22,9 @@ reordering in the skin contract" is an engine change.
 ## Code
 
 - **Never edit the playback or indexer packages.** They are Auxio's, and the audio quality they
-  provide is why Shellac forked Auxio instead of starting fresh. If a skin needs something they
-  do not expose, extend the skin contract in `skin/src/main/java/org/shellac/skin/AppSkin.kt`.
-- **Skins must not import `com.merklegroot.shellac.*` or `org.oxycblt.musikr.*`.** The module
+  provide is why Unruly forked Auxio instead of starting fresh. If a skin needs something they
+  do not expose, extend the skin contract in `skin/src/main/java/org/unruly/skin/AppSkin.kt`.
+- **Skins must not import `com.merklegroot.unruly.*` or `org.oxycblt.musikr.*`.** The module
   graph enforces this — if you find yourself fighting it, the contract is what needs changing.
 - Kotlin only, except where a UI component has to be vendored.
 - Run `./gradlew spotlessApply` before you push. CI checks formatting.
@@ -33,6 +33,6 @@ reordering in the skin contract" is an engine change.
 
 ## New skins
 
-Adding a skin is the intended way to extend Shellac. Implement `AppSkin`, register it in
+Adding a skin is the intended way to extend Unruly. Implement `AppSkin`, register it in
 `SkinRegistry`, and read the KDoc on `AppSkin` first — it documents the rules the host relies on.
 Pick a stable `id`: it is persisted as the user's preference and can never change once shipped.

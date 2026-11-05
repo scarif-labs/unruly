@@ -1,6 +1,6 @@
-Implement the Shellac engine adapter (buildspec Phase 3.5) in the Auxio Android project.
+Implement the Unruly engine adapter (buildspec Phase 3.5) in the Auxio Android project.
 
-This is the ONLY class that is allowed to know both Auxio's internals and the Shellac skin
+This is the ONLY class that is allowed to know both Auxio's internals and the Unruly skin
 contract. Getting it right is what keeps skins portable.
 
 Working directory is the repo root.
@@ -10,10 +10,10 @@ Working directory is the repo root.
 1. `ARCHITECTURE-NOTES.md` (repo root) — the verified engine map. Every symbol in it was
    read from source and cited `path:line`. **Trust it over your own recollection.**
 2. The contract, which you must implement exactly:
-   - `skin/src/main/java/org/shellac/skin/SkinModels.kt`
-   - `skin/src/main/java/org/shellac/skin/SkinLibrary.kt`
-   - `skin/src/main/java/org/shellac/skin/SkinCommands.kt`
-   - `skin/src/main/java/org/shellac/skin/AppSkin.kt`
+   - `skin/src/main/java/org/unruly/skin/SkinModels.kt`
+   - `skin/src/main/java/org/unruly/skin/SkinLibrary.kt`
+   - `skin/src/main/java/org/unruly/skin/SkinCommands.kt`
+   - `skin/src/main/java/org/unruly/skin/AppSkin.kt`
 
 ## Hard rules
 
@@ -28,7 +28,7 @@ Working directory is the repo root.
 
 ## Where to put it
 
-`app/src/main/java/org/oxycblt/auxio/shellac/engine/` — suggested split:
+`app/src/main/java/org/oxycblt/auxio/unruly/engine/` — suggested split:
 `EngineAdapter.kt`, `SkinLibraryImpl.kt`, `SkinCommandsImpl.kt`, `Mappers.kt`.
 
 ## Pinned versions
@@ -38,7 +38,7 @@ Java 21 · minSdk 24 · Hilt 2.59.2 (the project uses Hilt/Dagger with `@Inject`
 
 ## What to build
 
-### A. Mappers — Auxio types to Shellac types
+### A. Mappers — Auxio types to Unruly types
 - ids: `music.uid.toString()` (see ARCHITECTURE-NOTES §4 "Identity" — **not** a Long)
 - names: Auxio's `Name` is an object, not a String. Use the existing extension
   `org.oxycblt.auxio.music.resolve(context)` (`app/.../music/MusicUtil.kt:37`). The adapter

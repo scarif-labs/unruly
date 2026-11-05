@@ -1,4 +1,4 @@
-# Shellac — Full-App Skin Layer over Auxio
+# Unruly — Full-App Skin Layer over Auxio
 
 **Goal:** Fork Auxio, reduce it to a headless audio engine, and build a skin layer that owns the entire UI. Every screen — browse, search, queue, now-playing, navigation itself — is defined by the active skin. Validate with a complete "Touch Wheel" skin.
 
@@ -25,8 +25,8 @@ Nothing here is your code. The purpose is to prove the upstream project builds u
 
 **0.3 — Clone with submodules.**
 ```bash
-git clone --recurse-submodules https://github.com/OxygenCobalt/Auxio.git shellac
-cd shellac
+git clone --recurse-submodules https://github.com/OxygenCobalt/Auxio.git unruly
+cd unruly
 ```
 If already cloned without the flag: `git submodule update --init --recursive`
 
@@ -36,7 +36,7 @@ If already cloned without the flag: `git submodule update --init --recursive`
 
 **0.6 — Set up your fork.**
 ```bash
-git checkout -b shellac
+git checkout -b unruly
 git remote rename origin upstream
 ```
 

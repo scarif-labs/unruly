@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from Inter Black's "u" plus the kick (logo direction L2-D). Don't hand-edit;
+     regenerate with tools/logo/assets.py (see tools/logo/README.md). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="240dp"
+    android:height="240dp"
+    android:viewportWidth="240"
+    android:viewportHeight="240">
+    <path android:fillColor="#111111" android:pathData="M97.88,149.76C109.06,149.76 116.35,144.56 120.97,136.85L120.97,137.46C121.87,141.51 123.16,145.10 124.79,148.29L124.80,148.71L125.01,148.71C131.56,161.17 143.35,167.16 157.12,168.88L171.36,149.98C160.72,144.21 153.07,137.46 153.07,125.99L153.07,64.88L120.97,64.88L120.97,119.96C118.93,123.39 115.37,125.32 110.78,125.32C103.20,125.32 98.78,120.29 98.78,111.97L98.78,64.88L68.64,64.88L68.64,118.27C68.64,136.56 80.11,149.76 97.88,149.76Z" />
+</vector>

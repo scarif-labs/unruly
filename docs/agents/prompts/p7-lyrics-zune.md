@@ -1,4 +1,4 @@
-Add lyrics to the Zune skin in the Shellac Android project.
+Add lyrics to the Zune skin in the Unruly Android project.
 
 Working directory is the repo root.
 
@@ -9,28 +9,28 @@ containing ffmpeg's test-vector suite; an unscoped search drowns in it.
 
 ## What already exists — read it and use its REAL signatures
 
-- `skin/src/main/java/org/shellac/skin/SkinLyrics.kt` — `SkinLyricLine`, `SkinLyrics`,
+- `skin/src/main/java/org/unruly/skin/SkinLyrics.kt` — `SkinLyricLine`, `SkinLyrics`,
   `SkinLyricsState`, `SkinLyricsSource`
-- `skin/src/main/java/org/shellac/skin/support/LyricsSupport.kt` — `activeLyricIndexAt`.
+- `skin/src/main/java/org/unruly/skin/support/LyricsSupport.kt` — `activeLyricIndexAt`.
   **Use it. Do not write your own.**
-- `skin/src/main/java/org/shellac/skin/AppSkin.kt` — `SkinSession.lyrics`
-- `skin/src/main/java/org/shellac/skin/support/PositionTicker.kt` —
+- `skin/src/main/java/org/unruly/skin/AppSkin.kt` — `SkinSession.lyrics`
+- `skin/src/main/java/org/unruly/skin/support/PositionTicker.kt` —
   `rememberInterpolatedPosition`
-- `skin/src/main/java/org/shellac/skin/zune/` — the whole skin: `ZuneSkin.kt`,
+- `skin/src/main/java/org/unruly/skin/zune/` — the whole skin: `ZuneSkin.kt`,
   `ZuneTheme.kt` (`BlackFrame`, `AccentLink`, `SkinPaletteColors`, `SkinPaletteTypography`),
   `ZuneScreens.kt`
 
 ## Your job
 
-Only files under `skin/src/main/java/org/shellac/skin/zune/`. Another agent is working in
-`org.shellac.skin.wheel` — do not touch it. Do NOT modify the contract, `support/`, or any
+Only files under `skin/src/main/java/org/unruly/skin/zune/`. Another agent is working in
+`org.unruly.skin.wheel` — do not touch it. Do NOT modify the contract, `support/`, or any
 `build.gradle`.
 
 ## Hard constraints
 
-1. **Only `org.shellac.skin` types plus Compose/Kotlin stdlib.** Do NOT import
+1. **Only `org.unruly.skin` types plus Compose/Kotlin stdlib.** Do NOT import
    `org.oxycblt.auxio` or `org.oxycblt.musikr`. Do not read `app/` or `musikr/` at all.
-2. Do NOT import anything from `org.shellac.skin.wheel`. This skin shares nothing with it —
+2. Do NOT import anything from `org.unruly.skin.wheel`. This skin shares nothing with it —
    that independence is the point of it existing.
 3. `collectAsStateWithLifecycle` is NOT available. Use `collectAsState()`.
 4. Pass function-typed arguments **by name** when a function takes more than one — a trailing
@@ -95,7 +95,7 @@ You CANNOT run Gradle in this sandbox — it fails with
 
 Re-read your files and check every symbol against its declaration: exact parameter names,
 order, nullability, and whether something returns `Flow`, `StateFlow` or a plain value.
-Confirm: `grep -rn "org.shellac.skin.wheel" skin/src/main/java/org/shellac/skin/zune/` returns
+Confirm: `grep -rn "org.unruly.skin.wheel" skin/src/main/java/org/unruly/skin/zune/` returns
 nothing.
 
 ## Report to stdout

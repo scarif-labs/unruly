@@ -1,16 +1,16 @@
-Write two deliberately ugly debug skins for the Shellac project, an Android music player.
+Write two deliberately ugly debug skins for the Unruly project, an Android music player.
 
 Working directory is the repo root. Create files under:
-skin/src/main/java/org/shellac/skin/debug/
+skin/src/main/java/org/unruly/skin/debug/
 
 ## Critical constraint
 
-You may ONLY use types from the `org.shellac.skin` package. Read these four files first and use nothing outside them:
+You may ONLY use types from the `org.unruly.skin` package. Read these four files first and use nothing outside them:
 
-- skin/src/main/java/org/shellac/skin/AppSkin.kt
-- skin/src/main/java/org/shellac/skin/SkinModels.kt
-- skin/src/main/java/org/shellac/skin/SkinLibrary.kt
-- skin/src/main/java/org/shellac/skin/SkinCommands.kt
+- skin/src/main/java/org/unruly/skin/AppSkin.kt
+- skin/src/main/java/org/unruly/skin/SkinModels.kt
+- skin/src/main/java/org/unruly/skin/SkinLibrary.kt
+- skin/src/main/java/org/unruly/skin/SkinCommands.kt
 
 You must NOT import anything from `org.oxycblt.auxio` or `org.oxycblt.musikr`. The `skin` module cannot even see those packages, so such an import will not compile. Do not attempt it. Do not read the app/ or musikr/ directories at all - you do not need them, and that is the entire point of this exercise.
 

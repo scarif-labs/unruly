@@ -1,11 +1,11 @@
-Implement four pieces of skin support infrastructure for the Shellac Android project
+Implement four pieces of skin support infrastructure for the Unruly Android project
 (buildspec Phase 4.2, 4.3, 4.5, 4.6). These are mechanical; keep them small and obvious.
 
 Working directory is the repo root.
 
 ## Where the code goes
 
-Create NEW files under `skin/src/main/java/org/shellac/skin/support/`:
+Create NEW files under `skin/src/main/java/org/unruly/skin/support/`:
 - `SkinAlbumArt.kt`
 - `SkinTheme.kt`
 - `SkinBackStack.kt`
@@ -16,13 +16,13 @@ right now. Do not touch them.
 
 ## Hard constraints
 
-1. **Only use `org.shellac.skin` types plus Compose/Coil/Kotlin stdlib.** Do NOT import
+1. **Only use `org.unruly.skin` types plus Compose/Coil/Kotlin stdlib.** Do NOT import
    `org.oxycblt.auxio` or `org.oxycblt.musikr` - the `skin` module cannot see them. Do not
    read `app/` or `musikr/` at all.
 2. Do not modify existing files. Do not touch any `build.gradle`.
 3. Read these first:
-   - `skin/src/main/java/org/shellac/skin/SkinModels.kt`
-   - `skin/src/main/java/org/shellac/skin/SkinLibrary.kt` (for `LibraryLoadState`)
+   - `skin/src/main/java/org/unruly/skin/SkinModels.kt`
+   - `skin/src/main/java/org/unruly/skin/SkinLibrary.kt` (for `LibraryLoadState`)
 4. `collectAsStateWithLifecycle` is NOT available. Use `collectAsState()`.
 5. Available: androidx.compose runtime/ui/foundation/material3, androidx.paging.compose,
    and Coil 3 (`io.coil-kt.coil3:coil-compose`, so `coil3.compose.AsyncImage`).

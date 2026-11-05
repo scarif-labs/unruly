@@ -1,4 +1,4 @@
-Build the queue and search screens for the Touch Wheel skin in the Shellac Android project
+Build the queue and search screens for the Touch Wheel skin in the Unruly Android project
 (buildspec Phase 5g).
 
 Working directory is the repo root.
@@ -17,7 +17,7 @@ match every checksum in those fixtures.
 
 ## Where the code goes
 
-New files under `skin/src/main/java/org/shellac/skin/wheel/`:
+New files under `skin/src/main/java/org/unruly/skin/wheel/`:
 - `WheelQueue.kt`  — queue screen
 - `WheelSearch.kt` — search screen
 
@@ -28,7 +28,7 @@ the contract, anything under `support/`, or any `build.gradle`.
 
 ## Hard constraints
 
-1. **Only `org.shellac.skin` types plus Compose/Kotlin stdlib.** Do NOT import
+1. **Only `org.unruly.skin` types plus Compose/Kotlin stdlib.** Do NOT import
    `org.oxycblt.auxio` or `org.oxycblt.musikr`. Do not read `app/` or `musikr/` at all.
 2. `collectAsStateWithLifecycle` is NOT available. Use `collectAsState()`.
 3. Pass function-typed arguments **by name** when a function takes more than one — a trailing
@@ -38,12 +38,12 @@ Pinned: Kotlin 2.3.10, Compose BOM 2026.06.01, paging 3.5.0, minSdk 24, Java 21.
 
 ## Read these first and use their REAL signatures
 
-- `skin/src/main/java/org/shellac/skin/SkinLibrary.kt` — `search(...)`, `SkinSearchResults`
-- `skin/src/main/java/org/shellac/skin/SkinCommands.kt` — queue commands, `playSongFrom*`
-- `skin/src/main/java/org/shellac/skin/SkinModels.kt` — `SkinPlaybackState.queue`, `queueIndex`
-- `skin/src/main/java/org/shellac/skin/wheel/TouchWheelSkin.kt` — `wheelScaffold`,
+- `skin/src/main/java/org/unruly/skin/SkinLibrary.kt` — `search(...)`, `SkinSearchResults`
+- `skin/src/main/java/org/unruly/skin/SkinCommands.kt` — queue commands, `playSongFrom*`
+- `skin/src/main/java/org/unruly/skin/SkinModels.kt` — `SkinPlaybackState.queue`, `queueIndex`
+- `skin/src/main/java/org/unruly/skin/wheel/TouchWheelSkin.kt` — `wheelScaffold`,
   `wheelListBody`, `selectionIndices`, the back stack
-- `skin/src/main/java/org/shellac/skin/wheel/WheelMenuList.kt` — both overloads
+- `skin/src/main/java/org/unruly/skin/wheel/WheelMenuList.kt` — both overloads
 
 `wheelScaffold` takes `itemCount` plus `resolveSelected: (Int) -> T?`. Reuse it; do not build
 a parallel scaffold.

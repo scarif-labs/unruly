@@ -6,8 +6,8 @@
 **Log:** `docs/agents/logs/p5-hierarchy.log`
 
 Files created:
-- `skin/src/main/java/org/shellac/skin/wheel/TouchWheelSkin.kt` (598 lines)
-- `skin/src/main/java/org/shellac/skin/wheel/WheelDestination.kt` (16 lines)
+- `skin/src/main/java/org/unruly/skin/wheel/TouchWheelSkin.kt` (598 lines)
+- `skin/src/main/java/org/unruly/skin/wheel/WheelDestination.kt` (16 lines)
 
 This was the first sub-phase to exercise the whole contract at depth: Root → Music → five
 categories → drill-down → now-playing. Everything before it was flat skins with one level of
@@ -19,7 +19,7 @@ navigation, which is why this is where the design problems surfaced.
 
 **The isolation gate held.** `grep -rc "org.oxycblt" skin/.../wheel/` returned 0 across all
 five files. A 598-line skin doing real library browsing, playback and navigation was written
-against nothing but `org.shellac.skin` plus Compose. That is the central claim of the whole
+against nothing but `org.unruly.skin` plus Compose. That is the central claim of the whole
 project and this is the first non-trivial evidence for it.
 
 **Naming discipline held.** `grep -rni "ipod|apple|click wheel" skin/` is clean.

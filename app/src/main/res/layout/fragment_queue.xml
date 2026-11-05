@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.merklegroot.shellac.list.recycler.ShellacRecyclerView
+    <com.merklegroot.unruly.list.recycler.UnrulyRecyclerView
         android:id="@+id/queue_recycler"
-        style="@style/Widget.Shellac.RecyclerView.Linear"
+        style="@style/Widget.Unruly.RecyclerView.Linear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/item_editable_song" />

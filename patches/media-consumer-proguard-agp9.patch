@@ -7,7 +7,7 @@ index 611ea7ce8c..376378dc3c 100644
          minSdkVersion project.ext.minSdkVersion
          targetSdkVersion project.ext.targetSdkVersion
 -        consumerProguardFiles 'proguard-rules.txt'
-+        // SHELLAC PATCH: 25 of the media3 libraries (common_ktx, session, effect, muxer,
++        // UNRULY PATCH: 25 of the media3 libraries (common_ktx, session, effect, muxer,
 +        // transformer, ui_compose, ...) do not ship a proguard-rules.txt. Older AGP silently
 +        // ignored a missing consumer proguard file; AGP 9.2.1 fails the build with
 +        // "Supplied consumer proguard configuration does not exist". Only declare it when

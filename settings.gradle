@@ -21,8 +21,8 @@ gradle.ext.androidxMediaModulePrefix = 'media-'
 gradle.ext.androidxMediaProjectName = 'media-'
 apply from: file("media/core_settings.gradle")
 
-rootProject.name = "shellac"
+rootProject.name = "unruly"
 include ':app'
 include ':musikr'
-// Shellac skin contract. Deliberately has no dependency on :app or :musikr.
+// Unruly skin contract. Deliberately has no dependency on :app or :musikr.
 include ':skin'

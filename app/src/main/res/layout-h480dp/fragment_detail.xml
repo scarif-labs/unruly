@@ -13,10 +13,10 @@
     android:background="?attr/colorSurface"
     android:transitionGroup="true">
 
-    <com.merklegroot.shellac.ui.CoordinatorAppBarLayout
+    <com.merklegroot.unruly.ui.CoordinatorAppBarLayout
         android:id="@+id/detail_appbar"
-        style="@style/Widget.Shellac.AppBarLayout"
-        app:layout_behavior="com.merklegroot.shellac.detail.ContinuousAppBarLayoutBehavior"
+        style="@style/Widget.Unruly.AppBarLayout"
+        app:layout_behavior="com.merklegroot.unruly.detail.ContinuousAppBarLayoutBehavior"
         app:liftOnScroll="true"
         app:liftOnScrollTargetViewId="@id/detail_recycler">
 
@@ -40,9 +40,9 @@
                 android:layout_gravity="bottom"
                 app:layout_collapseParallaxMultiplier="0.85">
 
-                <com.merklegroot.shellac.image.CoverView
+                <com.merklegroot.unruly.image.CoverView
                     android:id="@+id/detail_cover"
-                    style="@style/Widget.Shellac.Image.Huge"
+                    style="@style/Widget.Unruly.Image.Huge"
                     app:enablePlaybackIndicator="false"
                     app:enableSelectionBadge="false"
                     android:layout_marginTop="@dimen/spacing_medium"
@@ -65,7 +65,7 @@
 
                 <TextView
                     android:id="@+id/detail_name"
-                    style="@style/Widget.Shellac.TextView.Detail"
+                    style="@style/Widget.Unruly.TextView.Detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -76,7 +76,7 @@
 
                 <TextView
                     android:id="@+id/detail_subhead"
-                    style="@style/Widget.Shellac.TextView.Secondary.Ellipsize"
+                    style="@style/Widget.Unruly.TextView.Secondary.Ellipsize"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="?android:attr/textColorSecondary"
@@ -86,7 +86,7 @@
 
                 <TextView
                     android:id="@+id/detail_info"
-                    style="@style/Widget.Shellac.TextView.Secondary.Ellipsize"
+                    style="@style/Widget.Unruly.TextView.Secondary.Ellipsize"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="?android:attr/textColorSecondary"
@@ -103,9 +103,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/detail_info">
 
-                    <com.merklegroot.shellac.ui.RippleFixMaterialButton
+                    <com.merklegroot.unruly.ui.RippleFixMaterialButton
                         android:id="@+id/detail_play_button"
-                        style="@style/Widget.Shellac.Button.Secondary"
+                        style="@style/Widget.Unruly.Button.Secondary"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -113,9 +113,9 @@
                         app:icon="@drawable/ic_play_24"
                         tools:ignore="RtlSymmetry"/>
 
-                    <com.merklegroot.shellac.ui.RippleFixMaterialButton
+                    <com.merklegroot.unruly.ui.RippleFixMaterialButton
                         android:id="@+id/detail_shuffle_button"
-                        style="@style/Widget.Shellac.Button.Primary"
+                        style="@style/Widget.Unruly.Button.Primary"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -131,13 +131,13 @@
                 android:layout_gravity="bottom"
                 app:layout_collapseMode="pin" />
 
-            <com.merklegroot.shellac.ui.MultiToolbar
+            <com.merklegroot.unruly.ui.MultiToolbar
                 android:id="@+id/detail_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_collapseMode="pin" >
 
-                <com.merklegroot.shellac.ui.ShellacToolbar
+                <com.merklegroot.unruly.ui.UnrulyToolbar
                     android:id="@+id/detail_normal_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -146,7 +146,7 @@
                     app:menu="@menu/toolbar_detail"
                     app:navigationIcon="@drawable/ic_back_24" />
 
-                <com.merklegroot.shellac.ui.ShellacToolbar
+                <com.merklegroot.unruly.ui.UnrulyToolbar
                     android:id="@+id/detail_selection_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
                     app:menu="@menu/toolbar_selection"
                     app:navigationIcon="@drawable/ic_close_24" />
 
-                <com.merklegroot.shellac.ui.ShellacToolbar
+                <com.merklegroot.unruly.ui.UnrulyToolbar
                     android:id="@+id/detail_edit_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -164,15 +164,15 @@
                     app:menu="@menu/toolbar_edit"
                     app:navigationIcon="@drawable/ic_close_24" />
 
-            </com.merklegroot.shellac.ui.MultiToolbar>
+            </com.merklegroot.unruly.ui.MultiToolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-    </com.merklegroot.shellac.ui.CoordinatorAppBarLayout>
+    </com.merklegroot.unruly.ui.CoordinatorAppBarLayout>
 
-    <com.merklegroot.shellac.list.recycler.FastScrollRecyclerView
+    <com.merklegroot.unruly.list.recycler.FastScrollRecyclerView
         android:id="@+id/detail_recycler"
-        style="@style/Widget.Shellac.RecyclerView.Grid"
+        style="@style/Widget.Unruly.RecyclerView.Grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"

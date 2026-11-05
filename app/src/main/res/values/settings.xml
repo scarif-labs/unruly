@@ -1,69 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Note: The old way of naming keys was to prefix them with KEY_. Now it's to prefix them with shellac_. -->
-    <string name="set_key_ui" translatable="false">shellac_ui</string>
-    <string name="set_key_personalize" translatable="false">shellac_personalize</string>
-    <string name="set_key_music" translatable="false">shellac_music</string>
-    <string name="set_key_audio" translatable="false">shellac_audio</string>
+    <!-- Note: The old way of naming keys was to prefix them with KEY_. Now it's to prefix them with unruly_. -->
+    <string name="set_key_ui" translatable="false">unruly_ui</string>
+    <string name="set_key_personalize" translatable="false">unruly_personalize</string>
+    <string name="set_key_music" translatable="false">unruly_music</string>
+    <string name="set_key_audio" translatable="false">unruly_audio</string>
 
     <string name="set_key_theme" translatable="false">KEY_THEME2</string>
     <string name="set_key_black_theme" translatable="false">KEY_BLACK_THEME</string>
-    <string name="set_key_accent" translatable="false">shellac_accent2</string>
+    <string name="set_key_accent" translatable="false">unruly_accent2</string>
 
-    <string name="set_key_reindex" translatable="false">shellac_reindex</string>
-    <string name="set_key_rescan" translatable="false">shellac_rescan</string>
-    <string name="set_key_observing" translatable="false">shellac_observing</string>
-    <string name="set_key_music_dirs" translatable="false">shellac_music_dirs</string>
-    <string name="set_key_excluded_dirs" translatable="false">shellac_excluded_dirs</string>
-    <string name="set_key_fs_cache" translatable="false">shellac_fs_cache</string>
-    <string name="set_key_cover_mode" translatable="false">shellac_cover_mode2</string>
-    <string name="set_key_square_covers" translatable="false">shellac_square_covers</string>
-    <string name="set_key_exclude_non_music" translatable="false">shellac_exclude_non_music</string>
-    <string name="set_key_with_hidden" translatable="false">shellac_with_hidden</string>
-    <string name="set_key_saf_multithread" translatable="false">shellac_saf_multithread</string>
-    <string name="set_key_music_locations" translatable="false">shellac_music_locations2</string>
-    <string name="set_key_excluded_locations" translatable="false">shellac_excluded_locations</string>
-    <string name="set_key_filter_mode" translatable="false">shellac_filter_mode</string>
-    <string name="set_key_filtered_locations" translatable="false">shellac_filtered_locations</string>
-    <string name="set_key_separators" translatable="false">shellac_separators</string>
-    <string name="set_key_auto_sort_names" translatable="false">shellac_auto_sort_names</string>
-    <string name="set_key_locations_mode" translatable="false">shellac_locations_mode</string>
+    <string name="set_key_reindex" translatable="false">unruly_reindex</string>
+    <string name="set_key_rescan" translatable="false">unruly_rescan</string>
+    <string name="set_key_observing" translatable="false">unruly_observing</string>
+    <string name="set_key_music_dirs" translatable="false">unruly_music_dirs</string>
+    <string name="set_key_excluded_dirs" translatable="false">unruly_excluded_dirs</string>
+    <string name="set_key_fs_cache" translatable="false">unruly_fs_cache</string>
+    <string name="set_key_cover_mode" translatable="false">unruly_cover_mode2</string>
+    <string name="set_key_square_covers" translatable="false">unruly_square_covers</string>
+    <string name="set_key_exclude_non_music" translatable="false">unruly_exclude_non_music</string>
+    <string name="set_key_with_hidden" translatable="false">unruly_with_hidden</string>
+    <string name="set_key_saf_multithread" translatable="false">unruly_saf_multithread</string>
+    <string name="set_key_music_locations" translatable="false">unruly_music_locations2</string>
+    <string name="set_key_excluded_locations" translatable="false">unruly_excluded_locations</string>
+    <string name="set_key_filter_mode" translatable="false">unruly_filter_mode</string>
+    <string name="set_key_filtered_locations" translatable="false">unruly_filtered_locations</string>
+    <string name="set_key_separators" translatable="false">unruly_separators</string>
+    <string name="set_key_auto_sort_names" translatable="false">unruly_auto_sort_names</string>
+    <string name="set_key_locations_mode" translatable="false">unruly_locations_mode</string>
 
-    <string name="set_key_headset_autoplay" translatable="false">shellac_headset_autoplay</string>
-    <string name="set_key_replay_gain" translatable="false">shellac_replay_gain</string>
-    <string name="set_key_pre_amp" translatable="false">shellac_pre_amp</string>
-    <string name="set_key_pre_amp_with" translatable="false">shellac_pre_amp_with</string>
-    <string name="set_key_pre_amp_without" translatable="false">shellac_pre_amp_without</string>
+    <string name="set_key_headset_autoplay" translatable="false">unruly_headset_autoplay</string>
+    <string name="set_key_replay_gain" translatable="false">unruly_replay_gain</string>
+    <string name="set_key_pre_amp" translatable="false">unruly_pre_amp</string>
+    <string name="set_key_pre_amp_with" translatable="false">unruly_pre_amp_with</string>
+    <string name="set_key_pre_amp_without" translatable="false">unruly_pre_amp_without</string>
 
-    <string name="set_key_play_in_list_with" translatable="false">shellac_play_in_list_with</string>
-    <string name="set_key_play_in_parent_with" translatable="false">shellac_play_in_parent_with</string>
+    <string name="set_key_play_in_list_with" translatable="false">unruly_play_in_list_with</string>
+    <string name="set_key_play_in_parent_with" translatable="false">unruly_play_in_parent_with</string>
     <string name="set_key_keep_shuffle" translatable="false">KEY_KEEP_SHUFFLE</string>
     <string name="set_key_rewind_prev" translatable="false">KEY_PREV_REWIND</string>
     <string name="set_key_repeat_pause" translatable="false">KEY_LOOP_PAUSE</string>
-    <string name="set_key_remember_pause" translatable="false">shellac_remember_pause</string>
+    <string name="set_key_remember_pause" translatable="false">unruly_remember_pause</string>
 
-    <string name="set_key_home_tabs" translatable="false">shellac_home_tabs</string>
-    <string name="set_key_hide_collaborators" translatable="false">shellac_hide_collaborators</string>
-    <string name="set_key_round_mode" translatable="false">shellac_round_covers</string>
-    <string name="set_key_bar_action" translatable="false">shellac_bar_action</string>
+    <string name="set_key_home_tabs" translatable="false">unruly_home_tabs</string>
+    <string name="set_key_hide_collaborators" translatable="false">unruly_hide_collaborators</string>
+    <string name="set_key_round_mode" translatable="false">unruly_round_covers</string>
+    <string name="set_key_bar_action" translatable="false">unruly_bar_action</string>
 
-    <string name="set_key_search_filters" translatable="false">shellac_search_filters</string>
+    <string name="set_key_search_filters" translatable="false">unruly_search_filters</string>
 
-    <string name="set_key_task_exit" translatable="false">shellac_task_exit</string>
+    <string name="set_key_task_exit" translatable="false">unruly_task_exit</string>
 
-    <string name="set_key_songs_sort" translatable="false">shellac_songs_sort</string>
-    <string name="set_key_albums_sort" translatable="false">shellac_albums_sort</string>
-    <string name="set_key_artists_sort" translatable="false">shellac_artists_sort</string>
-    <string name="set_key_genres_sort" translatable="false">shellac_genres_sort</string>
-    <string name="set_key_playlists_sort" translatable="false">shellac_playlists_sort</string>
+    <string name="set_key_songs_sort" translatable="false">unruly_songs_sort</string>
+    <string name="set_key_albums_sort" translatable="false">unruly_albums_sort</string>
+    <string name="set_key_artists_sort" translatable="false">unruly_artists_sort</string>
+    <string name="set_key_genres_sort" translatable="false">unruly_genres_sort</string>
+    <string name="set_key_playlists_sort" translatable="false">unruly_playlists_sort</string>
 
-    <string name="set_key_album_songs_sort" translatable="false">shellac_album_sort</string>
-    <string name="set_key_artist_songs_sort" translatable="false">shellac_artist_sort</string>
-    <string name="set_key_genre_songs_sort" translatable="false">shellac_genre_sort</string>
+    <string name="set_key_album_songs_sort" translatable="false">unruly_album_sort</string>
+    <string name="set_key_artist_songs_sort" translatable="false">unruly_artist_sort</string>
+    <string name="set_key_genre_songs_sort" translatable="false">unruly_genre_sort</string>
 
-    <string name="set_key_library_revision" translatable="false">shellac_library_revision</string>
+    <string name="set_key_library_revision" translatable="false">unruly_library_revision</string>
 
-    <string name="set_key_force_reload_workaround" translatable="false">shellac_force_reload</string>
+    <string name="set_key_force_reload_workaround" translatable="false">unruly_force_reload</string>
 
     <string-array name="entries_theme">
         <item>@string/set_theme_auto</item>

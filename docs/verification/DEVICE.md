@@ -51,5 +51,5 @@ A=~/Library/Android/sdk/platform-tools/adb
 $A devices -l                      # confirm attached
 $A install -r app/build/outputs/apk/full/debug/app-full-debug.apk
 $A logcat -c                       # clear before a test run
-$A logcat | grep -iE "auxio|shellac"
+$A logcat | grep -iE "auxio|unruly"
 ```

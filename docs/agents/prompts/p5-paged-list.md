@@ -1,4 +1,4 @@
-Fix a paging regression in the Touch Wheel skin of the Shellac Android project.
+Fix a paging regression in the Touch Wheel skin of the Unruly Android project.
 
 Working directory is the repo root.
 
@@ -8,7 +8,7 @@ Working directory is the repo root.
 
 ## The bug
 
-`skin/src/main/java/org/shellac/skin/wheel/TouchWheelSkin.kt` ends with this helper:
+`skin/src/main/java/org/unruly/skin/wheel/TouchWheelSkin.kt` ends with this helper:
 
 ```kotlin
 private fun <T : Any> LazyPagingItems<T>.wheelItems(): List<T> {
@@ -30,7 +30,7 @@ a full `List`.
 
 ### 1. A paged overload of `WheelMenuList`
 
-In `skin/src/main/java/org/shellac/skin/wheel/WheelMenuList.kt`, ADD an overload beside the
+In `skin/src/main/java/org/unruly/skin/wheel/WheelMenuList.kt`, ADD an overload beside the
 existing `List<T>` one. Do not change, rename, or reimplement the existing overload — other
 screens use it and it is verified.
 
@@ -74,7 +74,7 @@ Change it to pass the `LazyPagingItems` through to the new overload. Specificall
 
 ### 3. Use the new song-plus-context commands
 
-`SkinCommands` (in `skin/src/main/java/org/shellac/skin/SkinCommands.kt`) has just gained:
+`SkinCommands` (in `skin/src/main/java/org/unruly/skin/SkinCommands.kt`) has just gained:
 
 ```kotlin
 fun playSongFromAll(songId: String)
@@ -97,7 +97,7 @@ methods in `SkinCommands.kt` before using them.
 
 ## Hard constraints
 
-1. **Only `org.shellac.skin` types plus Compose/Kotlin/Paging.** Do NOT import
+1. **Only `org.unruly.skin` types plus Compose/Kotlin/Paging.** Do NOT import
    `org.oxycblt.auxio` or `org.oxycblt.musikr`. Do not read `app/` or `musikr/` at all.
 2. `collectAsStateWithLifecycle` is NOT available. Use `collectAsState()`.
 3. Do not modify `TouchWheel.kt`, `WheelZone.kt`, the contract, anything under `support/`,

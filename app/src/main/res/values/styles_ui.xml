@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- SHARED RE-USABLE UI STYLES -->
 
-    <style name="Widget.Shellac.AppBarLayout" parent="Widget.Material3.AppBarLayout">
+    <style name="Widget.Unruly.AppBarLayout" parent="Widget.Material3.AppBarLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <!-- Fix flickering lift animation when scrolling quickly -->
@@ -10,7 +10,7 @@
     </style>
 
     <!-- Base toolbar style -->
-    <style name="Widget.Shellac.Toolbar" parent="Widget.Material3.Toolbar">
+    <style name="Widget.Unruly.Toolbar" parent="Widget.Material3.Toolbar">
         <item name="titleTextAppearance">?attr/textAppearanceTitleLargeEmphasized</item>
         <item name="subtitleTextAppearance">?attr/textAppearanceLabelMediumEmphasized</item>
         <item name="maxButtonHeight">@dimen/size_touchable_small</item>
@@ -20,19 +20,19 @@
         <item name="android:paddingEnd">@dimen/spacing_tiny</item>
     </style>
 
-    <style name="Widget.Shellac.TabLayout" parent="Widget.Material3.TabLayout">
+    <style name="Widget.Unruly.TabLayout" parent="Widget.Material3.TabLayout">
         <item name="tabTextAppearance">?attr/textAppearanceTitleSmallEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.TabLayout.Secondary" parent="Widget.Material3.TabLayout.Secondary">
+    <style name="Widget.Unruly.TabLayout.Secondary" parent="Widget.Material3.TabLayout.Secondary">
         <item name="tabTextAppearance">?attr/textAppearanceTitleSmallEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.Chip.Filter" parent="Widget.Material3.Chip.Filter">
+    <style name="Widget.Unruly.Chip.Filter" parent="Widget.Material3.Chip.Filter">
         <item name="android:textAppearance">?attr/textAppearanceTitleSmallEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.Slider" parent="Widget.Material3.Slider">
+    <style name="Widget.Unruly.Slider" parent="Widget.Material3.Slider">
         <item name="labelBehavior">gone</item>
         <item name="tickVisible">false</item>
         <item name="trackStopIndicatorSize">0dp</item>
@@ -42,27 +42,27 @@
         <item name="thumbHeight">@dimen/slider_thumb_height</item>
     </style>
 
-    <style name="Widget.Shellac.LinearProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
+    <style name="Widget.Unruly.LinearProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
 <!--        <item name="trackColor">@color/sel_track</item>-->
         <item name="trackCornerRadius">@dimen/m3_shape_corners_full</item>
         <item name="trackStopIndicatorSize">0dp</item>
     </style>
 
-    <style name="Widget.Shellac.BottomSheet" parent="Widget.Material3.BottomSheet">
+    <style name="Widget.Unruly.BottomSheet" parent="Widget.Material3.BottomSheet">
         <item name="marginLeftSystemWindowInsets">false</item>
         <item name="marginRightSystemWindowInsets">false</item>
         <item name="paddingBottomSystemWindowInsets">false</item>
         <item name="paddingTopSystemWindowInsets">false</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Shellac.BottomSheet</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Unruly.BottomSheet</item>
         <item name="shouldRemoveExpandedCorners">true</item>
     </style>
 
-    <style name="ShapeAppearance.Shellac.BottomSheet" parent="ShapeAppearance.Material3.Corner.ExtraLarge">
+    <style name="ShapeAppearance.Unruly.BottomSheet" parent="ShapeAppearance.Material3.Corner.ExtraLarge">
         <!-- This is really badly off-spec, but is needed to nicely harmonize the corner radii in the playback bar -->
         <item name="cornerSize">20dp</item>
     </style>
 
-    <style name="Widget.Shellac.BottomSheet.Modal" parent="Widget.Material3.BottomSheet.Modal">
+    <style name="Widget.Unruly.BottomSheet.Modal" parent="Widget.Material3.BottomSheet.Modal">
         <item name="marginLeftSystemWindowInsets">false</item>
         <item name="marginRightSystemWindowInsets">false</item>
         <item name="paddingBottomSystemWindowInsets">false</item>
@@ -70,15 +70,15 @@
         <item name="shouldRemoveExpandedCorners">false</item>
     </style>
 
-    <style name="Widget.Shellac.BottomSheet.Dialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/Widget.Shellac.BottomSheet.Modal</item>
-        <item name="materialButtonStyle">@style/Widget.Shellac.Button</item>
-        <item name="materialButtonTonalStyle">@style/Widget.Shellac.Button.TonalButton</item>
-        <item name="materialButtonOutlinedStyle">@style/Widget.Shellac.Button.OutlinedButton</item>
-        <item name="materialButtonElevatedStyle">@style/Widget.Shellac.Button.ElevatedButton</item>
-        <item name="borderlessButtonStyle">@style/Widget.Shellac.Button.TextButton</item>
-        <item name="snackbarButtonStyle">@style/Widget.Shellac.Button.TextButton.Snackbar</item>
-        <item name="materialIconButtonStyle">@style/Widget.Shellac.Button.Icon.Base</item>
+    <style name="Widget.Unruly.BottomSheet.Dialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.Unruly.BottomSheet.Modal</item>
+        <item name="materialButtonStyle">@style/Widget.Unruly.Button</item>
+        <item name="materialButtonTonalStyle">@style/Widget.Unruly.Button.TonalButton</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.Unruly.Button.OutlinedButton</item>
+        <item name="materialButtonElevatedStyle">@style/Widget.Unruly.Button.ElevatedButton</item>
+        <item name="borderlessButtonStyle">@style/Widget.Unruly.Button.TextButton</item>
+        <item name="snackbarButtonStyle">@style/Widget.Unruly.Button.TextButton.Snackbar</item>
+        <item name="materialIconButtonStyle">@style/Widget.Unruly.Button.Icon.Base</item>
         <item name="materialIconButtonOutlinedStyle">
             @style/Widget.Material3Expressive.Button.IconButton.Outlined
         </item>
@@ -88,118 +88,118 @@
         <item name="materialIconButtonFilledTonalStyle">
             @style/Widget.Material3Expressive.Button.IconButton.Tonal
         </item>
-        <item name="materialSplitButtonStyle">@style/Widget.Shellac.SplitButton</item>
+        <item name="materialSplitButtonStyle">@style/Widget.Unruly.SplitButton</item>
         <item name="materialSplitButtonLeadingFilledStyle">
-            @style/Widget.Shellac.SplitButton.LeadingButton.Filled
+            @style/Widget.Unruly.SplitButton.LeadingButton.Filled
         </item>
         <item name="materialSplitButtonLeadingFilledTonalStyle">
-            @style/Widget.Shellac.SplitButton.LeadingButton.Filled.Tonal
+            @style/Widget.Unruly.SplitButton.LeadingButton.Filled.Tonal
         </item>
         <item name="materialSplitButtonIconFilledStyle">
-            @style/Widget.Shellac.SplitButton.IconButton.Filled
+            @style/Widget.Unruly.SplitButton.IconButton.Filled
         </item>
         <item name="materialSplitButtonIconFilledTonalStyle">
-            @style/Widget.Shellac.SplitButton.IconButton.Filled.Tonal
+            @style/Widget.Unruly.SplitButton.IconButton.Filled.Tonal
         </item>
-        <item name="android:windowAnimationStyle">@style/Animation.Shellac.BottomSheet.Dialog</item>
+        <item name="android:windowAnimationStyle">@style/Animation.Unruly.BottomSheet.Dialog</item>
     </style>
 
-    <style name="Animation.Shellac.BottomSheet.Dialog" parent="Animation.Material3.BottomSheetDialog">
+    <style name="Animation.Unruly.BottomSheet.Dialog" parent="Animation.Material3.BottomSheetDialog">
         <item name="android:windowEnterAnimation">@anim/bottom_sheet_slide_in</item>
         <item name="android:windowExitAnimation">@anim/bottom_sheet_slide_out</item>
     </style>
 
-    <style name="Widget.Shellac.BottomSheet.Handle" parent="Widget.Material3.BottomSheet.DragHandle">
+    <style name="Widget.Unruly.BottomSheet.Handle" parent="Widget.Material3.BottomSheet.DragHandle">
         <item name="android:paddingBottom">0dp</item>
     </style>
 
-    <style name="Widget.Shellac.MaterialButtonGroup" parent="Widget.Material3.MaterialButtonGroup">
+    <style name="Widget.Unruly.MaterialButtonGroup" parent="Widget.Material3.MaterialButtonGroup">
         <item name="buttonSizeChange">@xml/safe_button_group_size_change</item>
         <item name="android:gravity">center</item>
         <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="Widget.Shellac.Image.Small" parent="">
+    <style name="Widget.Unruly.Image.Small" parent="">
         <item name="android:layout_width">@dimen/size_touchable_small</item>
         <item name="android:layout_height">@dimen/size_touchable_small</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Medium</item>
         <item name="iconSize">@dimen/size_icon_small</item>
     </style>
 
-    <style name="Widget.Shellac.Image.Small.Circular" parent="">
+    <style name="Widget.Unruly.Image.Small.Circular" parent="">
         <item name="android:layout_width">@dimen/size_touchable_small</item>
         <item name="android:layout_height">@dimen/size_touchable_small</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Full</item>
         <item name="iconSize">@dimen/size_icon_small</item>
     </style>
 
-    <style name="Widget.Shellac.Image.Medium" parent="">
+    <style name="Widget.Unruly.Image.Medium" parent="">
         <item name="android:layout_width">@dimen/size_touchable_medium</item>
         <item name="android:layout_height">@dimen/size_touchable_medium</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Medium</item>
         <item name="iconSize">@dimen/size_icon_medium</item>
     </style>
 
-    <style name="Widget.Shellac.Image.Medium.Circular" parent="">
+    <style name="Widget.Unruly.Image.Medium.Circular" parent="">
         <item name="android:layout_width">@dimen/size_touchable_medium</item>
         <item name="android:layout_height">@dimen/size_touchable_medium</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Full</item>
         <item name="iconSize">@dimen/size_icon_medium</item>
     </style>
 
-    <style name="Widget.Shellac.Image.MidLarge" parent="">
+    <style name="Widget.Unruly.Image.MidLarge" parent="">
         <item name="android:layout_width">@dimen/size_touchable_huge</item>
         <item name="android:layout_height">@dimen/size_touchable_huge</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
     </style>
 
-    <style name="Widget.Shellac.Image.Large" parent="">
+    <style name="Widget.Unruly.Image.Large" parent="">
         <item name="android:layout_width">@dimen/size_hero_small</item>
         <item name="android:layout_height">@dimen/size_hero_small</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
     </style>
 
-    <style name="Widget.Shellac.Image.MidHuge" parent="">
+    <style name="Widget.Unruly.Image.MidHuge" parent="">
         <item name="android:layout_width">@dimen/size_hero_medium</item>
         <item name="android:layout_height">@dimen/size_hero_medium</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
     </style>
 
-    <style name="Widget.Shellac.Image.Huge" parent="">
+    <style name="Widget.Unruly.Image.Huge" parent="">
         <item name="android:layout_width">@dimen/size_hero_large</item>
         <item name="android:layout_height">@dimen/size_hero_large</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
     </style>
 
-    <style name="Widget.Shellac.Image.MidFull" parent="">
+    <style name="Widget.Unruly.Image.MidFull" parent="">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
         <item name="layout_constraintDimensionRatio">1</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Large</item>
     </style>
 
-    <style name="Widget.Shellac.Image.Full" parent="">
+    <style name="Widget.Unruly.Image.Full" parent="">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
         <item name="layout_constraintDimensionRatio">1</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
     </style>
 
-    <style name="Widget.Shellac.RecyclerView.Linear" parent="">
+    <style name="Widget.Unruly.RecyclerView.Linear" parent="">
         <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
     </style>
 
-    <style name="Widget.Shellac.RecyclerView.Grid.Base" parent="">
+    <style name="Widget.Unruly.RecyclerView.Grid.Base" parent="">
         <item name="layoutManager">androidx.recyclerview.widget.GridLayoutManager</item>
     </style>
 
-    <style name="Widget.Shellac.RecyclerView.Grid" parent="Widget.Shellac.RecyclerView.Grid.Base" />
+    <style name="Widget.Unruly.RecyclerView.Grid" parent="Widget.Unruly.RecyclerView.Grid.Base" />
 
-    <style name="Widget.Shellac.RecyclerView.Grid.WithAdaptiveFab" parent="Widget.Shellac.RecyclerView.Grid">
+    <style name="Widget.Unruly.RecyclerView.Grid.WithAdaptiveFab" parent="Widget.Unruly.RecyclerView.Grid">
         <item name="android:paddingBottom">@dimen/recycler_fab_space_normal</item>
     </style>
 
-    <style name="Widget.Shellac.DisableDropShadows" parent="">
+    <style name="Widget.Unruly.DisableDropShadows" parent="">
         <!-- API 28+ Only -->
         <item name="android:outlineAmbientShadowColor" tools:ignore="NewApi">
             @android:color/transparent
@@ -215,53 +215,53 @@
 
     <!-- TEXTVIEW STYLES -->
 
-    <style name="Widget.Shellac.TextView.Base" parent="Widget.AppCompat.TextView">
+    <style name="Widget.Unruly.TextView.Base" parent="Widget.AppCompat.TextView">
         <item name="android:textAlignment">viewStart</item>
         <item name="emojiCompatEnabled">false</item>
     </style>
 
-    <style name="Widget.Shellac.TextView.Item.Base" parent="Widget.Shellac.TextView.Base">
+    <style name="Widget.Unruly.TextView.Item.Base" parent="Widget.Unruly.TextView.Base">
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
         <item name="android:layout_marginStart">@dimen/spacing_medium</item>
     </style>
 
-    <style name="Widget.Shellac.TextView.Item.Primary" parent="Widget.Shellac.TextView.Item.Base">
+    <style name="Widget.Unruly.TextView.Item.Primary" parent="Widget.Unruly.TextView.Item.Base">
         <item name="android:textAppearance">?attr/textAppearanceTitleMedium
         </item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="Widget.Shellac.TextView.Item.Secondary" parent="Widget.Shellac.TextView.Item.Base">
+    <style name="Widget.Unruly.TextView.Item.Secondary" parent="Widget.Unruly.TextView.Item.Base">
         <item name="android:textAppearance">?attr/textAppearanceBodyMedium</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <style name="Widget.Shellac.TextView.Primary" parent="Widget.Shellac.TextView.Base">
+    <style name="Widget.Unruly.TextView.Primary" parent="Widget.Unruly.TextView.Base">
         <item name="android:ellipsize">marquee</item>
         <item name="android:singleLine">true</item>
         <item name="android:marqueeRepeatLimit">marquee_forever</item>
         <item name="android:textAppearance">?attr/textAppearanceTitleLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.TextView.Secondary.Base" parent="Widget.Shellac.TextView.Base">
+    <style name="Widget.Unruly.TextView.Secondary.Base" parent="Widget.Unruly.TextView.Base">
         <item name="android:textColor">?android:attr/textColorSecondary</item>
         <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
     </style>
 
-    <style name="Widget.Shellac.TextView.Secondary.Ellipsize" parent="Widget.Shellac.TextView.Secondary.Base">
+    <style name="Widget.Unruly.TextView.Secondary.Ellipsize" parent="Widget.Unruly.TextView.Secondary.Base">
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
 
     </style>
 
-    <style name="Widget.Shellac.TextView.Secondary.Marquee" parent="Widget.Shellac.TextView.Secondary.Base">
+    <style name="Widget.Unruly.TextView.Secondary.Marquee" parent="Widget.Unruly.TextView.Secondary.Base">
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">marquee</item>
         <item name="android:marqueeRepeatLimit">marquee_forever</item>
     </style>
 
-    <style name="Widget.Shellac.TextView.Primary.Compact" parent="Widget.Shellac.TextView.Base">
+    <style name="Widget.Unruly.TextView.Primary.Compact" parent="Widget.Unruly.TextView.Base">
         <item name="android:ellipsize">marquee</item>
         <item name="android:singleLine">true</item>
         <item name="android:marqueeRepeatLimit">marquee_forever</item>
@@ -269,14 +269,14 @@
         <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.TextView.Secondary.Compact" parent="Widget.Shellac.TextView.Base">
+    <style name="Widget.Unruly.TextView.Secondary.Compact" parent="Widget.Unruly.TextView.Base">
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
         <item name="android:textAppearance">?attr/textAppearanceBodySmall</item>
     </style>
 
-    <style name="Widget.Shellac.TextView.Header" parent="Widget.Shellac.TextView.Base">
+    <style name="Widget.Unruly.TextView.Header" parent="Widget.Unruly.TextView.Base">
         <item name="android:paddingStart">@dimen/spacing_medium</item>
         <item name="android:paddingTop">@dimen/spacing_small</item>
         <item name="android:paddingBottom">@dimen/spacing_small</item>
@@ -287,12 +287,12 @@
         <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.TextView.Detail" parent="Widget.Shellac.TextView.Base">
+    <style name="Widget.Unruly.TextView.Detail" parent="Widget.Unruly.TextView.Base">
         <item name="android:textAppearance">?attr/textAppearanceTitleLargeEmphasized</item>
         <item name="android:textAlignment">viewStart</item>
     </style>
 
-    <style name="Widget.Shellac.TextView.Icon" parent="Widget.Shellac.TextView.Base">
+    <style name="Widget.Unruly.TextView.Icon" parent="Widget.Unruly.TextView.Base">
         <item name="android:drawablePadding">@dimen/spacing_medium</item>
         <item name="android:paddingTop">@dimen/spacing_mid_medium</item>
         <item name="android:paddingStart">@dimen/spacing_medium</item>
@@ -301,7 +301,7 @@
         <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
     </style>
 
-    <style name="Widget.Shellac.TextView.Icon.Clickable" parent="Widget.Shellac.TextView.Icon">
+    <style name="Widget.Unruly.TextView.Icon.Clickable" parent="Widget.Unruly.TextView.Icon">
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:background">?attr/selectableItemBackground</item>
@@ -309,82 +309,82 @@
 
     <!-- BUTTON STYLES -->
 
-    <style name="Widget.Shellac.Button" parent="Widget.Material3Expressive.Button">
+    <style name="Widget.Unruly.Button" parent="Widget.Material3Expressive.Button">
         <item name="labelTextAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
         <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.Button.TonalButton" parent="Widget.Material3Expressive.Button.TonalButton">
+    <style name="Widget.Unruly.Button.TonalButton" parent="Widget.Material3Expressive.Button.TonalButton">
         <item name="labelTextAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
         <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.Button.OutlinedButton" parent="Widget.Material3Expressive.Button.OutlinedButton">
+    <style name="Widget.Unruly.Button.OutlinedButton" parent="Widget.Material3Expressive.Button.OutlinedButton">
         <item name="labelTextAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
         <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.Button.ElevatedButton" parent="Widget.Material3Expressive.Button.ElevatedButton">
+    <style name="Widget.Unruly.Button.ElevatedButton" parent="Widget.Material3Expressive.Button.ElevatedButton">
         <item name="labelTextAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
         <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.Button.TextButton" parent="Widget.Material3Expressive.Button.TextButton">
+    <style name="Widget.Unruly.Button.TextButton" parent="Widget.Material3Expressive.Button.TextButton">
         <item name="labelTextAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
         <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.Button.TextButton.Dialog" parent="Widget.Material3Expressive.Button.TextButton.Dialog">
+    <style name="Widget.Unruly.Button.TextButton.Dialog" parent="Widget.Material3Expressive.Button.TextButton.Dialog">
         <item name="labelTextAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
         <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.Button.TextButton.Dialog.Flush" parent="Widget.Material3Expressive.Button.TextButton.Dialog.Flush">
+    <style name="Widget.Unruly.Button.TextButton.Dialog.Flush" parent="Widget.Material3Expressive.Button.TextButton.Dialog.Flush">
         <item name="labelTextAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
         <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.Button.TextButton.Snackbar" parent="Widget.Material3Expressive.Button.TextButton.Snackbar">
+    <style name="Widget.Unruly.Button.TextButton.Snackbar" parent="Widget.Material3Expressive.Button.TextButton.Snackbar">
         <item name="labelTextAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
         <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.SplitButton" parent="Widget.Material3.MaterialSplitButton" />
+    <style name="Widget.Unruly.SplitButton" parent="Widget.Material3.MaterialSplitButton" />
 
-    <style name="Widget.Shellac.SplitButton.LeadingButton.Filled" parent="Widget.Material3.SplitButton.LeadingButton.Filled">
+    <style name="Widget.Unruly.SplitButton.LeadingButton.Filled" parent="Widget.Material3.SplitButton.LeadingButton.Filled">
         <item name="labelTextAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
         <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.SplitButton.LeadingButton.Filled.Tonal" parent="Widget.Material3.SplitButton.LeadingButton.Filled.Tonal">
+    <style name="Widget.Unruly.SplitButton.LeadingButton.Filled.Tonal" parent="Widget.Material3.SplitButton.LeadingButton.Filled.Tonal">
         <item name="labelTextAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
         <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
     </style>
 
-    <style name="Widget.Shellac.SplitButton.IconButton.Filled" parent="Widget.Material3.SplitButton.IconButton.Filled" />
+    <style name="Widget.Unruly.SplitButton.IconButton.Filled" parent="Widget.Material3.SplitButton.IconButton.Filled" />
 
-    <style name="Widget.Shellac.SplitButton.IconButton.Filled.Tonal" parent="Widget.Material3.SplitButton.IconButton.Filled.Tonal" />
+    <style name="Widget.Unruly.SplitButton.IconButton.Filled.Tonal" parent="Widget.Material3.SplitButton.IconButton.Filled.Tonal" />
 
-    <style name="Widget.Shellac.Button.Primary" parent="Widget.Shellac.Button">
+    <style name="Widget.Unruly.Button.Primary" parent="Widget.Unruly.Button">
         <item name="iconGravity">textStart</item>
         <item name="iconSize">@dimen/size_icon_small</item>
     </style>
 
-    <style name="Widget.Shellac.Button.Secondary" parent="Widget.Shellac.Button.TonalButton">
+    <style name="Widget.Unruly.Button.Secondary" parent="Widget.Unruly.Button.TonalButton">
         <item name="iconGravity">textStart</item>
         <item name="iconSize">@dimen/size_icon_small</item>
     </style>
 
-    <style name="Widget.Shellac.Button.Icon.Base" parent="Widget.Material3Expressive.Button.IconButton">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Shellac.UncheckableIconButton</item>
+    <style name="Widget.Unruly.Button.Icon.Base" parent="Widget.Material3Expressive.Button.IconButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Unruly.UncheckableIconButton</item>
     </style>
 
-    <style name="ThemeOverlay.Shellac.UncheckableIconButton" parent="">
+    <style name="ThemeOverlay.Unruly.UncheckableIconButton" parent="">
         <item name="colorContainer">@android:color/transparent</item>
         <item name="colorOnContainer">?attr/colorOnSurfaceVariant</item>
     </style>
 
-    <style name="Widget.Shellac.Button.Icon.Small" parent="Widget.Shellac.Button.Icon.Base">
+    <style name="Widget.Unruly.Button.Icon.Small" parent="Widget.Unruly.Button.Icon.Base">
         <item name="iconSize">@dimen/size_icon_small</item>
         <item name="android:minWidth">@dimen/size_touchable_small</item>
         <item name="android:minHeight">@dimen/size_touchable_small</item>
@@ -400,7 +400,7 @@
         <item name="iconTint" tools:ignore="PrivateResource">@color/m3_text_button_foreground_color_selector</item>
     </style>
 
-    <style name="Widget.Shellac.Button.Icon.Medium" parent="Widget.Material3Expressive.Button.IconButton.Outlined">
+    <style name="Widget.Unruly.Button.Icon.Medium" parent="Widget.Material3Expressive.Button.IconButton.Outlined">
         <item name="iconSize">@dimen/size_icon_medium</item>
         <item name="android:minWidth">@dimen/size_touchable_small</item>
         <item name="android:minHeight">@dimen/size_touchable_small</item>
@@ -415,7 +415,7 @@
         <item name="iconTint" tools:ignore="PrivateResource">@color/m3_text_button_foreground_color_selector</item>
     </style>
 
-    <style name="Widget.Shellac.Button.Icon.Small.Primary" parent="Widget.Material3Expressive.Button.IconButton.Filled">
+    <style name="Widget.Unruly.Button.Icon.Small.Primary" parent="Widget.Material3Expressive.Button.IconButton.Filled">
         <item name="iconSize">@dimen/size_icon_small</item>
         <item name="android:minWidth">@dimen/size_touchable_small</item>
         <item name="android:minHeight">@dimen/size_touchable_small</item>
@@ -429,7 +429,7 @@
         <item name="android:paddingBottom">@dimen/spacing_small</item>
     </style>
 
-    <style name="Widget.Shellac.Button.Icon.Small.Secondary" parent="Widget.Material3Expressive.Button.IconButton.Tonal">
+    <style name="Widget.Unruly.Button.Icon.Small.Secondary" parent="Widget.Material3Expressive.Button.IconButton.Tonal">
         <item name="iconSize">@dimen/size_icon_small</item>
         <item name="android:minWidth">@dimen/size_touchable_small</item>
         <item name="android:minHeight">@dimen/size_touchable_small</item>
@@ -444,32 +444,32 @@
     </style>
 
 
-    <style name="ThemeOverlay.Shellac.IconButton.Palette.Secondary" parent="">
+    <style name="ThemeOverlay.Unruly.IconButton.Palette.Secondary" parent="">
         <item name="colorContainer">?attr/colorSecondaryContainer</item>
         <item name="colorOnContainer">?attr/colorOnSecondaryContainer</item>
     </style>
 
-    <style name="ThemeOverlay.Shellac.IconButton.Style.Small.Primary" parent="">
-        <item name="materialIconButtonStyle">@style/Widget.Shellac.Button.Icon.Small.Primary</item>
+    <style name="ThemeOverlay.Unruly.IconButton.Style.Small.Primary" parent="">
+        <item name="materialIconButtonStyle">@style/Widget.Unruly.Button.Icon.Small.Primary</item>
     </style>
 
-    <style name="ThemeOverlay.Shellac.IconButton.Style.Small.Secondary" parent="">
-        <item name="materialIconButtonStyle">@style/Widget.Shellac.Button.Icon.Small.Secondary</item>
+    <style name="ThemeOverlay.Unruly.IconButton.Style.Small.Secondary" parent="">
+        <item name="materialIconButtonStyle">@style/Widget.Unruly.Button.Icon.Small.Secondary</item>
     </style>
 
-    <style name="Widget.Shellac.Button.PlayPause" parent="Widget.Material3Expressive.Button.IconButton">
+    <style name="Widget.Unruly.Button.PlayPause" parent="Widget.Material3Expressive.Button.IconButton">
         <item name="android:checkable">true</item>
     </style>
 
-    <style name="Widget.Shellac.Button.PlayPause.Secondary" parent="Widget.Material3Expressive.Button.IconButton">
+    <style name="Widget.Unruly.Button.PlayPause.Secondary" parent="Widget.Material3Expressive.Button.IconButton">
         <item name="backgroundTint">?attr/colorSecondary</item>
         <item name="iconTint">?attr/colorOnSecondary</item>
         <item name="android:checkable">true</item>
     </style>
 
-    <style name="Widget.Shellac.Button.Playback.More" parent="Widget.Shellac.Button.Icon.Base" />
+    <style name="Widget.Unruly.Button.Playback.More" parent="Widget.Unruly.Button.Icon.Base" />
 
-    <style name="Widget.Shellac.Button.Playback.Toggle" parent="Widget.Material3Expressive.Button.IconButton.Outlined">
+    <style name="Widget.Unruly.Button.Playback.Toggle" parent="Widget.Material3Expressive.Button.IconButton.Outlined">
         <item name="android:checkable">true</item>
         <item name="toggleCheckedStateOnClick">false</item>
         <item name="iconTint">@color/sel_checkable_icon</item>
@@ -477,13 +477,13 @@
         <item name="backgroundTint">?attr/colorSurfaceContainerLow</item>
     </style>
 
-    <style name="Widget.Shellac.Button.Playback.Skip" parent="Widget.Material3Expressive.Button.IconButton.Tonal" />
+    <style name="Widget.Unruly.Button.Playback.Skip" parent="Widget.Material3Expressive.Button.IconButton.Tonal" />
 
-    <style name="Widget.Shellac.Button.Playback.PlayPause" parent="Widget.Material3Expressive.Button.IconButton.Tonal">
+    <style name="Widget.Unruly.Button.Playback.PlayPause" parent="Widget.Material3Expressive.Button.IconButton.Tonal">
         <item name="android:checkable">true</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Shellac.Button.PrimaryTonal</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Unruly.Button.PrimaryTonal</item>
     </style>
-    <style name="ThemeOverlay.Shellac.Button.PrimaryTonal" parent="">
+    <style name="ThemeOverlay.Unruly.Button.PrimaryTonal" parent="">
         <item name="colorContainer">?attr/colorPrimaryContainer</item>
         <item name="colorContainerChecked">?attr/colorPrimary</item>
         <item name="colorContainerUnchecked">?attr/colorPrimaryContainer</item>

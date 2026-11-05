@@ -1,10 +1,10 @@
-# Shellac — Progress Tracker
+# Unruly — Progress Tracker
 
 Master status across all phases. One line per task. Detail lives in `docs/tasks/<id>-*.md`.
 
 **Legend:** ⬜ not started · 🟡 in progress · ✅ done · 🔴 blocked · ⏭️ skipped
 
-Last updated: 2026-08-05
+Last updated: 2026-10-20
 
 ---
 
@@ -28,7 +28,7 @@ Last updated: 2026-08-05
 | 0.3 | Clone with submodules | ✅ media 609M + ffmpeg + taglib, all clean | — |
 | 0.4 | Build APK — ⚠️ task is **`:app:assembleDebug`**, not `assembleFullDebug` (no flavors exist) | ✅ 24.4 MB APK, 8 native `.so` across 4 ABIs | [0.4](tasks/0.4-build-toolchain.md) |
 | 0.5 | Install on real device | ✅ installed + launched, no crash (pid 12080) | [checks](verification/phase-0-checks.md) |
-| 0.6 | Set up fork | ✅ branch `shellac`, remote renamed to `upstream` | — |
+| 0.6 | Set up fork | ✅ branch `unruly`, remote renamed to `upstream` | — |
 | 0.T | Clean rebuild test | ✅ 232/232 tasks executed, 11m29s, identical APK | — |
 | 0.C | Commit working state | ✅ `856bddcc3` (unsigned — see papercut) | — |
 | 0.M | **Manual device verification** | ✅ user-confirmed 2026-08-05 ("tested the rest and they are good") | [checks](verification/phase-0-checks.md) |
@@ -99,7 +99,7 @@ Commits `032f1a705`, `4c205d7d4`, `389d66803`.
 | 3.3 Commands | ✅ | `SkinCommands.kt` |
 | 3.4 AppSkin | ✅ | `AppSkin.kt` |
 | 3.5 Engine adapter | ✅ verified on device | codex/luna-high |
-| 3.6 Host Activity | ✅ verified on device | `ShellacActivity` |
+| 3.6 Host Activity | ✅ verified on device | `UnrulyActivity` |
 | 3.7 Non-skinnable settings | ✅ verified on device | own LAUNCHER entry |
 | 3.8 Registry + fallback | ✅ | crash-loop breaker, not an error boundary |
 | 3.9 Debug skins | ✅ verified on device | cline/deepseek-v4-flash |
@@ -129,7 +129,7 @@ cannot see one. Grep remains as a backstop against a skin placed in the wrong mo
 
 ## Phase 4 — Skin Support Infrastructure
 
-All in `skin/src/main/java/org/shellac/skin/support/`. Commit `8fc0d62cb`.
+All in `skin/src/main/java/org/unruly/skin/support/`. Commit `8fc0d62cb`.
 
 | Task | File | Status | Agent |
 |---|---|---|---|
@@ -201,11 +201,33 @@ found a design hole in an afternoon.
 
 | Task | Status | Notes |
 |---|---|---|
-| 6.1 Second skin | ✅ **verified on device** | Zune-styled, `org.shellac.skin.zune`. Imports nothing from `wheel/` or `org.oxycblt`. **Needed no contract changes** — see [6.1](tasks/6.1-second-skin.md) |
+| 6.1 Second skin | ✅ **verified on device** | Zune-styled, `org.unruly.skin.zune`. Imports nothing from `wheel/` or `org.oxycblt`. **Needed no contract changes** — see [6.1](tasks/6.1-second-skin.md) |
 | 6.2 Edge cases | ⬜ | Blocked on B4 (20,000-track library) |
 | 6.3 Upstream merge | ⬜ | |
 | 6.4 Performance | 🟡 | Release build verified to survive R8; profiling still needs a manual folder grant — see [5h](tasks/5h-classic-styling.md) §9 |
 | 6.5 Licensing / README | ⬜ | GPLv3 obligations |
+
+
+## Phase 7 — More skins
+
+Classic player interfaces, one skin each. Ground rules and gaps in [skins-backlog](tasks/skins-backlog.md).
+
+| Task | Skin | Status |
+|------|------|--------|
+| 7.1 | Winamp 2 (classic main window, equaliser, playlist editor) | ✅ built as "Amp", approved by the user; transport and volume not exercised on device |
+| 7.2 | iOS 6 Music app | 🟡 built as "Glossy"; portrait verified on device; landscape skipped (broken), minor items open (see backlog) |
+| 7.3 | PSP XMB | 🟡 built as "Crossbar"; menu, player and landscape menu verified on device; awaiting the user's review (see backlog) |
+| 7.4 | Sony Ericsson Walkman phone | ⬜ |
+| 7.5 | Windows Media Player 11 | ⬜ |
+
+## Onboarding and settings redesign ("Redline")
+
+| Task | Status | Notes |
+|---|---|---|
+| Vortex welcome | ✅ verified on device | Type-tunnel welcome, toned-down wobble, fits all screen sizes. See [vortex-welcome](verification/vortex-welcome.md) |
+| Folders + lock-screen steps | 🟡 built | Gloria Hallelujah headlines, photocopied audio-gear cut-outs (replaced the creatures), progress bar, folder list laid over the art. Latest build not yet installed; art is AI placeholder. See [onboarding-redline](tasks/onboarding-redline.md) |
+| Settings menu stack | 🟡 portrait checked on device | Replaces the Winamp "PREFERENCES" window: a menu (skin, library, lyrics) pushing one page each, same red stock and gear art. See [settings-redline](tasks/settings-redline.md) |
+| Commit | ⬜ | Nothing committed yet |
 
 ---
 

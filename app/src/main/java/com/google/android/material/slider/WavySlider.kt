@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2026 Shellac Project
- * WavySlider.kt is part of Shellac.
+ * Copyright (c) 2026 Unruly Project
+ * WavySlider.kt is part of Unruly.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ import androidx.dynamicanimation.animation.FloatValueHolder
 import androidx.dynamicanimation.animation.SpringAnimation
 import com.google.android.material.R as MR
 import com.google.android.material.motion.MotionUtils
-import com.merklegroot.shellac.R
+import com.merklegroot.unruly.R
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -543,7 +543,7 @@ constructor(
         waveTransitionAnimation = null
 
         // Use a standard M3 animation
-        // Not using Shellac anim utils due to this being outside the Shellac pkg
+        // Not using Unruly anim utils due to this being outside the Unruly pkg
         // TODO: Could move it inside the pkg honestly
         val springAnimation =
             SpringAnimation(FloatValueHolder(currentAmplitudeFraction)).apply {

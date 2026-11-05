@@ -1,11 +1,11 @@
 name: Feature Request
-description: Propose new functionality for Shellac
+description: Propose new functionality for Unruly
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Before filing: Shellac draws a hard line between the **engine** (playback and indexing,
+        Before filing: Unruly draws a hard line between the **engine** (playback and indexing,
         inherited from Auxio and deliberately untouched) and **skins**, which own every screen
         and the navigation between them. Most interface requests are skin requests — and adding
         a new skin is the intended way to get the interface you want.

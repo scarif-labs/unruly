@@ -1,4 +1,4 @@
-Add a lyrics screen to the Touch Wheel skin in the Shellac Android project.
+Add a lyrics screen to the Touch Wheel skin in the Unruly Android project.
 
 Working directory is the repo root.
 
@@ -13,14 +13,14 @@ containing ffmpeg's test-vector suite; an unscoped search drowns in it.
 
 ## What already exists — read it and use its REAL signatures
 
-- `skin/src/main/java/org/shellac/skin/SkinLyrics.kt` — `SkinLyricLine`, `SkinLyrics`,
+- `skin/src/main/java/org/unruly/skin/SkinLyrics.kt` — `SkinLyricLine`, `SkinLyrics`,
   `SkinLyricsState`, `SkinLyricsSource`
-- `skin/src/main/java/org/shellac/skin/support/LyricsSupport.kt` — `activeLyricIndexAt`.
+- `skin/src/main/java/org/unruly/skin/support/LyricsSupport.kt` — `activeLyricIndexAt`.
   **Use it. Do not write your own.**
-- `skin/src/main/java/org/shellac/skin/AppSkin.kt` — `SkinSession.lyrics`
-- `skin/src/main/java/org/shellac/skin/support/PositionTicker.kt` —
+- `skin/src/main/java/org/unruly/skin/AppSkin.kt` — `SkinSession.lyrics`
+- `skin/src/main/java/org/unruly/skin/support/PositionTicker.kt` —
   `rememberInterpolatedPosition`
-- `skin/src/main/java/org/shellac/skin/wheel/` — the whole skin. In particular
+- `skin/src/main/java/org/unruly/skin/wheel/` — the whole skin. In particular
   `WheelChrome.kt` (`ClassicTitleBar`, `ClassicMenuRow`, `ClassicSplitLayout`,
   `ClassicColors`, `ClassicTypography`), `WheelMenuList.kt`, `TouchWheelSkin.kt`
   (`wheelScaffold`, `navigateTo`, `WheelDestination`)
@@ -28,17 +28,17 @@ containing ffmpeg's test-vector suite; an unscoped search drowns in it.
 ## Your job
 
 Only these files:
-- NEW `skin/src/main/java/org/shellac/skin/wheel/WheelLyrics.kt`
+- NEW `skin/src/main/java/org/unruly/skin/wheel/WheelLyrics.kt`
 - `WheelDestination.kt` — add a `Lyrics` destination
 - `TouchWheelSkin.kt` — route it and add the entry point
 
 Do NOT modify `TouchWheel.kt`, `WheelZone.kt`, `WheelMenuList.kt`, `WheelChrome.kt`,
 `WheelNowPlaying.kt`, `WheelQueue.kt`, `WheelSearch.kt`, the contract, `support/`, or any
-`build.gradle`. Another agent is working in `org.shellac.skin.zune` — do not touch it.
+`build.gradle`. Another agent is working in `org.unruly.skin.zune` — do not touch it.
 
 ## Hard constraints
 
-1. **Only `org.shellac.skin` types plus Compose/Kotlin stdlib.** Do NOT import
+1. **Only `org.unruly.skin` types plus Compose/Kotlin stdlib.** Do NOT import
    `org.oxycblt.auxio` or `org.oxycblt.musikr`. Do not read `app/` or `musikr/` at all.
 2. `collectAsStateWithLifecycle` is NOT available. Use `collectAsState()`.
 3. Pass function-typed arguments **by name** when a function takes more than one — a trailing

@@ -1,0 +1,10 @@
+{
+  "id": "com.example.starter",
+  "name": "Starter",
+  "author": "You",
+  "version": "1.0.0",
+  "unrulyApi": 1,
+  "entry": "index.html",
+  "edgeToEdge": true,
+  "settingsGear": "top-end"
+}

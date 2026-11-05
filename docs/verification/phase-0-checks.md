@@ -78,7 +78,7 @@ For anything that fails, the useful information is:
 ```bash
 A=~/Library/Android/sdk/platform-tools/adb
 $A logcat -c            # clear, then reproduce the problem, then:
-$A logcat -d > ~/Desktop/shellac-phase0.log
+$A logcat -d > ~/Desktop/unruly-phase0.log
 ```
 
 **If the build itself fails,** the buildspec is emphatic and correct: that is a toolchain

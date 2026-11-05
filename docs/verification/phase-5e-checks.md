@@ -10,7 +10,7 @@ adb devices                      # confirm 9b53f076 is listed
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-Then open **Shellac**, go to the app-native settings launcher icon, and select **Touch
+Then open **Unruly**, go to the app-native settings launcher icon, and select **Touch
 Wheel**. Debug A and B are still there — switching back is the escape hatch if the wheel
 misbehaves.
 

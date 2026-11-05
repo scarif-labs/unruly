@@ -6,15 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.merklegroot.shellac.list.recycler.FastScrollRecyclerView
+    <com.merklegroot.unruly.list.recycler.FastScrollRecyclerView
         android:id="@+id/home_recycler"
-        style="@style/Widget.Shellac.RecyclerView.Grid.WithAdaptiveFab"
+        style="@style/Widget.Unruly.RecyclerView.Grid.WithAdaptiveFab"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/item_song" />
 
 
-    <com.merklegroot.shellac.ui.EdgeFrameLayout
+    <com.merklegroot.unruly.ui.EdgeFrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -28,7 +28,7 @@
             android:orientation="vertical"
             android:padding="@dimen/spacing_medium">
 
-            <com.merklegroot.shellac.home.list.CookieImageView
+            <com.merklegroot.unruly.home.list.CookieImageView
                 android:id="@+id/home_no_music_placeholder"
                 android:layout_width="@dimen/size_fast_scroll_popup"
                 android:layout_height="@dimen/size_fast_scroll_popup"
@@ -47,7 +47,7 @@
                 android:textAlignment="center"
                 android:textAppearance="?attr/textAppearanceBodyLarge" />
 
-            <com.merklegroot.shellac.ui.RippleFixMaterialButton
+            <com.merklegroot.unruly.ui.RippleFixMaterialButton
                 android:id="@+id/home_no_music_action"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,5 +55,5 @@
 
         </LinearLayout>
 
-    </com.merklegroot.shellac.ui.EdgeFrameLayout>
+    </com.merklegroot.unruly.ui.EdgeFrameLayout>
 </FrameLayout>

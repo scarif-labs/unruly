@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/header_title"
-        style="@style/Widget.Shellac.TextView.Header"
+        style="@style/Widget.Unruly.TextView.Header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spacing_mid_medium"
@@ -18,9 +18,9 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Songs" />
 
-    <com.merklegroot.shellac.ui.RippleFixMaterialButton
+    <com.merklegroot.unruly.ui.RippleFixMaterialButton
         android:id="@+id/header_sort"
-        style="@style/Widget.Shellac.Button.Icon.Small"
+        style="@style/Widget.Unruly.Button.Icon.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spacing_mid_medium"

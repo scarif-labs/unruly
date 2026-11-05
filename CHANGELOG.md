@@ -1,7 +1,7 @@
 # Changelog
 
-Changes to Shellac. For the history of the upstream engine, see
-[Auxio's changelog](https://github.com/OxygenCobalt/Auxio/blob/dev/CHANGELOG.md); Shellac forked
+Changes to Unruly. For the history of the upstream engine, see
+[Auxio's changelog](https://github.com/OxygenCobalt/Auxio/blob/dev/CHANGELOG.md); Unruly forked
 at Auxio v4.1.5.
 
 ## Unreleased
@@ -26,5 +26,5 @@ Initial skin-layer work, built on Auxio v4.1.5.
 - Removed the two debug skins used to validate the contract during development.
 
 **Project**
-- Renamed the app package to `com.merklegroot.shellac` and the application ID to match.
-- Replaced Auxio branding with the Shellac mark and launcher icons.
+- Renamed the app package to `com.merklegroot.unruly` and the application ID to match.
+- Replaced Auxio branding with the Unruly mark and launcher icons.

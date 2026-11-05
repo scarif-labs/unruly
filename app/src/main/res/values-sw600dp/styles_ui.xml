@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Widget.Shellac.RecyclerView.Grid.WithAdaptiveFab" parent="Widget.Shellac.RecyclerView.Grid">
+    <style name="Widget.Unruly.RecyclerView.Grid.WithAdaptiveFab" parent="Widget.Unruly.RecyclerView.Grid">
         <item name="android:paddingBottom">@dimen/recycler_fab_space_large</item>
     </style>
 </resources>

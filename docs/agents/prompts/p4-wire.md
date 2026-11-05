@@ -1,20 +1,20 @@
-Wire the newly-built skin support layer into the two existing debug skins in the Shellac
-Android project. Nothing in `org.shellac.skin.support` has a consumer yet, so none of it has
+Wire the newly-built skin support layer into the two existing debug skins in the Unruly
+Android project. Nothing in `org.unruly.skin.support` has a consumer yet, so none of it has
 ever executed. This task is that consumer, and doubles as the Phase 4 test harness.
 
 Working directory is the repo root.
 
 ## Files to modify — ONLY these two
 
-- `skin/src/main/java/org/shellac/skin/debug/DebugSkinA.kt`
-- `skin/src/main/java/org/shellac/skin/debug/DebugSkinB.kt`
+- `skin/src/main/java/org/unruly/skin/debug/DebugSkinA.kt`
+- `skin/src/main/java/org/unruly/skin/debug/DebugSkinB.kt`
 
 Do not create files. Do not modify anything under `support/` or the contract. Do not touch
 any `build.gradle`.
 
 ## Hard constraints
 
-1. **Only `org.shellac.skin` types plus Compose/Kotlin stdlib.** Do NOT import
+1. **Only `org.unruly.skin` types plus Compose/Kotlin stdlib.** Do NOT import
    `org.oxycblt.auxio` or `org.oxycblt.musikr`. Do not read `app/` or `musikr/` at all.
 2. `collectAsStateWithLifecycle` is NOT available. Use `collectAsState()`.
 
@@ -22,12 +22,12 @@ Pinned: Kotlin 2.3.10, Compose BOM 2026.06.01, Coil 3.4.0, minSdk 24, Java 21.
 
 ## Read these first — use their real signatures, do not guess
 
-- `skin/src/main/java/org/shellac/skin/support/PositionTicker.kt`
-- `skin/src/main/java/org/shellac/skin/support/RotaryGesture.kt`
-- `skin/src/main/java/org/shellac/skin/support/SkinAlbumArt.kt`
-- `skin/src/main/java/org/shellac/skin/support/SkinTheme.kt`
-- `skin/src/main/java/org/shellac/skin/support/SkinBackStack.kt`
-- `skin/src/main/java/org/shellac/skin/support/SkinStates.kt`
+- `skin/src/main/java/org/unruly/skin/support/PositionTicker.kt`
+- `skin/src/main/java/org/unruly/skin/support/RotaryGesture.kt`
+- `skin/src/main/java/org/unruly/skin/support/SkinAlbumArt.kt`
+- `skin/src/main/java/org/unruly/skin/support/SkinTheme.kt`
+- `skin/src/main/java/org/unruly/skin/support/SkinBackStack.kt`
+- `skin/src/main/java/org/unruly/skin/support/SkinStates.kt`
 
 ## What to change
 

@@ -12,7 +12,7 @@
 
     <!-- Lyrics lookup only. This engine is otherwise entirely offline, so the permission is
          here for one third-party API call and nothing else. The lookup is user-toggleable in
-         Shellac settings; when off, no request is ever made. -->
+         Unruly settings; when off, no request is ever made. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -27,10 +27,15 @@
         android:name="android.permission.ACCESS_NETWORK_STATE"
         tools:node="remove" />
 
-    <queries />
+    <!-- Lets settings find the system equalizer (for its name, and whether there is one). -->
+    <queries>
+        <intent>
+            <action android:name="android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL" />
+        </intent>
+    </queries>
 
     <application
-        android:name=".Shellac"
+        android:name=".Unruly"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -38,7 +43,7 @@
         android:label="@string/info_app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Shellac.App"
+        android:theme="@style/Theme.Unruly.App"
         android:appCategory="audio"
         android:enableOnBackInvokedCallback="true"
         tools:ignore="UnusedAttribute">
@@ -47,18 +52,18 @@
             android:resource="@xml/automotive_app_desc"/>
         <meta-data
                 android:name="androidx.car.app.TintableAttributionIcon"
-                android:resource="@drawable/ic_shellac_24" />
+                android:resource="@drawable/ic_unruly_24" />
 
         <!--
-        SHELLAC HOST. Hosts the active skin and nothing else.
+        UNRULY HOST. Hosts the active skin and nothing else.
         Kept alongside .MainActivity for now so the original UI stays testable; .MainActivity
         is removed once a real skin exists (buildspec Phase 5).
         -->
         <activity
-            android:name=".shellac.host.ShellacActivity"
+            android:name=".unruly.host.UnrulyActivity"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="Shellac"
+            android:label="@string/info_app_name"
             android:launchMode="singleTask"
             android:roundIcon="@mipmap/ic_launcher"
             android:windowSoftInputMode="adjustNothing">
@@ -74,14 +79,14 @@
         </activity>
 
         <!--
-        SHELLAC SETTINGS - buildspec 3.7. Never composes a skin.
+        UNRULY SETTINGS - buildspec 3.7. Never composes a skin.
 
         NO LAUNCHER ENTRY, deliberately - and this reverses an earlier decision, so the
         reasoning matters.
 
         It used to have its own LAUNCHER entry so it stayed reachable when the active skin
         was unusable. But it shipped with the SAME icon as the host and a near-identical
-        label, so the launcher showed two indistinguishable "Shellac" icons. Users opened the
+        label, so the launcher showed two indistinguishable "Unruly" icons. Users opened the
         wrong one, landed on a settings screen that composes no skin, changed a theme and saw
         nothing happen, then pressed back and got dumped out of the app - because this
         Activity was its own task root. That is a guaranteed daily papercut traded against a
@@ -103,9 +108,9 @@
         apart. singleTop keeps it in the caller's task, so the signal stays truthful.
         -->
         <!--
-        FIRST-RUN SETUP. Grants the music folders Shellac scans.
+        FIRST-RUN SETUP. Grants the music folders Unruly scans.
 
-        No launcher entry and not exported: it is only ever reached from ShellacActivity's
+        No launcher entry and not exported: it is only ever reached from UnrulyActivity's
         first-run gate or from the "Music folders" row in settings, both in-process.
 
         launchMode is the default (standard) on purpose. It is started from two different
@@ -113,17 +118,45 @@
         both cases it should sit on top of whoever started it so that finish() returns there.
         -->
         <activity
-            android:name=".shellac.host.OnboardingActivity"
+            android:name=".unruly.host.OnboardingActivity"
             android:exported="false"
-            android:label="Shellac setup"
+            android:label="@string/info_app_setup_name"
             android:windowSoftInputMode="adjustNothing" />
 
+        <!--
+        Also opens .unruly skin files from file managers and chat apps. It never installs on
+        its own: it shows the skin's name and author and waits for the user to tap Install, since
+        any app can send us a file this way.
+
+        Few senders know a type for .unruly, so most send application/octet-stream and some put
+        the name in the path; the filters cover both. The octet-stream one makes Unruly show up
+        for other unknown files too, which then get a short "not an Unruly skin" instead.
+        -->
         <activity
-            android:name=".shellac.host.ShellacSettingsActivity"
+            android:name=".unruly.host.UnrulySettingsActivity"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
-            android:label="Shellac Settings"
-            android:launchMode="singleTop" />
+            android:label="@string/info_app_settings_name"
+            android:launchMode="singleTop">
+            <intent-filter android:label="@string/lbl_install_skin">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:mimeType="*/*" />
+                <data android:pathPattern=".*\\.unruly" />
+                <data android:pathPattern=".*\\..*\\.unruly" />
+                <data android:pathPattern=".*\\..*\\..*\\.unruly" />
+            </intent-filter>
+            <intent-filter android:label="@string/lbl_install_skin">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:mimeType="application/octet-stream" />
+                <data android:mimeType="application/x-unruly-skin" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".MainActivity"
@@ -135,21 +168,21 @@
             android:windowSoftInputMode="adjustNothing">
 
             <!--
-            NO LAUNCHER ENTRY. This is Shellac's original pre-Shellac UI, kept only so it stays
-            testable and so the "Shuffle All" launcher shortcut (Shellac.kt) keeps working -
-            ShellacActivity does not yet parse intent actions, so repointing that shortcut
+            NO LAUNCHER ENTRY. This is Unruly's original pre-Unruly UI, kept only so it stays
+            testable and so the "Shuffle All" launcher shortcut (Unruly.kt) keeps working -
+            UnrulyActivity does not yet parse intent actions, so repointing that shortcut
             here would silently do nothing.
 
-            Its MAIN/LAUNCHER/MUSIC_PLAYER filter moved to .ShellacActivity. Leaving it here
+            Its MAIN/LAUNCHER/MUSIC_PLAYER filter moved to .UnrulyActivity. Leaving it here
             put a THIRD icon in the launcher that opened an entirely different interface from
-            the other two, with no skin and no route to Shellac settings.
+            the other two, with no skin and no route to Unruly settings.
 
             Reachable by explicit intent, which is all the shortcut needs.
             -->
             <intent-filter>
                 <!--
                 Signal that we can take audio of *any* format, file or content. This is important,
-                as some apps use this to determine if Shellac is eligible to be a default music
+                as some apps use this to determine if Unruly is eligible to be a default music
                 player.
                 -->
                 <action android:name="android.intent.action.VIEW" />
@@ -173,7 +206,7 @@
         Service handling music playback, system components, and state saving.
         -->
         <service
-            android:name=".ShellacService"
+            android:name=".UnrulyService"
             android:foregroundServiceType="mediaPlayback"
             android:icon="@mipmap/ic_launcher"
             android:exported="true"
@@ -185,7 +218,7 @@
         </service>
 
         <!--
-        Expose Shellac's cover data to the android system
+        Expose Unruly's cover data to the android system
         -->
         <provider
             android:name=".image.CoverProvider"

@@ -1,6 +1,6 @@
 # Phase 3 — Device Verification Checklist
 
-Two launcher icons now exist: **Shellac** (the skin host) and **Shellac Settings**.
+Two launcher icons now exist: **Unruly** (the skin host) and **Unruly Settings**.
 The original **Auxio Debug** icon still works and is untouched.
 
 ## Already verified automatically — no action needed
@@ -36,7 +36,7 @@ engine already holds the whole library in RAM, so this measures **UI/adapter** m
 - [ ] Rotate in each skin — no crash, navigation position preserved
 
 ### 4. Repeated skin switching
-- [ ] Switch A → B → A ten times via Shellac Settings
+- [ ] Switch A → B → A ten times via Unruly Settings
 - [ ] No leak in the profiler, no slowdown
 
 ### 5. Audio unchanged
@@ -45,7 +45,7 @@ engine already holds the whole library in RAM, so this measures **UI/adapter** m
 ## Known gaps, deliberately
 
 - **Now-playing is text only.** Debug skins are ugly on purpose (buildspec 3.9).
-- **`ShellacActivity` has not replaced `MainActivity`.** Both launcher entries coexist so the
+- **`UnrulyActivity` has not replaced `MainActivity`.** Both launcher entries coexist so the
   original UI stays testable. `MainActivity` is removed in Phase 5 once a real skin exists.
 - **A throwing skin still crashes the process once.** Compose has no error boundary; the
   registry quarantines the offender so the *next* launch is fine. One crash, then recovery.

@@ -49,7 +49,7 @@ compound command changes it for everything after.** Two real failures:
 **Rules:**
 - Use absolute paths for anything important. For Gradle, pass `-p <abs-root>` as well:
   ```bash
-  /Users/0x1379/Work/shellac/repo/gradlew -p /Users/0x1379/Work/shellac/repo :app:assembleDebug
+  /Users/0x1379/Work/unruly/repo/gradlew -p /Users/0x1379/Work/unruly/repo :app:assembleDebug
   ```
 - Watch for the harness note `Shell cwd was reset to …` — it means the next relative path
   will resolve somewhere unexpected.

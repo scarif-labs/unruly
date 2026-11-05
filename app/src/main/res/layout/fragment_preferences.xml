@@ -7,21 +7,21 @@
     android:orientation="vertical"
     android:transitionGroup="true">
 
-    <com.merklegroot.shellac.ui.CoordinatorAppBarLayout
+    <com.merklegroot.unruly.ui.CoordinatorAppBarLayout
         android:id="@+id/preferences_appbar"
-        style="@style/Widget.Shellac.AppBarLayout"
+        style="@style/Widget.Unruly.AppBarLayout"
         android:clickable="true"
         android:focusable="true"
         app:liftOnScroll="true">
 
-        <com.merklegroot.shellac.ui.ShellacToolbar
+        <com.merklegroot.unruly.ui.UnrulyToolbar
             android:id="@+id/preferences_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:navigationIcon="@drawable/ic_back_24"
             app:title="@string/set_root_title" />
 
-    </com.merklegroot.shellac.ui.CoordinatorAppBarLayout>
+    </com.merklegroot.unruly.ui.CoordinatorAppBarLayout>
 
     <FrameLayout
         android:id="@android:id/list_container"

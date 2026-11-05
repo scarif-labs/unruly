@@ -1,7 +1,7 @@
 # Phase 4 — Device Verification Checklist
 
 The support layer is wired into both debug skins specifically so it can be tested by hand.
-Launch **Shellac**, play an album, open now-playing.
+Launch **Unruly**, play an album, open now-playing.
 
 ## 1. Interpolated position ⭐ — the headline test
 
@@ -47,7 +47,7 @@ A bordered box on now-playing shows `ROTARY: +N` and the last delta.
 
 - [ ] Debug A and Debug B look clearly different (colours and type)
 - [ ] Debug A: **light** status/nav bar icons. Debug B: **dark**
-- [ ] Open **Shellac Settings** from inside each skin — settings looks **identical** either
+- [ ] Open **Unruly Settings** from inside each skin — settings looks **identical** either
       way. No skin colour bleeds into it
 - [ ] Switch A → B → A: the system bars update each time and never keep the previous
       skin's styling (`onDispose` restore)
@@ -63,7 +63,7 @@ skin must not be forced into it.
 
 ## 6. Loading and empty states
 
-- [ ] Trigger **Rescan music** in Shellac Settings, return to a skin: the scanning state
+- [ ] Trigger **Rescan music** in Unruly Settings, return to a skin: the scanning state
       renders (not a blank screen)
 - [ ] Each skin styles scanning differently
 
@@ -77,5 +77,5 @@ skin must not be forced into it.
 ```bash
 A=~/Library/Android/sdk/platform-tools/adb
 $A logcat -c      # clear, reproduce, then:
-$A logcat -d | grep -iE "shellac|rotary|fatal" > ~/Desktop/shellac-phase4.log
+$A logcat -d | grep -iE "unruly|rotary|fatal" > ~/Desktop/unruly-phase4.log
 ```

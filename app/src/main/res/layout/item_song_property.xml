@@ -12,7 +12,7 @@
     app:expandedHintEnabled="false"
     tools:hint="@string/lbl_path">
 
-    <com.merklegroot.shellac.detail.ReadOnlyTextInput
+    <com.merklegroot.unruly.detail.ReadOnlyTextInput
         android:id="@+id/property_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

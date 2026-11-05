@@ -5,7 +5,7 @@
 **Prompt:** `docs/agents/prompts/p5-nowplaying.md`
 **Commit:** `19f69496a`
 
-Files: `skin/src/main/java/org/shellac/skin/wheel/WheelNowPlaying.kt` (new),
+Files: `skin/src/main/java/org/unruly/skin/wheel/WheelNowPlaying.kt` (new),
 `TouchWheelSkin.kt` (delegate + rotation routing), `WheelMenuList.kt` (centring fix).
 
 ---

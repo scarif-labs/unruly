@@ -1,21 +1,21 @@
-Implement two pieces of skin support infrastructure for the Shellac Android project
+Implement two pieces of skin support infrastructure for the Unruly Android project
 (buildspec Phase 4.1 and 4.4). Both are subtle; correctness matters far more than features.
 
 Working directory is the repo root.
 
 ## Where the code goes
 
-Create NEW files under `skin/src/main/java/org/shellac/skin/support/`:
+Create NEW files under `skin/src/main/java/org/unruly/skin/support/`:
 - `PositionTicker.kt`
 - `RotaryGesture.kt`
 
 ## Hard constraints
 
-1. **Only use `org.shellac.skin` types plus Compose/Kotlin stdlib.** Do NOT import
+1. **Only use `org.unruly.skin` types plus Compose/Kotlin stdlib.** Do NOT import
    `org.oxycblt.auxio` or `org.oxycblt.musikr` — the `skin` module cannot see them. Do not
    read `app/` or `musikr/` at all.
 2. Do not modify existing files. Do not touch any `build.gradle`.
-3. Read `skin/src/main/java/org/shellac/skin/SkinModels.kt` first — you need
+3. Read `skin/src/main/java/org/unruly/skin/SkinModels.kt` first — you need
    `SkinPlaybackState` (`positionMs`, `durationMs`, `isPlaying`).
 4. `collectAsStateWithLifecycle` is NOT available here. Use `collectAsState()`.
 

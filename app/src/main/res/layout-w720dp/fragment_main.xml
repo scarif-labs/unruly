@@ -8,10 +8,10 @@
     android:background="?attr/colorSurface">
 
 
-    <com.merklegroot.shellac.ui.EatInsetsFrameLayout
+    <com.merklegroot.unruly.ui.EatInsetsFrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.merklegroot.shellac.ui.BottomSheetContentBehavior">
+        app:layout_behavior="com.merklegroot.unruly.ui.BottomSheetContentBehavior">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/explore_nav_host"
@@ -23,7 +23,7 @@
             tools:layout="@layout/fragment_home" />
 
 
-        <com.merklegroot.shellac.ui.EdgeFrameLayout
+        <com.merklegroot.unruly.ui.EdgeFrameLayout
             android:id="@+id/main_fab_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -32,7 +32,7 @@
             android:clipToPadding="false"
             app:layout_anchor="@id/home_content">
 
-            <com.merklegroot.shellac.home.ThemedSpeedDialView
+            <com.merklegroot.unruly.home.ThemedSpeedDialView
                 android:id="@+id/home_new_playlist_fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,9 +55,9 @@
                 android:contentDescription="@string/lbl_shuffle"
                 android:src="@drawable/ic_shuffle_off_24" />
 
-        </com.merklegroot.shellac.ui.EdgeFrameLayout>
+        </com.merklegroot.unruly.ui.EdgeFrameLayout>
 
-    </com.merklegroot.shellac.ui.EatInsetsFrameLayout>
+    </com.merklegroot.unruly.ui.EatInsetsFrameLayout>
 
 
     <View
@@ -78,23 +78,23 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
-        app:layout_behavior="com.merklegroot.shellac.playback.PlaybackBottomSheetBehavior">
+        app:layout_behavior="com.merklegroot.unruly.playback.PlaybackBottomSheetBehavior">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/playback_bar_fragment"
-            android:name="com.merklegroot.shellac.playback.PlaybackBarFragment"
+            android:name="com.merklegroot.unruly.playback.PlaybackBarFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            style="@style/Widget.Shellac.DisableDropShadows"
+            style="@style/Widget.Unruly.DisableDropShadows"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/playback_panel_fragment"
-                android:name="com.merklegroot.shellac.playback.PlaybackPanelFragment"
+                android:name="com.merklegroot.unruly.playback.PlaybackPanelFragment"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 app:layout_constraintEnd_toStartOf="@+id/queue_sheet"
@@ -121,7 +121,7 @@
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/queue_fragment"
-                    android:name="com.merklegroot.shellac.playback.queue.QueueFragment"
+                    android:name="com.merklegroot.unruly.playback.queue.QueueFragment"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1" />

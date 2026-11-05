@@ -1,4 +1,4 @@
-Build the Touch Wheel skin's menu hierarchy for the Shellac Android project
+Build the Touch Wheel skin's menu hierarchy for the Unruly Android project
 (buildspec Phase 5e). This is the first real skin, and the first thing to exercise the whole
 contract in anger.
 
@@ -11,7 +11,7 @@ reference Apple anywhere in code or comments.
 
 ## Where the code goes
 
-Create NEW files under `skin/src/main/java/org/shellac/skin/wheel/`:
+Create NEW files under `skin/src/main/java/org/unruly/skin/wheel/`:
 - `TouchWheelSkin.kt`   — the `AppSkin` implementation
 - `WheelDestination.kt` — the navigation model
 
@@ -21,7 +21,7 @@ verified. Do not modify the contract or anything under `support/`. Do not touch 
 
 ## Hard constraints
 
-1. **Only `org.shellac.skin` types plus Compose/Kotlin stdlib.** Do NOT import
+1. **Only `org.unruly.skin` types plus Compose/Kotlin stdlib.** Do NOT import
    `org.oxycblt.auxio` or `org.oxycblt.musikr`. Do not read `app/` or `musikr/` at all.
 2. `collectAsStateWithLifecycle` is NOT available. Use `collectAsState()`.
 
@@ -29,16 +29,16 @@ Pinned: Kotlin 2.3.10, Compose BOM 2026.06.01, paging 3.5.0, minSdk 24, Java 21.
 
 ## Read these first and use their REAL signatures
 
-- `skin/src/main/java/org/shellac/skin/AppSkin.kt`
-- `skin/src/main/java/org/shellac/skin/SkinLibrary.kt`
-- `skin/src/main/java/org/shellac/skin/SkinCommands.kt`
-- `skin/src/main/java/org/shellac/skin/SkinModels.kt`
-- `skin/src/main/java/org/shellac/skin/wheel/TouchWheel.kt`
-- `skin/src/main/java/org/shellac/skin/wheel/WheelMenuList.kt`
-- `skin/src/main/java/org/shellac/skin/wheel/WheelZone.kt`
-- `skin/src/main/java/org/shellac/skin/support/SkinBackStack.kt`
-- `skin/src/main/java/org/shellac/skin/support/SkinStates.kt`
-- `skin/src/main/java/org/shellac/skin/support/SkinTheme.kt`
+- `skin/src/main/java/org/unruly/skin/AppSkin.kt`
+- `skin/src/main/java/org/unruly/skin/SkinLibrary.kt`
+- `skin/src/main/java/org/unruly/skin/SkinCommands.kt`
+- `skin/src/main/java/org/unruly/skin/SkinModels.kt`
+- `skin/src/main/java/org/unruly/skin/wheel/TouchWheel.kt`
+- `skin/src/main/java/org/unruly/skin/wheel/WheelMenuList.kt`
+- `skin/src/main/java/org/unruly/skin/wheel/WheelZone.kt`
+- `skin/src/main/java/org/unruly/skin/support/SkinBackStack.kt`
+- `skin/src/main/java/org/unruly/skin/support/SkinStates.kt`
+- `skin/src/main/java/org/unruly/skin/support/SkinTheme.kt`
 
 ## Screen layout
 

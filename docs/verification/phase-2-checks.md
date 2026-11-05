@@ -47,7 +47,7 @@ touches the Compose UI.
 ```bash
 A=~/Library/Android/sdk/platform-tools/adb
 $A logcat -c        # clear, reproduce, then:
-$A logcat -d | grep -iE "compose|fatal|androidruntime" > ~/Desktop/shellac-phase2.log
+$A logcat -d | grep -iE "compose|fatal|androidruntime" > ~/Desktop/unruly-phase2.log
 ```
 
 ## Note on the spike's appearance

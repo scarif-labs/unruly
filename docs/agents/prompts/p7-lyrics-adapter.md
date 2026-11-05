@@ -1,4 +1,4 @@
-Implement the engine-side lyrics lookup for the Shellac Android project, backed by LRCLIB.
+Implement the engine-side lyrics lookup for the Unruly Android project, backed by LRCLIB.
 
 Working directory is the repo root.
 
@@ -11,16 +11,16 @@ Scope every search to `app/src/main/java` or `skin/src/main/java`. The repo vend
 
 The contract is written and compiles. **Read it first and implement exactly it — do not change it:**
 
-- `skin/src/main/java/org/shellac/skin/SkinLyrics.kt` — `SkinLyricLine`, `SkinLyrics`,
+- `skin/src/main/java/org/unruly/skin/SkinLyrics.kt` — `SkinLyricLine`, `SkinLyrics`,
   `SkinLyricsState`, `SkinLyricsSource`
-- `skin/src/main/java/org/shellac/skin/AppSkin.kt` — `SkinSession` now takes a
+- `skin/src/main/java/org/unruly/skin/AppSkin.kt` — `SkinSession` now takes a
   `lyrics: SkinLyricsSource` parameter, which is currently unsatisfied
 
 `AndroidManifest.xml` already declares `INTERNET` and `ACCESS_NETWORK_STATE`.
 
 ## Your job
 
-Everything under `app/src/main/java/org/oxycblt/auxio/shellac/`. Do NOT modify anything in
+Everything under `app/src/main/java/org/oxycblt/auxio/unruly/`. Do NOT modify anything in
 `skin/`. Do NOT touch `org.oxycblt.auxio.playback` or `org.oxycblt.auxio.music` — the engine is
 read-only (project invariant 1).
 
@@ -68,7 +68,7 @@ element 0 — a wrong-length match is usually a different recording and its sync
 drift badly.
 
 **Required:** send a `User-Agent` header identifying the application, e.g.
-`Shellac/<versionName> (https://github.com/oxycblt/auxio)`. LRCLIB asks for this; requests
+`Unruly/<versionName> (https://github.com/oxycblt/auxio)`. LRCLIB asks for this; requests
 without one may be rejected.
 
 URL-encode every query parameter. Titles routinely contain `&`, `?`, `#` and `+`.
@@ -129,11 +129,11 @@ This engine is otherwise **entirely offline**. A lyrics lookup sends the playing
 title, artist and album to a third party, which is a real change in what the app does. So:
 
 - Add a boolean preference (e.g. `lyrics_lookup_enabled`) in the existing
-  `shellac_skins` SharedPreferences, or a sibling file. **Default it to enabled** — the user
+  `unruly_skins` SharedPreferences, or a sibling file. **Default it to enabled** — the user
   asked for the feature — but it must be switchable.
 - When disabled, `lyrics(...)` emits `SkinLyricsState.Disabled` and **makes no request at
   all**.
-- Add a toggle row to `app/src/main/java/org/oxycblt/auxio/shellac/host/ShellacSettingsActivity.kt`,
+- Add a toggle row to `app/src/main/java/org/oxycblt/auxio/unruly/host/UnrulySettingsActivity.kt`,
   under a new "Lyrics" section next to the existing "Library" section. Match the surrounding
   style. Make the row's text state plainly that lyrics are fetched from lrclib.net and that
   track details are sent there.

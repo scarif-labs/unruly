@@ -13,8 +13,8 @@ This is a DELIBERATELY UGLY proof of interop. Do not design anything. Do not ref
    If you need something not listed, STOP and report what is missing rather than guessing.
 3. Build config is already done — Compose deps and the compose plugin are present. Do not
    touch `build.gradle` files.
-4. Put all NEW Compose code in a new package `org.oxycblt.auxio.shellac.spike`
-   (`app/src/main/java/org/oxycblt/auxio/shellac/spike/`).
+4. Put all NEW Compose code in a new package `org.oxycblt.auxio.unruly.spike`
+   (`app/src/main/java/org/oxycblt/auxio/unruly/spike/`).
 
 ## Pinned versions — do not use APIs outside these
 
@@ -67,7 +67,7 @@ first, then use it via `by activityViewModels()`. This keeps you out of the musi
 Add a `ComposeView` to `fragment_playback_panel.xml`. The root is a
 `ConstraintLayout`; constrain the ComposeView somewhere visible (below the toolbar
 `@id/playback_toolbar` is fine) with a fixed height ~200dp so it cannot cover everything.
-Give it `android:id="@+id/shellac_compose"`.
+Give it `android:id="@+id/unruly_compose"`.
 In `PlaybackPanelFragment.onBindingCreated` (`:90`), set its content.
 It must render the literal text **COMPOSE ALIVE**.
 

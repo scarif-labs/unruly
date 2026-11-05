@@ -1,11 +1,11 @@
 name: Bug/Crash Report
-description: Report a problem with Shellac
+description: Report a problem with Unruly
 labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        Shellac is a fork of [Auxio](https://github.com/OxygenCobalt/Auxio). If the problem also
+        Unruly is a fork of [Auxio](https://github.com/OxygenCobalt/Auxio). If the problem also
         happens in stock Auxio, it belongs upstream, not here.
   - type: textarea
     id: desc
@@ -41,7 +41,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: Shellac version
+      label: Unruly version
       placeholder: e.g. 4.1.5, or a commit hash if you built it yourself
     validations:
       required: true

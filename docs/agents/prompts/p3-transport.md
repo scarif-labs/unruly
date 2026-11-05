@@ -1,22 +1,22 @@
-Extend the two existing debug skins in the Shellac Android project so that EVERY command in the skin contract is reachable from the UI. Right now only play/pause is wired, so the rest of the contract has never been exercised at runtime. The point of this task is coverage, not looks.
+Extend the two existing debug skins in the Unruly Android project so that EVERY command in the skin contract is reachable from the UI. Right now only play/pause is wired, so the rest of the contract has never been exercised at runtime. The point of this task is coverage, not looks.
 
 Working directory is the repo root.
 
 ## Files to modify
 
-- skin/src/main/java/org/shellac/skin/debug/DebugSkinA.kt
-- skin/src/main/java/org/shellac/skin/debug/DebugSkinB.kt
+- skin/src/main/java/org/unruly/skin/debug/DebugSkinA.kt
+- skin/src/main/java/org/unruly/skin/debug/DebugSkinB.kt
 
 Do not create new files. Do not modify anything else. Do not touch any build.gradle. Do not modify the contract files.
 
 ## Critical constraint
 
-You may ONLY use types from the `org.shellac.skin` package plus Compose/Kotlin stdlib. Read these first:
+You may ONLY use types from the `org.unruly.skin` package plus Compose/Kotlin stdlib. Read these first:
 
-- skin/src/main/java/org/shellac/skin/SkinCommands.kt
-- skin/src/main/java/org/shellac/skin/SkinModels.kt
-- skin/src/main/java/org/shellac/skin/SkinLibrary.kt
-- skin/src/main/java/org/shellac/skin/AppSkin.kt
+- skin/src/main/java/org/unruly/skin/SkinCommands.kt
+- skin/src/main/java/org/unruly/skin/SkinModels.kt
+- skin/src/main/java/org/unruly/skin/SkinLibrary.kt
+- skin/src/main/java/org/unruly/skin/AppSkin.kt
 
 You must NOT import anything from `org.oxycblt.auxio` or `org.oxycblt.musikr`. The skin module cannot see those packages. Do not read app/ or musikr/ at all.
 

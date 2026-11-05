@@ -1,17 +1,17 @@
-You are restyling ONE screen of the Shellac Android app to resemble a classic late-1990s
+You are restyling ONE screen of the Unruly Android app to resemble a classic late-1990s
 skinnable desktop media player (Winamp-era) config panel. Kotlin + Jetpack Compose.
 
-Working directory: /Users/0x1379/Work/shellac/repo
+Working directory: /Users/0x1379/Work/unruly/repo
 
 READ FIRST, IN FULL:
-  /Users/0x1379/Work/shellac/docs/tasks/winamp-chrome-api.md
+  /Users/0x1379/Work/unruly/docs/tasks/winamp-chrome-api.md
 That file is a binding contract. Another agent (codex) is implementing those primitives in
 RetroChrome.kt RIGHT NOW, in parallel with you. Assume every composable listed in its
 "Primitives codex must provide" section already exists and call them exactly as specified.
 Do NOT define your own copies of them, and do NOT edit RetroChrome.kt.
 
 YOU OWN EXACTLY ONE FILE:
-  app/src/main/java/com/merklegroot/shellac/shellac/host/ShellacSettingsActivity.kt
+  app/src/main/java/com/merklegroot/unruly/unruly/host/UnrulySettingsActivity.kt
 
 Do not create, edit or delete any other file. In particular do not touch
 OnboardingActivity.kt, RetroChrome.kt or VinylRecord.kt - codex owns those and you will

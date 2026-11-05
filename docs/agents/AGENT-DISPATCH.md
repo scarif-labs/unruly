@@ -42,11 +42,11 @@ codex exec --skip-git-repo-check "<prompt>"
 silently cannot edit:
 
 ```bash
-codex exec --sandbox workspace-write --cd /Users/0x1379/Work/shellac/repo "<prompt>"
+codex exec --sandbox workspace-write --cd /Users/0x1379/Work/unruly/repo "<prompt>"
 ```
 
 ### Papercuts
-- **`--skip-git-repo-check` is required** while the target dir is not a git repo. `/Users/0x1379/Work/shellac` is not one; `repo/` (the Auxio clone) is.
+- **`--skip-git-repo-check` is required** while the target dir is not a git repo. `/Users/0x1379/Work/unruly` is not one; `repo/` (the Auxio clone) is.
 - **Default sandbox is `read-only`.** A code-writing prompt without `--sandbox workspace-write` produces a confident description of edits it never made. This is the single most expensive failure mode — always pass it.
 - Approval mode reports `never` in headless exec, so it will not stop to ask.
 
@@ -55,7 +55,7 @@ codex exec --sandbox workspace-write --cd /Users/0x1379/Work/shellac/repo "<prom
 ## cline — `deepseek/deepseek-v4-flash`
 
 ```bash
-cline --json --auto-approve true -c /Users/0x1379/Work/shellac/repo --thinking high "<prompt>"
+cline --json --auto-approve true -c /Users/0x1379/Work/unruly/repo --thinking high "<prompt>"
 ```
 
 ### Papercuts

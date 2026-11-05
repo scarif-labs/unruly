@@ -1,4 +1,4 @@
-Build the wheel component for the "Touch Wheel" skin in the Shellac Android project
+Build the wheel component for the "Touch Wheel" skin in the Unruly Android project
 (buildspec Phase 5a and 5b). Geometry and hit-testing only — no menus, no playback yet.
 
 Working directory is the repo root.
@@ -11,7 +11,7 @@ names, and do not reference Apple anywhere in code or comments.
 
 ## Where the code goes
 
-Create NEW files under `skin/src/main/java/org/shellac/skin/wheel/`:
+Create NEW files under `skin/src/main/java/org/unruly/skin/wheel/`:
 - `TouchWheel.kt`      — the wheel composable
 - `WheelZone.kt`       — zone enum + hit-testing
 
@@ -20,13 +20,13 @@ not touch any `build.gradle`.
 
 ## Hard constraints
 
-1. **Only `org.shellac.skin` types plus Compose/Kotlin stdlib.** Do NOT import
+1. **Only `org.unruly.skin` types plus Compose/Kotlin stdlib.** Do NOT import
    `org.oxycblt.auxio` or `org.oxycblt.musikr`. Do not read `app/` or `musikr/`.
 2. `collectAsStateWithLifecycle` is NOT available. Use `collectAsState()`.
 3. Reuse the EXISTING rotary detector — do not write another one. Read
-   `skin/src/main/java/org/shellac/skin/support/RotaryGesture.kt` and use
+   `skin/src/main/java/org/unruly/skin/support/RotaryGesture.kt` and use
    `Modifier.rotaryInput(...)` exactly as it is declared.
-4. Read `skin/src/main/java/org/shellac/skin/support/SkinTheme.kt` and take colours from
+4. Read `skin/src/main/java/org/unruly/skin/support/SkinTheme.kt` and take colours from
    `SkinTheme.colors` rather than hardcoding.
 
 Pinned: Kotlin 2.3.10, Compose BOM 2026.06.01, minSdk 24, Java 21.
