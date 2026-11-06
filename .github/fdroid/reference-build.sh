@@ -24,7 +24,7 @@ sed -e "s/^    commit: .*/    commit: $COMMIT/" "$RECIPE" > "$DATA/metadata/$APP
 VERCODE=$(sed -n 's/^    versionCode: //p' "$DATA/metadata/$APPID.yml" | tail -1)
 cd "$DATA"
 # Keep whatever was built, including a failed verification's APK, for comparison.
-trap 'mkdir -p "$OUT"; cp -R "$DATA/tmp/." "$OUT/" 2>/dev/null || true' EXIT
+trap 'mkdir -p "$OUT"; cp -R "$DATA/tmp/." "$OUT/" 2>/dev/null; chmod -R a+rX "$OUT" || true' EXIT
 
 # --- from fdroiddata .gitlab-ci.yml, job "fdroid build" ---
 export ANDROID_HOME=/opt/android-sdk
