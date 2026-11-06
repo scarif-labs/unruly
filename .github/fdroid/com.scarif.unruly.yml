@@ -11,6 +11,7 @@ AutoName: Unruly
 
 RepoType: git
 Repo: https://github.com/scarif-labs/unruly.git
+Binaries: https://github.com/scarif-labs/unruly/releases/download/v%v/unruly-%v.apk
 
 Builds:
   - versionName: 1.0.0
@@ -35,6 +36,8 @@ Builds:
       - media/libraries
       - musikr/src/main/cpp/taglib/tests/data/
     ndk: r28c
+
+AllowedAPKSigningKeys: fc8f9a5dd143a1b78db0bbfb779f0f9dbb19de3107fc82bfd20b1a93b30279a8
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^v[\d.]+$
