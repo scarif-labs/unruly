@@ -10,9 +10,7 @@
 
     <!-- Format Namespace | Value formatting/plurals -->
     <string name="fmt_two" translatable="false">%1$s • %2$s</string>
-    <string name="fmt_three" translatable="false">%1$s • %2$s • %3$s</string>
     <string name="fmt_number" translatable="false">%d</string>
-    <string name="fmt_zipped_names" translatable="false">%1$s (%2$s)</string>
     <string name="fmt_date_range" translatable="false">%s - %s</string>
 
     <!-- Codec Namespace | Format names -->
@@ -22,9 +20,7 @@
     <string name="cnt_ogg">Ogg %s</string>
 
     <!-- Pkg Namespace | Dynamic package names -->
-    <string name="pkg_authority_cover">com.merklegroot.unruly.image.CoverProvider</string>
+    <string name="pkg_authority_cover">com.scarif.unruly.image.CoverProvider</string>
 
     <!-- Supporter Namespace | Sponsor usernames  -->
-    <string name="sup_bkkellyh">bkkellyh - $500!</string>
-    <string name="sup_gruntstumper">gruntstumper - $100</string>
 </resources>

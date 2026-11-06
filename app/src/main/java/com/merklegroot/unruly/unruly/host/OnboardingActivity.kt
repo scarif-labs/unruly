@@ -88,10 +88,10 @@ import timber.log.Timber as L
  *
  * ## Why this exists as its own screen
  *
- * Unruly loads music through SAF, so it scans **nothing** until the user has granted a folder
- * tree. Before this screen existed, a fresh install opened straight into the Touch Wheel with an
- * empty library and no explanation - indistinguishable from a scan that had failed. The folder
- * grant is not a setting, it is a precondition, and the app has no content at all without it.
+ * Unruly loads music through SAF, so it scans **nothing** until the user has granted a folder tree.
+ * Before this screen existed, a fresh install opened straight into the Touch Wheel with an empty
+ * library and no explanation - indistinguishable from a scan that had failed. The folder grant is
+ * not a setting, it is a precondition, and the app has no content at all without it.
  *
  * ## Why it is not skinnable
  *
@@ -128,7 +128,7 @@ class OnboardingActivity : ComponentActivity() {
             OnboardingContent(
                 managing = isManaging,
                 initialFolders = musicSettings.safQuery.source,
-                onFinished = { folders -> commit(folders) },
+                onFinished = { folders, wholePhone -> commit(folders, wholePhone) },
             )
         }
     }
@@ -143,14 +143,24 @@ class OnboardingActivity : ComponentActivity() {
      * [MusicSettings.forceLocationUpdate] covers the case where the folder list came out
      * byte-identical to what was already stored - the preference listener would not fire, and a
      * user who just walked through a setup flow expecting a rescan would get nothing.
+     *
+     * [wholePhone] skips folders and loads everything Android has indexed (MediaStore). It is the
+     * only way to reach music in `Download/`, which the folder picker refuses to grant.
      */
-    private fun commit(folderUris: List<Uri>) {
-        val changed = musicSettings.saveFolders(this, folderUris)
-        if (!changed) {
-            musicSettings.forceLocationUpdate()
+    private fun commit(folderUris: List<Uri>, wholePhone: Boolean) {
+        if (wholePhone) {
+            musicSettings.locationMode = LocationMode.MEDIA_STORE
+        } else {
+            musicSettings.locationMode = LocationMode.SAF
+            val changed = musicSettings.saveFolders(this, folderUris)
+            if (!changed) {
+                musicSettings.forceLocationUpdate()
+            }
         }
         markComplete(this)
-        L.d("Onboarding complete with ${folderUris.size} folder(s)")
+        L.d(
+            "Onboarding complete: ${if (wholePhone) "whole phone" else "${folderUris.size} folder(s)"}"
+        )
 
         if (!isManaging) {
             startActivity(Intent(this, UnrulyActivity::class.java))
@@ -194,6 +204,11 @@ class OnboardingActivity : ComponentActivity() {
     }
 }
 
+/** What Android calls access to the audio it has indexed. Renamed in 13. */
+internal val AUDIO_PERMISSION =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_AUDIO
+    else Manifest.permission.READ_EXTERNAL_STORAGE
+
 /** The steps, in order. [Welcome] is skipped when re-entered from settings. */
 private enum class Step {
     Welcome,
@@ -209,7 +224,7 @@ private val StepSaver: Saver<Step, String> =
 private fun OnboardingContent(
     managing: Boolean,
     initialFolders: List<Location.Opened>,
-    onFinished: (List<Uri>) -> Unit,
+    onFinished: (folders: List<Uri>, wholePhone: Boolean) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -238,6 +253,10 @@ private fun OnboardingContent(
             mutableStateOf(if (managing) Step.Folders else Step.Welcome)
         }
 
+    // Chosen instead of folders: load everything Android has indexed.
+    var wholePhone by rememberSaveable { mutableStateOf(false) }
+    var audioDenied by rememberSaveable { mutableStateOf(false) }
+
     SideEffect { applyRedlineSystemBars(context) }
 
     val addFolder = rememberFolderPicker { uri -> if (uri !in folders) folders.add(uri) }
@@ -253,15 +272,25 @@ private fun OnboardingContent(
 
     fun finishFolders() {
         if (needsNotificationStep && !managing) step = Step.Notifications
-        else onFinished(folders.toList())
+        else onFinished(folders.toList(), wholePhone)
     }
+
+    val audioPermission =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            L.d("Audio permission granted: $granted")
+            audioDenied = !granted
+            if (granted) {
+                wholePhone = true
+                finishFolders()
+            }
+        }
 
     val notificationPermission =
         rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             L.d("Notification permission granted: $granted")
             // Either way the setup is over - playback works without the notification, it is
             // just harder to control. Refusing must not dead-end the flow.
-            onFinished(folders.toList())
+            onFinished(folders.toList(), wholePhone)
         }
 
     if (step == Step.Welcome) {
@@ -278,9 +307,11 @@ private fun OnboardingContent(
                     managing = managing,
                     stepCount = stepCount,
                     folders = folders,
+                    audioDenied = audioDenied,
                     onAdd = { addFolder() },
                     onRemove = { folders.remove(it) },
                     onContinue = { finishFolders() },
+                    onWholePhone = { audioPermission.launch(AUDIO_PERMISSION) },
                 )
             Step.Notifications ->
                 NotificationsStep(
@@ -288,10 +319,10 @@ private fun OnboardingContent(
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
                         } else {
-                            onFinished(folders.toList())
+                            onFinished(folders.toList(), wholePhone)
                         }
                     },
-                    onSkip = { onFinished(folders.toList()) },
+                    onSkip = { onFinished(folders.toList(), wholePhone) },
                 )
         }
     }
@@ -316,9 +347,11 @@ private fun FoldersStep(
     managing: Boolean,
     stepCount: Int,
     folders: List<Uri>,
+    audioDenied: Boolean,
     onAdd: () -> Unit,
     onRemove: (Uri) -> Unit,
     onContinue: () -> Unit,
+    onWholePhone: () -> Unit,
 ) {
     val empty = folders.isEmpty()
     RedlineScreen(
@@ -326,7 +359,12 @@ private fun FoldersStep(
         stepCount = stepCount,
         headline = FoldersHeadline,
         fitTo = AllHeadlines,
-        footer = if (empty) "FEED ME FOLDERS." else null,
+        footer =
+            when {
+                !empty -> null
+                audioDenied -> "NO ACCESS. PICK A FOLDER."
+                else -> "FEED ME FOLDERS."
+            },
         art = {
             if (empty) {
                 PaperCutout(
@@ -367,6 +405,16 @@ private fun FoldersStep(
         actions = {
             if (empty) {
                 RedlineButton("Choose a folder", Glyph.Plus, onClick = onAdd)
+                // Folder picking can't reach Download/, so this is the way in for music there.
+                // Hidden in settings' re-entry, which has its own switch.
+                if (!managing) {
+                    RedlineButton(
+                        "Use all music on this phone",
+                        glyph = null,
+                        primary = false,
+                        onClick = onWholePhone,
+                    )
+                }
             } else {
                 RedlineButton("Add another", Glyph.Plus, primary = false, onClick = onAdd)
                 RedlineButton(

@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Note: The old way of naming keys was to prefix them with KEY_. Now it's to prefix them with unruly_. -->
-    <string name="set_key_ui" translatable="false">unruly_ui</string>
-    <string name="set_key_personalize" translatable="false">unruly_personalize</string>
-    <string name="set_key_music" translatable="false">unruly_music</string>
-    <string name="set_key_audio" translatable="false">unruly_audio</string>
 
     <string name="set_key_theme" translatable="false">KEY_THEME2</string>
     <string name="set_key_black_theme" translatable="false">KEY_BLACK_THEME</string>
     <string name="set_key_accent" translatable="false">unruly_accent2</string>
 
-    <string name="set_key_reindex" translatable="false">unruly_reindex</string>
-    <string name="set_key_rescan" translatable="false">unruly_rescan</string>
     <string name="set_key_observing" translatable="false">unruly_observing</string>
-    <string name="set_key_music_dirs" translatable="false">unruly_music_dirs</string>
-    <string name="set_key_excluded_dirs" translatable="false">unruly_excluded_dirs</string>
     <string name="set_key_fs_cache" translatable="false">unruly_fs_cache</string>
     <string name="set_key_cover_mode" translatable="false">unruly_cover_mode2</string>
     <string name="set_key_square_covers" translatable="false">unruly_square_covers</string>
@@ -31,7 +23,6 @@
 
     <string name="set_key_headset_autoplay" translatable="false">unruly_headset_autoplay</string>
     <string name="set_key_replay_gain" translatable="false">unruly_replay_gain</string>
-    <string name="set_key_pre_amp" translatable="false">unruly_pre_amp</string>
     <string name="set_key_pre_amp_with" translatable="false">unruly_pre_amp_with</string>
     <string name="set_key_pre_amp_without" translatable="false">unruly_pre_amp_without</string>
 
@@ -65,123 +56,21 @@
 
     <string name="set_key_force_reload_workaround" translatable="false">unruly_force_reload</string>
 
-    <string-array name="entries_theme">
-        <item>@string/set_theme_auto</item>
-        <item>@string/set_theme_day</item>
-        <item>@string/set_theme_night</item>
-    </string-array>
 
-    <array name="icons_theme">
-        <item>@drawable/ic_auto_24</item>
-        <item>@drawable/ic_light_24</item>
-        <item>@drawable/ic_dark_24</item>
-    </array>
 
-    <integer-array name="values_theme">
-        <item>@integer/theme_auto</item>
-        <item>@integer/theme_light</item>
-        <item>@integer/theme_dark</item>
-    </integer-array>
 
-    <string-array name="entries_cover_mode">
-        <item>@string/set_cover_mode_off</item>
-        <item>@string/set_cover_mode_save_space</item>
-        <item>@string/set_cover_mode_balanced</item>
-        <item>@string/set_cover_mode_high_quality</item>
-        <item>@string/set_cover_mode_as_is</item>
-    </string-array>
 
-    <integer-array name="values_cover_mode">
-        <item>@integer/cover_mode_off</item>
-        <item>@integer/cover_mode_save_space</item>
-        <item>@integer/cover_mode_balanced</item>
-        <item>@integer/cover_mode_high_quality</item>
-        <item>@integer/cover_mode_as_is</item>
-    </integer-array>
 
-    <string-array name="entries_bar_action">
-        <item>@string/set_action_mode_next</item>
-        <item>@string/set_action_mode_repeat</item>
-        <item>@string/lbl_shuffle</item>
-    </string-array>
 
-    <integer-array name="values_bar_action">
-        <item>@integer/action_mode_next</item>
-        <item>@integer/action_mode_repeat</item>
-        <item>@integer/action_mode_shuffle</item>
-    </integer-array>
 
-    <string-array name="entries_play_in_list_with">
-        <item>@string/set_play_song_from_all</item>
-        <item>@string/set_play_song_from_album</item>
-        <item>@string/set_play_song_from_artist</item>
-        <item>@string/set_play_song_from_genre</item>
-        <item>@string/set_play_song_by_itself</item>
-    </string-array>
 
-    <integer-array name="values_play_in_list_with">
-        <item>@integer/play_song_from_all</item>
-        <item>@integer/play_song_from_album</item>
-        <item>@integer/play_song_from_artist</item>
-        <item>@integer/play_song_from_genre</item>
-        <item>@integer/play_song_by_itself</item>
-    </integer-array>
 
-    <string-array name="entries_play_in_parent_with">
-        <item>@string/set_play_song_none</item>
-        <item>@string/set_play_song_from_all</item>
-        <item>@string/set_play_song_from_album</item>
-        <item>@string/set_play_song_from_artist</item>
-        <item>@string/set_play_song_from_genre</item>
-        <item>@string/set_play_song_by_itself</item>
-    </string-array>
 
-    <integer-array name="values_play_in_parent_with">
-        <item>@integer/play_song_none</item>
-        <item>@integer/play_song_from_all</item>
-        <item>@integer/play_song_from_album</item>
-        <item>@integer/play_song_from_artist</item>
-        <item>@integer/play_song_from_genre</item>
-        <item>@integer/play_song_by_itself</item>
-    </integer-array>
 
-    <string-array name="entries_replay_gain">
-        <item>@string/set_replay_gain_mode_off</item>
-        <item>@string/set_replay_gain_mode_track</item>
-        <item>@string/set_replay_gain_mode_album</item>
-        <item>@string/set_replay_gain_mode_dynamic</item>
-    </string-array>
 
-    <integer-array name="values_replay_gain">
-        <item>@integer/replay_gain_off</item>
-        <item>@integer/replay_gain_track</item>
-        <item>@integer/replay_gain_album</item>
-        <item>@integer/replay_gain_dynamic</item>
-    </integer-array>
 
-    <integer name="theme_auto">-1</integer>
-    <integer name="theme_light">1</integer>
-    <integer name="theme_dark">2</integer>
 
-    <integer name="play_song_none">-2147483648</integer>
-    <integer name="play_song_from_all">0xA11F</integer>
-    <integer name="play_song_from_album">0xA120</integer>
-    <integer name="play_song_from_artist">0xA121</integer>
-    <integer name="play_song_from_genre">0xA122</integer>
-    <integer name="play_song_by_itself">0xA124</integer>
 
-    <integer name="replay_gain_off">0xA110</integer>
-    <integer name="replay_gain_track">0xA111</integer>
-    <integer name="replay_gain_album">0xA112</integer>
-    <integer name="replay_gain_dynamic">0xA113</integer>
 
-    <integer name="action_mode_next">0xA119</integer>
-    <integer name="action_mode_repeat">0xA11A</integer>
-    <integer name="action_mode_shuffle">0xA11B</integer>
 
-    <integer name="cover_mode_off">0xA11C</integer>
-    <integer name="cover_mode_save_space">0xA125</integer>
-    <integer name="cover_mode_balanced">0xA11D</integer>
-    <integer name="cover_mode_high_quality">0xA11E</integer>
-    <integer name="cover_mode_as_is">0xA126</integer>
 </resources>

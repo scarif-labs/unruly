@@ -1,0 +1,1 @@
+A music player whose whole interface is a swappable skin

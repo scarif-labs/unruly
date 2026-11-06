@@ -28,9 +28,6 @@
         <item name="tabTextAppearance">?attr/textAppearanceTitleSmallEmphasized</item>
     </style>
 
-    <style name="Widget.Unruly.Chip.Filter" parent="Widget.Material3.Chip.Filter">
-        <item name="android:textAppearance">?attr/textAppearanceTitleSmallEmphasized</item>
-    </style>
 
     <style name="Widget.Unruly.Slider" parent="Widget.Material3.Slider">
         <item name="labelBehavior">gone</item>
@@ -113,105 +110,22 @@
         <item name="android:paddingBottom">0dp</item>
     </style>
 
-    <style name="Widget.Unruly.MaterialButtonGroup" parent="Widget.Material3.MaterialButtonGroup">
-        <item name="buttonSizeChange">@xml/safe_button_group_size_change</item>
-        <item name="android:gravity">center</item>
-        <item name="android:orientation">horizontal</item>
-    </style>
 
-    <style name="Widget.Unruly.Image.Small" parent="">
-        <item name="android:layout_width">@dimen/size_touchable_small</item>
-        <item name="android:layout_height">@dimen/size_touchable_small</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Medium</item>
-        <item name="iconSize">@dimen/size_icon_small</item>
-    </style>
 
-    <style name="Widget.Unruly.Image.Small.Circular" parent="">
-        <item name="android:layout_width">@dimen/size_touchable_small</item>
-        <item name="android:layout_height">@dimen/size_touchable_small</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Full</item>
-        <item name="iconSize">@dimen/size_icon_small</item>
-    </style>
 
-    <style name="Widget.Unruly.Image.Medium" parent="">
-        <item name="android:layout_width">@dimen/size_touchable_medium</item>
-        <item name="android:layout_height">@dimen/size_touchable_medium</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Medium</item>
-        <item name="iconSize">@dimen/size_icon_medium</item>
-    </style>
 
-    <style name="Widget.Unruly.Image.Medium.Circular" parent="">
-        <item name="android:layout_width">@dimen/size_touchable_medium</item>
-        <item name="android:layout_height">@dimen/size_touchable_medium</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Full</item>
-        <item name="iconSize">@dimen/size_icon_medium</item>
-    </style>
 
-    <style name="Widget.Unruly.Image.MidLarge" parent="">
-        <item name="android:layout_width">@dimen/size_touchable_huge</item>
-        <item name="android:layout_height">@dimen/size_touchable_huge</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
-    </style>
 
-    <style name="Widget.Unruly.Image.Large" parent="">
-        <item name="android:layout_width">@dimen/size_hero_small</item>
-        <item name="android:layout_height">@dimen/size_hero_small</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
-    </style>
 
-    <style name="Widget.Unruly.Image.MidHuge" parent="">
-        <item name="android:layout_width">@dimen/size_hero_medium</item>
-        <item name="android:layout_height">@dimen/size_hero_medium</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
-    </style>
 
-    <style name="Widget.Unruly.Image.Huge" parent="">
-        <item name="android:layout_width">@dimen/size_hero_large</item>
-        <item name="android:layout_height">@dimen/size_hero_large</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
-    </style>
 
-    <style name="Widget.Unruly.Image.MidFull" parent="">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="layout_constraintDimensionRatio">1</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Large</item>
-    </style>
 
-    <style name="Widget.Unruly.Image.Full" parent="">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="layout_constraintDimensionRatio">1</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
-    </style>
 
-    <style name="Widget.Unruly.RecyclerView.Linear" parent="">
-        <item name="layoutManager">androidx.recyclerview.widget.LinearLayoutManager</item>
-    </style>
 
-    <style name="Widget.Unruly.RecyclerView.Grid.Base" parent="">
-        <item name="layoutManager">androidx.recyclerview.widget.GridLayoutManager</item>
-    </style>
 
-    <style name="Widget.Unruly.RecyclerView.Grid" parent="Widget.Unruly.RecyclerView.Grid.Base" />
 
-    <style name="Widget.Unruly.RecyclerView.Grid.WithAdaptiveFab" parent="Widget.Unruly.RecyclerView.Grid">
-        <item name="android:paddingBottom">@dimen/recycler_fab_space_normal</item>
-    </style>
 
-    <style name="Widget.Unruly.DisableDropShadows" parent="">
-        <!-- API 28+ Only -->
-        <item name="android:outlineAmbientShadowColor" tools:ignore="NewApi">
-            @android:color/transparent
-        </item>
-        <item name="android:outlineSpotShadowColor" tools:ignore="NewApi">
-            @android:color/transparent
-        </item>
-    </style>
 
-    <style name="ThemeOverlay.Accent" parent="">
-        <item name="colorOnPrimary">?attr/colorSurface</item>
-    </style>
 
     <!-- TEXTVIEW STYLES -->
 
@@ -220,92 +134,18 @@
         <item name="emojiCompatEnabled">false</item>
     </style>
 
-    <style name="Widget.Unruly.TextView.Item.Base" parent="Widget.Unruly.TextView.Base">
-        <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:layout_marginStart">@dimen/spacing_medium</item>
-    </style>
 
-    <style name="Widget.Unruly.TextView.Item.Primary" parent="Widget.Unruly.TextView.Item.Base">
-        <item name="android:textAppearance">?attr/textAppearanceTitleMedium
-        </item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-    </style>
 
-    <style name="Widget.Unruly.TextView.Item.Secondary" parent="Widget.Unruly.TextView.Item.Base">
-        <item name="android:textAppearance">?attr/textAppearanceBodyMedium</item>
-        <item name="android:textColor">?android:attr/textColorSecondary</item>
-    </style>
 
-    <style name="Widget.Unruly.TextView.Primary" parent="Widget.Unruly.TextView.Base">
-        <item name="android:ellipsize">marquee</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:marqueeRepeatLimit">marquee_forever</item>
-        <item name="android:textAppearance">?attr/textAppearanceTitleLargeEmphasized</item>
-    </style>
 
-    <style name="Widget.Unruly.TextView.Secondary.Base" parent="Widget.Unruly.TextView.Base">
-        <item name="android:textColor">?android:attr/textColorSecondary</item>
-        <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
-    </style>
 
-    <style name="Widget.Unruly.TextView.Secondary.Ellipsize" parent="Widget.Unruly.TextView.Secondary.Base">
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
 
-    </style>
 
-    <style name="Widget.Unruly.TextView.Secondary.Marquee" parent="Widget.Unruly.TextView.Secondary.Base">
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">marquee</item>
-        <item name="android:marqueeRepeatLimit">marquee_forever</item>
-    </style>
 
-    <style name="Widget.Unruly.TextView.Primary.Compact" parent="Widget.Unruly.TextView.Base">
-        <item name="android:ellipsize">marquee</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:marqueeRepeatLimit">marquee_forever</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
-    </style>
 
-    <style name="Widget.Unruly.TextView.Secondary.Compact" parent="Widget.Unruly.TextView.Base">
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:textColor">?android:attr/textColorSecondary</item>
-        <item name="android:textAppearance">?attr/textAppearanceBodySmall</item>
-    </style>
 
-    <style name="Widget.Unruly.TextView.Header" parent="Widget.Unruly.TextView.Base">
-        <item name="android:paddingStart">@dimen/spacing_medium</item>
-        <item name="android:paddingTop">@dimen/spacing_small</item>
-        <item name="android:paddingBottom">@dimen/spacing_small</item>
-        <item name="android:paddingEnd">@dimen/spacing_medium</item>
-        <item name="android:minHeight">@dimen/size_touchable_small</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">?attr/colorSecondary</item>
-        <item name="android:textAppearance">?attr/textAppearanceLabelLargeEmphasized</item>
-    </style>
 
-    <style name="Widget.Unruly.TextView.Detail" parent="Widget.Unruly.TextView.Base">
-        <item name="android:textAppearance">?attr/textAppearanceTitleLargeEmphasized</item>
-        <item name="android:textAlignment">viewStart</item>
-    </style>
 
-    <style name="Widget.Unruly.TextView.Icon" parent="Widget.Unruly.TextView.Base">
-        <item name="android:drawablePadding">@dimen/spacing_medium</item>
-        <item name="android:paddingTop">@dimen/spacing_mid_medium</item>
-        <item name="android:paddingStart">@dimen/spacing_medium</item>
-        <item name="android:paddingBottom">@dimen/spacing_mid_medium</item>
-        <item name="android:paddingEnd">@dimen/spacing_medium</item>
-        <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
-    </style>
-
-    <style name="Widget.Unruly.TextView.Icon.Clickable" parent="Widget.Unruly.TextView.Icon">
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
-    </style>
 
     <!-- BUTTON STYLES -->
 
@@ -365,15 +205,7 @@
 
     <style name="Widget.Unruly.SplitButton.IconButton.Filled.Tonal" parent="Widget.Material3.SplitButton.IconButton.Filled.Tonal" />
 
-    <style name="Widget.Unruly.Button.Primary" parent="Widget.Unruly.Button">
-        <item name="iconGravity">textStart</item>
-        <item name="iconSize">@dimen/size_icon_small</item>
-    </style>
 
-    <style name="Widget.Unruly.Button.Secondary" parent="Widget.Unruly.Button.TonalButton">
-        <item name="iconGravity">textStart</item>
-        <item name="iconSize">@dimen/size_icon_small</item>
-    </style>
 
     <style name="Widget.Unruly.Button.Icon.Base" parent="Widget.Material3Expressive.Button.IconButton">
         <item name="materialThemeOverlay">@style/ThemeOverlay.Unruly.UncheckableIconButton</item>
@@ -384,111 +216,17 @@
         <item name="colorOnContainer">?attr/colorOnSurfaceVariant</item>
     </style>
 
-    <style name="Widget.Unruly.Button.Icon.Small" parent="Widget.Unruly.Button.Icon.Base">
-        <item name="iconSize">@dimen/size_icon_small</item>
-        <item name="android:minWidth">@dimen/size_touchable_small</item>
-        <item name="android:minHeight">@dimen/size_touchable_small</item>
-        <item name="android:insetTop">@dimen/spacing_tiny</item>
-        <item name="android:insetBottom">@dimen/spacing_tiny</item>
-        <item name="android:insetLeft">@dimen/spacing_tiny</item>
-        <item name="android:insetRight">@dimen/spacing_tiny</item>
-        <item name="android:paddingStart">@dimen/spacing_small</item>
-        <item name="android:paddingEnd">@dimen/spacing_small</item>
-        <item name="android:paddingTop">@dimen/spacing_small</item>
-        <item name="android:paddingBottom">@dimen/spacing_small</item>
-        <!-- Intentional to prevent button from spamming the log console -->
-        <item name="iconTint" tools:ignore="PrivateResource">@color/m3_text_button_foreground_color_selector</item>
-    </style>
-
-    <style name="Widget.Unruly.Button.Icon.Medium" parent="Widget.Material3Expressive.Button.IconButton.Outlined">
-        <item name="iconSize">@dimen/size_icon_medium</item>
-        <item name="android:minWidth">@dimen/size_touchable_small</item>
-        <item name="android:minHeight">@dimen/size_touchable_small</item>
-        <item name="android:insetTop">@dimen/spacing_small</item>
-        <item name="android:insetBottom">@dimen/spacing_small</item>
-        <item name="android:insetLeft">0dp</item>
-        <item name="android:insetRight">0dp</item>
-        <item name="android:paddingStart">@dimen/spacing_small</item>
-        <item name="android:paddingEnd">@dimen/spacing_small</item>
-        <item name="android:paddingTop">@dimen/spacing_small</item>
-        <item name="android:paddingBottom">@dimen/spacing_small</item>
-        <item name="iconTint" tools:ignore="PrivateResource">@color/m3_text_button_foreground_color_selector</item>
-    </style>
-
-    <style name="Widget.Unruly.Button.Icon.Small.Primary" parent="Widget.Material3Expressive.Button.IconButton.Filled">
-        <item name="iconSize">@dimen/size_icon_small</item>
-        <item name="android:minWidth">@dimen/size_touchable_small</item>
-        <item name="android:minHeight">@dimen/size_touchable_small</item>
-        <item name="android:insetTop">@dimen/spacing_tiny</item>
-        <item name="android:insetBottom">@dimen/spacing_tiny</item>
-        <item name="android:insetLeft">@dimen/spacing_tiny</item>
-        <item name="android:insetRight">@dimen/spacing_tiny</item>
-        <item name="android:paddingStart">@dimen/spacing_small</item>
-        <item name="android:paddingEnd">@dimen/spacing_small</item>
-        <item name="android:paddingTop">@dimen/spacing_small</item>
-        <item name="android:paddingBottom">@dimen/spacing_small</item>
-    </style>
-
-    <style name="Widget.Unruly.Button.Icon.Small.Secondary" parent="Widget.Material3Expressive.Button.IconButton.Tonal">
-        <item name="iconSize">@dimen/size_icon_small</item>
-        <item name="android:minWidth">@dimen/size_touchable_small</item>
-        <item name="android:minHeight">@dimen/size_touchable_small</item>
-        <item name="android:insetTop">@dimen/spacing_tiny</item>
-        <item name="android:insetBottom">@dimen/spacing_tiny</item>
-        <item name="android:insetLeft">@dimen/spacing_tiny</item>
-        <item name="android:insetRight">@dimen/spacing_tiny</item>
-        <item name="android:paddingStart">@dimen/spacing_small</item>
-        <item name="android:paddingEnd">@dimen/spacing_small</item>
-        <item name="android:paddingTop">@dimen/spacing_small</item>
-        <item name="android:paddingBottom">@dimen/spacing_small</item>
-    </style>
 
 
-    <style name="ThemeOverlay.Unruly.IconButton.Palette.Secondary" parent="">
-        <item name="colorContainer">?attr/colorSecondaryContainer</item>
-        <item name="colorOnContainer">?attr/colorOnSecondaryContainer</item>
-    </style>
 
-    <style name="ThemeOverlay.Unruly.IconButton.Style.Small.Primary" parent="">
-        <item name="materialIconButtonStyle">@style/Widget.Unruly.Button.Icon.Small.Primary</item>
-    </style>
 
-    <style name="ThemeOverlay.Unruly.IconButton.Style.Small.Secondary" parent="">
-        <item name="materialIconButtonStyle">@style/Widget.Unruly.Button.Icon.Small.Secondary</item>
-    </style>
 
-    <style name="Widget.Unruly.Button.PlayPause" parent="Widget.Material3Expressive.Button.IconButton">
-        <item name="android:checkable">true</item>
-    </style>
 
-    <style name="Widget.Unruly.Button.PlayPause.Secondary" parent="Widget.Material3Expressive.Button.IconButton">
-        <item name="backgroundTint">?attr/colorSecondary</item>
-        <item name="iconTint">?attr/colorOnSecondary</item>
-        <item name="android:checkable">true</item>
-    </style>
 
-    <style name="Widget.Unruly.Button.Playback.More" parent="Widget.Unruly.Button.Icon.Base" />
 
-    <style name="Widget.Unruly.Button.Playback.Toggle" parent="Widget.Material3Expressive.Button.IconButton.Outlined">
-        <item name="android:checkable">true</item>
-        <item name="toggleCheckedStateOnClick">false</item>
-        <item name="iconTint">@color/sel_checkable_icon</item>
-        <item name="strokeColor">@color/sel_checkable_outline</item>
-        <item name="backgroundTint">?attr/colorSurfaceContainerLow</item>
-    </style>
 
-    <style name="Widget.Unruly.Button.Playback.Skip" parent="Widget.Material3Expressive.Button.IconButton.Tonal" />
 
-    <style name="Widget.Unruly.Button.Playback.PlayPause" parent="Widget.Material3Expressive.Button.IconButton.Tonal">
-        <item name="android:checkable">true</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.Unruly.Button.PrimaryTonal</item>
-    </style>
-    <style name="ThemeOverlay.Unruly.Button.PrimaryTonal" parent="">
-        <item name="colorContainer">?attr/colorPrimaryContainer</item>
-        <item name="colorContainerChecked">?attr/colorPrimary</item>
-        <item name="colorContainerUnchecked">?attr/colorPrimaryContainer</item>
-        <item name="colorOnContainer">?attr/colorOnPrimaryContainer</item>
-        <item name="colorOnContainerChecked">?attr/colorOnPrimary</item>
-        <item name="colorOnContainerUnchecked">?attr/colorOnPrimaryContainer</item>
-    </style>
+
+
+
 </resources>

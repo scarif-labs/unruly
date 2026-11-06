@@ -29,6 +29,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.merklegroot.unruly.BuildConfig
 import com.merklegroot.unruly.IntegerTable
+import com.merklegroot.unruly.Unruly
 import com.merklegroot.unruly.UnrulyService
 import com.merklegroot.unruly.music.MusicSettings
 import com.merklegroot.unruly.playback.PlaybackViewModel
@@ -126,6 +127,40 @@ class UnrulyActivity : ComponentActivity() {
                 .putExtra(UnrulyService.INTENT_KEY_START_ID, IntegerTable.START_ID_ACTIVITY)
         )
 
-        playbackModel.playDeferred(DeferredPlayback.RestoreState(false))
+        if (!startIntentAction(intent)) {
+            playbackModel.playDeferred(DeferredPlayback.RestoreState(false))
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        startIntentAction(intent)
+    }
+
+    /**
+     * Turn an audio file opened from another app, or the "Shuffle All" shortcut, into a
+     * [DeferredPlayback]. Returns true if the intent was (or already had been) handled, so that
+     * onResume does not override it with RestoreState.
+     */
+    private fun startIntentAction(intent: Intent?): Boolean {
+        if (intent == null) return false
+        // onResume runs again on every return to the app; an intent is only acted on once.
+        if (intent.getBooleanExtra(KEY_INTENT_USED, false)) return true
+
+        val action =
+            when (intent.action) {
+                Intent.ACTION_VIEW -> DeferredPlayback.Open(intent.data ?: return false)
+                Unruly.INTENT_KEY_SHORTCUT_SHUFFLE -> DeferredPlayback.ShuffleAll
+                else -> return false
+            }
+        intent.putExtra(KEY_INTENT_USED, true)
+        L.d("Translated intent to $action")
+        playbackModel.playDeferred(action)
+        return true
+    }
+
+    private companion object {
+        const val KEY_INTENT_USED = BuildConfig.APPLICATION_ID + ".key.FILE_INTENT_USED"
     }
 }

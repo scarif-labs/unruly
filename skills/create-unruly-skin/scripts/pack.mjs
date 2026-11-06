@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Validate a skin folder exactly as the app will, then zip it into <id>-<version>.unruly.
 //   node pack.mjs <skin-dir> [out-dir]
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { deflateRawSync, crc32 } from "node:zlib";
 import { validate } from "./lib.mjs";
@@ -65,6 +65,8 @@ end.writeUInt32LE(central.length, 12);
 end.writeUInt32LE(offset, 16);
 const zip = Buffer.concat([...locals, central, end]);
 
-const out = join(resolve(outArg || "."), `${manifest.id}-${manifest.version || "0"}.unruly`);
+const outDir = resolve(outArg || ".");
+mkdirSync(outDir, { recursive: true });
+const out = join(outDir, `${manifest.id}-${manifest.version || "0"}.unruly`);
 writeFileSync(out, zip);
 console.log(`Packed ${files.length} files (${(zip.length / 1024).toFixed(0)} KB) -> ${out}`);

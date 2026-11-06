@@ -19,7 +19,6 @@
 package com.merklegroot.unruly.util
 
 import com.merklegroot.unruly.BuildConfig
-import kotlin.reflect.KClass
 
 /**
  * Sanitizes a value that is unlikely to be null. On debug builds, this aliases to [requireNotNull],
@@ -32,37 +31,6 @@ fun <T> unlikelyToBeNull(value: T?) =
     } else {
         value!!
     }
-
-/**
- * Aliases a check to ensure that the given number is non-zero.
- *
- * @return The given number if it's non-zero, null otherwise.
- */
-fun Int.positiveOrNull() = if (this > 0) this else null
-
-/**
- * Lazily set up a reflected field. Automatically handles visibility changes. Adapted from Material
- * Files: https://github.com/zhanghai/MaterialFiles
- *
- * @param clazz The [KClass] to reflect into.
- * @param field The name of the field to obtain.
- */
-fun lazyReflectedField(clazz: KClass<*>, field: String) = lazy {
-    clazz.java.getDeclaredField(field).also { it.isAccessible = true }
-}
-
-/**
- * Lazily set up a reflected method. Automatically handles visibility changes. Adapted from Material
- * Files: https://github.com/zhanghai/MaterialFiles
- *
- * @param clazz The [KClass] to reflect into.
- * @param method The name of the method to obtain.
- */
-fun lazyReflectedMethod(clazz: KClass<*>, method: String, vararg params: KClass<*>) = lazy {
-    clazz.java.getDeclaredMethod(method, *params.map { it.java }.toTypedArray()).also {
-        it.isAccessible = true
-    }
-}
 
 /**
  * Split a [String] by the given selector, automatically handling escaped characters that satisfy

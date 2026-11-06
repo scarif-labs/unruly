@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="info_app_name" translatable="false">Unruly Debug</string>
-    <string name="pkg_authority_cover">com.merklegroot.unruly.debug.image.CoverProvider</string>
+    <string name="pkg_authority_cover">com.scarif.unruly.debug.image.CoverProvider</string>
 </resources>

@@ -1,0 +1,43 @@
+Categories:
+  - Local Media Player
+  - Multimedia
+License: GPL-3.0-only
+AuthorName: Scarif Labs
+SourceCode: https://github.com/scarif-labs/unruly
+IssueTracker: https://github.com/scarif-labs/unruly/issues
+Changelog: https://github.com/scarif-labs/unruly/blob/HEAD/CHANGELOG.md
+
+AutoName: Unruly
+
+RepoType: git
+Repo: https://github.com/scarif-labs/unruly.git
+
+Builds:
+  - versionName: 1.0.0
+    versionCode: 1
+    commit: v1.0.0
+    subdir: app
+    submodules: true
+    sudo:
+      - echo "deb https://deb.debian.org/debian trixie main" > 
+        /etc/apt/sources.list.d/trixie.list
+      - apt-get update
+      - apt-get install -y -t trixie openjdk-21-jdk-headless
+      - update-alternatives --auto java
+      - apt-get install -y cmake file make ninja-build
+    gradle:
+      - yes
+    prebuild:
+      - sed -i -e '/afterEvaluate {/,/^}/d' ../media/publish.gradle
+      - sed -i -e '/gms/d' ../media/build.gradle
+      - sed -i -e '/foojay/d' ../settings.gradle
+      - cd ../media && git apply ../patches/media-consumer-proguard-agp9.patch
+    scandelete:
+      - media/libraries
+      - musikr/src/main/cpp/taglib/tests/data/
+    ndk: r28c
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags ^v[\d.]+$
+CurrentVersion: 1.0.0
+CurrentVersionCode: 1

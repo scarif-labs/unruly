@@ -60,7 +60,8 @@ constructor(
     private val playbackManager = playbackManager
     private val listSettings = listSettings
 
-    val library: SkinLibrary = SkinLibraryImpl(this.context, musicRepository, searchEngine)
+    val library: SkinLibrary =
+        SkinLibraryImpl(this.context, musicRepository, searchEngine, listSettings)
 
     fun bind(playbackModel: PlaybackViewModel, openAppSettings: () -> Unit): SkinSession {
         val binding = Binding(playbackModel)

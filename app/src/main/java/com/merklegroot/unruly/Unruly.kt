@@ -27,6 +27,7 @@ import com.merklegroot.unruly.home.HomeSettings
 import com.merklegroot.unruly.image.ImageSettings
 import com.merklegroot.unruly.playback.PlaybackSettings
 import com.merklegroot.unruly.ui.UISettings
+import com.merklegroot.unruly.unruly.host.UnrulyActivity
 import com.merklegroot.unruly.util.CopyleftNoticeTree
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -48,8 +49,8 @@ class Unruly : Application() {
         super.onCreate()
         @Suppress("KotlinConstantConditions")
         if (
-            BuildConfig.APPLICATION_ID != "com.merklegroot.unruly" &&
-                BuildConfig.APPLICATION_ID != "com.merklegroot.unruly.debug"
+            BuildConfig.APPLICATION_ID != "com.scarif.unruly" &&
+                BuildConfig.APPLICATION_ID != "com.scarif.unruly.debug"
         ) {
             Timber.plant(CopyleftNoticeTree())
         } else if (BuildConfig.DEBUG) {
@@ -73,7 +74,7 @@ class Unruly : Application() {
                     .setLongLabel(getString(R.string.lbl_shuffle_shortcut_long))
                     .setIcon(IconCompat.createWithResource(this, R.drawable.ic_shortcut_shuffle_24))
                     .setIntent(
-                        Intent(this, MainActivity::class.java)
+                        Intent(this, UnrulyActivity::class.java)
                             .setAction(INTENT_KEY_SHORTCUT_SHUFFLE)
                     )
                     .build()

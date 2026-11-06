@@ -1,0 +1,18 @@
+<p>In Unruly a skin is the whole app: browsing, now playing, queue, lyrics, and how you move between them. Switch skins and you get a different player.</p>
+
+<p><b>Built-in skins</b></p>
+<ul>
+<li>iPod, with a click wheel and haptic ticks</li>
+<li>Zune HD</li>
+<li>PSP XMB</li>
+<li>iOS 6 Music</li>
+<li>Winamp 2</li>
+</ul>
+
+<p><b>Make your own</b></p>
+<p>A skin is a small web page (HTML, CSS and JS) packed into a .unruly file. Open the file on your phone or load it from settings. Skins run offline in a locked-down view and can't reach the network. If one crashes, Unruly falls back to a working skin.</p>
+<p>The repository includes an agent skill and authoring kit, so you can describe a skin to a coding agent and get a working file back.</p>
+
+<p><b>Under the hood</b></p>
+<p>Playback and library indexing come from Auxio: gapless playback, ReplayGain, accurate tag parsing, and support for most formats through ExoPlayer and FFmpeg.</p>
+<p>Unruly can look up lyrics from LRCLIB. You can turn this off in settings.</p>

@@ -21,7 +21,6 @@ package com.merklegroot.unruly.settings
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.annotation.StringRes
-import androidx.preference.PreferenceManager
 import com.merklegroot.unruly.util.unlikelyToBeNull
 import timber.log.Timber as L
 
@@ -63,7 +62,11 @@ interface Settings<Listener> {
     abstract class Impl<Listener>(private val context: Context) :
         Settings<Listener>, SharedPreferences.OnSharedPreferenceChangeListener {
         protected val sharedPreferences: SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+            context.applicationContext.let {
+                // The same file androidx.preference's getDefaultSharedPreferences uses, so
+                // existing installs keep their settings.
+                it.getSharedPreferences(it.packageName + "_preferences", Context.MODE_PRIVATE)
+            }
 
         /** @see [Context.getString] */
         protected fun getString(@StringRes stringRes: Int) = context.getString(stringRes)

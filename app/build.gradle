@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id "com.android.application"
-    id "androidx.navigation.safeargs.kotlin"
     id "kotlin-parcelize"
     id "dagger.hilt.android.plugin"
     id "com.google.devtools.ksp"
@@ -17,9 +16,9 @@ android {
 
     defaultConfig {
         // Published package identity for the Unruly app.
-        applicationId "com.merklegroot.unruly"
-        versionName "4.1.5"
-        versionCode 75
+        applicationId "com.scarif.unruly"
+        versionName "1.0.0"
+        versionCode 1
 
         minSdk min_sdk
         // randomly flickers between deprecated and required depending on what mood my gradle is in
@@ -76,7 +75,6 @@ android {
     }
 
     buildFeatures {
-        viewBinding true
         buildConfig true
         compose true
     }
@@ -119,10 +117,6 @@ dependencies {
     // Pinned explicitly: something (activity-compose / material3) pulls 2.11.0 transitively,
     // which demands compileSdk 37.
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_compose_version"
-    // Listed by buildspec 2.1. NOTE: Phase 3.4 gives each skin ownership of its own
-    // navigation and Phase 4.5 supplies a back-stack primitive, so this may end up unused
-    // and removable. Kept for now to follow the spec.
-    implementation "androidx.navigation:navigation-compose:$navigation_version"
 
     // --- SUPPORT ---
 
@@ -130,24 +124,6 @@ dependencies {
     implementation "androidx.core:core-ktx:$core_version"
     implementation "androidx.appcompat:appcompat:1.7.1"
     implementation "androidx.activity:activity-ktx:1.13.0"
-    // good news: androidx-fragment 1.8.9's predictive back no longer crashes when you navigate
-    // back across nested views too fast
-    // bad news: it still doesn't cope well with home's inflation latency and freezes up
-    // if you navigate twice very fast and time it right
-    // keep it pinned down to pre-predictive back for now...
-    // noinspection GradleDependency
-    implementation "androidx.fragment:fragment-ktx:1.6.2"
-
-    // Components
-    // Deliberately kept on 1.2.1 to prevent a bug where the queue sheet will not collapse on
-    // certain upwards scrolling events
-    // TODO: Report this issue and hope for a timely fix
-    // noinspection GradleDependency
-    implementation "androidx.recyclerview:recyclerview:1.2.1"
-    implementation "androidx.constraintlayout:constraintlayout:2.2.1"
-    // 1.1.0 upgrades recyclerview to 1.3.0, keep it on 1.0.0
-    //noinspection GradleDependency
-    implementation "androidx.viewpager2:viewpager2:1.0.0"
 
     // Lifecycle
     def lifecycle_version = "2.10.0"
@@ -156,18 +132,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
-    // Navigation
-    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
-
     // Media
     implementation "androidx.media:media:1.8.0"
 
     // Android Auto
     implementation "androidx.car.app:app:1.7.0"
-
-    // Preferences
-    implementation "androidx.preference:preference-ktx:1.2.1"
 
     // Database
     implementation "androidx.room:room-runtime:$room_version"
@@ -204,9 +173,6 @@ dependencies {
 
     // Logging
     implementation 'com.jakewharton.timber:timber:5.0.1'
-
-    // Speed dial
-    implementation "com.leinardi.android:speed-dial:3.3.0"
 
     // Tasker integration
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.10'

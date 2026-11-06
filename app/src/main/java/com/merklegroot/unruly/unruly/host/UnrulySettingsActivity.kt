@@ -74,8 +74,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
@@ -119,6 +119,7 @@ import com.merklegroot.unruly.BuildConfig
 import com.merklegroot.unruly.R
 import com.merklegroot.unruly.music.MusicRepository
 import com.merklegroot.unruly.music.MusicSettings
+import com.merklegroot.unruly.music.locations.LocationMode
 import com.merklegroot.unruly.playback.state.PlaybackStateManager
 import com.merklegroot.unruly.unruly.engine.LyricsPreferences
 import com.merklegroot.unruly.unruly.web.SkinPackageException
@@ -139,8 +140,8 @@ import timber.log.Timber as L
  * This Activity never composes a skin. That is the entire point: it stays reachable when the active
  * skin is broken, crashes on launch, or renders an unusable interface. Without it, a bad skin means
  * uninstalling the app to recover. So: no [org.unruly.skin.AppSkin.Render], no skin theme, nothing
- * here that a skin can influence beyond its name in the picker. It is set like the index on a record
- * sleeve instead (red grotesk on off-white), as a menu that pushes one page per option.
+ * here that a skin can influence beyond its name in the picker. It is set like the index on a
+ * record sleeve instead (red grotesk on off-white), as a menu that pushes one page per option.
  *
  * It has NO launcher entry. It used to, so that it stayed reachable when a skin was unusable, but
  * it shared the host's icon and label and users kept opening it by mistake - see the comment on
@@ -186,8 +187,8 @@ class UnrulySettingsActivity : ComponentActivity() {
      *   observable (no skin is hosted here), and back leaves the task entirely, which reads as "the
      *   app minimised itself".
      * - Launched from a skin ([org.unruly.skin.SkinSession.openAppSettings] does a plain
-     *   `startActivity` from [UnrulyActivity]), the host is already directly below us on the
-     *   stack. Starting it again would stack a second host over a live one.
+     *   `startActivity` from [UnrulyActivity]), the host is already directly below us on the stack.
+     *   Starting it again would stack a second host over a live one.
      *
      * [isTaskRoot] separates them exactly: it is true only when nothing of ours sits below this
      * Activity in the task, which is precisely the "no host to go back to" case. It is checked
@@ -316,6 +317,7 @@ class UnrulySettingsActivity : ComponentActivity() {
      * adb shell am start -n <pkg>/com.merklegroot.unruly.unruly.host.UnrulySettingsActivity \
      *   -a com.merklegroot.unruly.INSTALL_SKIN -d file:///sdcard/Android/data/<pkg>/files/x.unruly
      * ```
+     *
      * The file must be in our own external files dir, which needs no permission to read. Release
      * builds ignore the action; users load skins through the picker.
      */
@@ -424,6 +426,28 @@ private fun SettingsContent(
         )
     }
     var rescanning by remember { mutableStateOf(false) }
+    // Folders, or everything Android has indexed. The mode write itself triggers the rescan.
+    var wholePhone by remember {
+        mutableStateOf(musicSettings.locationMode == LocationMode.MEDIA_STORE)
+    }
+    var audioDenied by remember { mutableStateOf(false) }
+    val audioPermission =
+        rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            audioDenied = !granted
+            if (granted) {
+                wholePhone = true
+                musicSettings.locationMode = LocationMode.MEDIA_STORE
+            }
+        }
+    val setWholePhone = { on: Boolean ->
+        audioDenied = false
+        if (on) {
+            audioPermission.launch(AUDIO_PERMISSION)
+        } else {
+            wholePhone = false
+            musicSettings.locationMode = LocationMode.SAF
+        }
+    }
 
     // User skins: a .unruly file picked here is checked, unpacked and switched to at once.
     var userSkins by remember { mutableStateOf(registry.userSkins()) }
@@ -509,7 +533,12 @@ private fun SettingsContent(
                     ) {
                         page = SettingsPage.Skin
                     }
-                    MenuEntry("library", folderCount(folders.size)) { page = SettingsPage.Library }
+                    MenuEntry(
+                        "library",
+                        if (wholePhone) "WHOLE PHONE" else folderCount(folders.size),
+                    ) {
+                        page = SettingsPage.Library
+                    }
                     MenuEntry("lyrics", if (lyricsEnabled) "ON" else "OFF") {
                         page = SettingsPage.Lyrics
                     }
@@ -573,8 +602,10 @@ private fun SettingsContent(
                     onBack = back,
                     scrolls = false,
                     actions = {
-                        SettingsButton("Add folder", primary = false, onClick = addFolder) {
-                            drawPlus(it)
+                        if (!wholePhone) {
+                            SettingsButton("Add folder", primary = false, onClick = addFolder) {
+                                drawPlus(it)
+                            }
                         }
                         SettingsButton(
                             if (rescanning) "Rescanning…" else "Rescan",
@@ -589,23 +620,32 @@ private fun SettingsContent(
                         }
                     },
                 ) {
+                    SettingsToggle("All music on this phone", wholePhone, setWholePhone)
+                    Spacer(Modifier.height(12.dp))
                     StatusLabel(
-                        if (folders.isEmpty()) "0 FOLDERS · NOTHING TO SCAN"
-                        else "${folderCount(folders.size)} · READY"
+                        when {
+                            audioDenied -> "NO ACCESS TO MUSIC"
+                            wholePhone -> "WHOLE PHONE · READY"
+                            folders.isEmpty() -> "0 FOLDERS · NOTHING TO SCAN"
+                            else -> "${folderCount(folders.size)} · READY"
+                        }
                     )
-                    Spacer(Modifier.height(8.dp))
-                    FolderRows(
-                        folders,
-                        onRemove = {
-                            folders.remove(it)
-                            saveFolders()
-                        },
-                        Modifier.weight(1f, fill = false),
-                    )
+                    if (!wholePhone) {
+                        Spacer(Modifier.height(8.dp))
+                        FolderRows(
+                            folders,
+                            onRemove = {
+                                folders.remove(it)
+                                saveFolders()
+                            },
+                            Modifier.weight(1f, fill = false),
+                        )
+                    }
                 }
             SettingsPage.Lyrics ->
                 SettingsScaffold("lyrics", onBack = back) {
-                    LyricsToggle(
+                    SettingsToggle(
+                        "Fetch from lrclib.net",
                         checked = lyricsEnabled,
                         onChange = { enabled ->
                             lyricsEnabled = enabled
@@ -840,12 +880,7 @@ private fun Modifier.drawBehindRule(): Modifier = drawBehind {
 
 /** A menu entry: the option in heavy red, its state in orange caps beneath, an arrow, a rule. */
 @Composable
-private fun MenuEntry(
-    label: String,
-    status: String,
-    enabled: Boolean = true,
-    onClick: () -> Unit,
-) {
+private fun MenuEntry(label: String, status: String, enabled: Boolean = true, onClick: () -> Unit) {
     val size = LocalHeadlineSize.current * 0.6f
     Row(
         Modifier.fillMaxWidth()
@@ -904,9 +939,9 @@ private fun SkinChoice(
         }
         if (onRemove != null) {
             Box(
-                Modifier.size(48.dp)
-                    .clickable(role = Role.Button, onClick = onRemove)
-                    .semantics { contentDescription = "Remove $displayName" },
+                Modifier.size(48.dp).clickable(role = Role.Button, onClick = onRemove).semantics {
+                    contentDescription = "Remove $displayName"
+                },
                 contentAlignment = Alignment.Center,
             ) {
                 Canvas(Modifier.size(14.dp)) {
@@ -1007,9 +1042,9 @@ private fun SettingsButton(
     }
 }
 
-/** The lrclib switch: the whole row toggles; the track fills red when on. */
+/** A labelled switch: the whole row toggles; the track fills red when on. */
 @Composable
-private fun LyricsToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
+private fun SettingsToggle(label: String, checked: Boolean, onChange: (Boolean) -> Unit) {
     Row(
         Modifier.fillMaxWidth()
             .toggleable(checked, role = Role.Switch, onValueChange = onChange)
@@ -1018,7 +1053,7 @@ private fun LyricsToggle(checked: Boolean, onChange: (Boolean) -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            "Fetch from lrclib.net",
+            label,
             modifier = Modifier.weight(1f),
             color = VortexInk,
             fontFamily = SettingsSans,

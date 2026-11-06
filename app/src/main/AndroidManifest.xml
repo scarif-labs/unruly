@@ -55,9 +55,8 @@
                 android:resource="@drawable/ic_unruly_24" />
 
         <!--
-        UNRULY HOST. Hosts the active skin and nothing else.
-        Kept alongside .MainActivity for now so the original UI stays testable; .MainActivity
-        is removed once a real skin exists (buildspec Phase 5).
+        UNRULY HOST. Hosts the active skin and nothing else. Also takes audio files opened from
+        other apps and the "Shuffle All" shortcut (see UnrulyActivity.startIntentAction).
         -->
         <activity
             android:name=".unruly.host.UnrulyActivity"
@@ -69,12 +68,32 @@
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <!-- Moved off .MainActivity: this is the entry point that declares us a
-                     music player, so it must be the one the system opens. -->
+                <!-- The entry point that declares us a music player, so it must be the one
+                     the system opens. -->
                 <action android:name="android.intent.action.MUSIC_PLAYER" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.APP_MUSIC" />
+            </intent-filter>
+            <intent-filter>
+                <!--
+                Signal that we can take audio of *any* format, file or content. This is important,
+                as some apps use this to determine if Unruly is eligible to be a default music
+                player.
+                -->
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+
+                <!-- Normal audio mime types + weird mime types -->
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="application/ogg" />
+                <data android:mimeType="application/x-ogg" />
+                <data android:mimeType="application/itunes" />
             </intent-filter>
         </activity>
 
@@ -158,48 +177,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:icon="@mipmap/ic_launcher"
-            android:launchMode="singleTask"
-            android:allowCrossUidActivitySwitchFromBelow="false"
-            android:roundIcon="@mipmap/ic_launcher"
-            android:windowSoftInputMode="adjustNothing">
-
-            <!--
-            NO LAUNCHER ENTRY. This is Unruly's original pre-Unruly UI, kept only so it stays
-            testable and so the "Shuffle All" launcher shortcut (Unruly.kt) keeps working -
-            UnrulyActivity does not yet parse intent actions, so repointing that shortcut
-            here would silently do nothing.
-
-            Its MAIN/LAUNCHER/MUSIC_PLAYER filter moved to .UnrulyActivity. Leaving it here
-            put a THIRD icon in the launcher that opened an entirely different interface from
-            the other two, with no skin and no route to Unruly settings.
-
-            Reachable by explicit intent, which is all the shortcut needs.
-            -->
-            <intent-filter>
-                <!--
-                Signal that we can take audio of *any* format, file or content. This is important,
-                as some apps use this to determine if Unruly is eligible to be a default music
-                player.
-                -->
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="content" />
-                <data android:scheme="file" />
-
-                <!-- Normal audio mime types + weird mime types -->
-                <data android:mimeType="audio/*" />
-                <data android:mimeType="application/ogg" />
-                <data android:mimeType="application/x-ogg" />
-                <data android:mimeType="application/itunes" />
-            </intent-filter>
-        </activity>
 
 
         <!--

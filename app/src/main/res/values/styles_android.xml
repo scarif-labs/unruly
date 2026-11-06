@@ -49,41 +49,11 @@
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <!-- Dialog style that properly implements dividers in a NestedScrollView -->
-    <style name="Widget.Unruly.Dialog.NestedScrollView" parent="">
-        <item name="android:overScrollMode">never</item>
-        <item name="android:paddingTop">@dimen/spacing_medium</item>
 
-        <!-- API 23+ specific -->
-        <item name="android:scrollIndicators" tools:ignore="NewApi">top|bottom</item>
-    </style>
 
-    <style name="PreferenceTheme.Unruly" parent="@style/PreferenceThemeOverlay">
-        <item name="android:layout">@layout/fragment_preferences</item>
-    </style>
 
-    <style name="Preference.Unruly" parent="Preference.Material">
-        <item name="allowDividerBelow">false</item>
-        <item name="iconSpaceReserved">false</item>
-        <item name="android:background">@android:color/black</item>
-    </style>
 
-    <style name="Preference.Unruly.DialogPreference" parent="Preference.DialogPreference.Material">
-        <item name="allowDividerBelow">false</item>
-        <item name="iconSpaceReserved">false</item>
-    </style>
 
-    <style name="Preference.Unruly.PreferenceCategory" parent="Preference.Category.Material">
-        <item name="layout">@layout/item_header</item>
-        <item name="allowDividerBelow">false</item>
-        <item name="iconSpaceReserved">false</item>
-    </style>
-
-    <style name="Preference.Unruly.SwitchPreferenceCompat" parent="Preference.SwitchPreferenceCompat.Material">
-        <item name="widgetLayout">@layout/view_preference_switch</item>
-        <item name="allowDividerBelow">false</item>
-        <item name="iconSpaceReserved">false</item>
-    </style>
 
     <!-- Widget TextView that mimics the main Unruly Primary/Secondary TextViews. -->
     <style name="Widget.Unruly.TextView.AppWidget" parent="Widget.Unruly.TextView.Base">

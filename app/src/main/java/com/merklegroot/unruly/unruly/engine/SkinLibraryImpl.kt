@@ -20,6 +20,7 @@ package com.merklegroot.unruly.unruly.engine
 
 import android.content.Context
 import androidx.paging.PagingData
+import com.merklegroot.unruly.list.ListSettings
 import com.merklegroot.unruly.music.IndexingState
 import com.merklegroot.unruly.music.MusicRepository
 import com.merklegroot.unruly.search.SearchEngine
@@ -57,6 +58,7 @@ constructor(
     @ApplicationContext private val context: Context,
     private val musicRepository: MusicRepository,
     private val searchEngine: SearchEngine,
+    private val listSettings: ListSettings,
 ) : SkinLibrary {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -172,7 +174,8 @@ constructor(
             musicRepository.library
                 ?.albums
                 ?.firstOrNull { it.uid.toString() == albumId }
-                ?.songs
+                // The order album playback queues in, so the list matches the queue.
+                ?.let { listSettings.albumSongSort.songs(it.songs) }
                 .orEmpty()
                 .map { it.toSkin(context) }
         }

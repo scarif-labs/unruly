@@ -56,25 +56,6 @@ fun <T : Music> List<T>.resolveNames(context: Context) =
     concatLocalized(context) { it.name.resolve(context) }
 
 /**
- * Returns if [Music.name] matches for each item in a list. Useful for scenarios where the display
- * information of an item must be compared without a context.
- *
- * @param other The list of items to compare to.
- * @return True if they are the same (by [Music.name]), false otherwise.
- */
-fun <T : Music> List<T>.areNamesTheSame(other: List<T>): Boolean {
-    for (i in 0 until max(size, other.size)) {
-        val a = getOrNull(i) ?: return false
-        val b = other.getOrNull(i) ?: return false
-        if (a.name != b.name) {
-            return false
-        }
-    }
-
-    return true
-}
-
-/**
  * Resolve this instance into a human-readable date.
  *
  * @param context [Context] required to get human-readable names.

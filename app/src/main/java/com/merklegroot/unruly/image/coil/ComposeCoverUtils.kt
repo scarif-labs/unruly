@@ -24,11 +24,3 @@ internal object ComposeCoverDefaults {
     const val MIN_GAP_CORNER_RATIO = 0.35f
     const val MAX_CORNER_RATIO = 0.15f
 }
-
-internal fun List<Int>.validatedZOrder(): List<Int> {
-    val expected = listOf(0, 1, 2, 3)
-    require(size == expected.size && distinct().size == expected.size && containsAll(expected)) {
-        "zOrder must be a permutation of [0, 1, 2, 3], got $this"
-    }
-    return this
-}

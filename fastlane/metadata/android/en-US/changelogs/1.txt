@@ -1,0 +1,5 @@
+First release.
+
+- Five built-in skins: iPod, Zune HD, PSP XMB, iOS 6 Music, Winamp 2
+- Load your own web skins from .unruly files
+- Synced lyrics from LRCLIB
