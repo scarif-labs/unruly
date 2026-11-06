@@ -23,6 +23,8 @@ git clone --depth 1 https://gitlab.com/fdroid/fdroiddata.git "$DATA"
 sed -e "s/^    commit: .*/    commit: $COMMIT/" "$RECIPE" > "$DATA/metadata/$APPID.yml"
 VERCODE=$(sed -n 's/^    versionCode: //p' "$DATA/metadata/$APPID.yml" | tail -1)
 cd "$DATA"
+# Keep whatever was built, including a failed verification's APK, for comparison.
+trap 'mkdir -p "$OUT"; cp -R "$DATA/tmp/." "$OUT/" 2>/dev/null || true' EXIT
 
 # --- from fdroiddata .gitlab-ci.yml, job "fdroid build" ---
 export ANDROID_HOME=/opt/android-sdk
@@ -83,6 +85,4 @@ rm "$home_vagrant/fdroiddata" "$home_vagrant/.gitconfig"
 popd
 # --- end of fdroiddata steps ---
 
-mkdir -p "$OUT"
-cp -R "$DATA/tmp/." "$OUT/"
-ls -laR "$OUT"
+ls -laR "$DATA/tmp"
