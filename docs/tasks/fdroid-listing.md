@@ -1,6 +1,8 @@
 # F-Droid listing
 
-Status: 🟡 2026-11-06: v1.0.0 tagged and pushed; fdroiddata MR not opened yet. The release build passes R8 (from this tree, JDK 17) and is
+Status: 🟡 2026-11-06: submitted. fdroiddata MR !56036 is open:
+https://gitlab.com/fdroid/fdroiddata/-/merge_requests/56036 (fork visheh10/fdroiddata, branch
+`com.scarif.unruly`). Waiting on its pipeline and on reviewers.
 installed on the phone as `com.scarif.unruly` (signed with the debug key). Nothing is committed,
 tagged or submitted yet.
 
@@ -78,3 +80,26 @@ tagged or submitted yet.
   fdroiddata; that's harmless.
 - The phone still has the old `com.merklegroot.unruly.debug` install. A new debug build installs
   alongside it as `com.scarif.unruly.debug`, which needs onboarding again.
+
+## Reproducible builds (2026-11-06)
+
+The user chose reproducible builds with their own key, so F-Droid publishes our signature.
+
+- Release key: `~/.config/unruly/release.jks` (alias `unruly`, RSA 4096, valid to 2126). Password
+  only in the macOS Keychain, item `unruly-release-keystore`. Cert SHA-256
+  `fc8f9a5dd143a1b78db0bbfb779f0f9dbb19de3107fc82bfd20b1a93b30279a8` (= `AllowedAPKSigningKeys`).
+  The user must back both up; losing them ends updates for F-Droid users.
+- Release flow for each version:
+  1. Tag `vX.Y.Z`, update `versionName`/`versionCode`/`commit` (full hash) in
+     `.github/fdroid/com.scarif.unruly.yml`.
+  2. Run the "F-Droid reference build" workflow (`gh workflow run fdroid-reference.yml -f tag=vX.Y.Z`).
+     It runs `fdroid build` in F-Droid's buildserver image, copying fdroiddata's CI job.
+  3. Download the unsigned APK and sign it with `.github/fdroid/sign-release.sh`. It must use
+     `--alignment-preserved true` and no v1 signing; plain `apksigner sign` changes other bytes and
+     F-Droid's check fails (that is what broke the first 1.0.0 upload).
+  4. Upload as `unruly-X.Y.Z.apk` on the GitHub release (`Binaries` points there).
+  5. Optionally rerun the workflow: with `Binaries` set it ends in "compared built binary to
+     supplied reference binary successfully".
+- The build itself is reproducible: two independent F-Droid builds of 3e056506b were byte-identical.
+- APK is universal (12.6 MB, 6.2 MB of it native code for 4 ABIs). Offered ABI splits in the MR if
+  reviewers ask.
