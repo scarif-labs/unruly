@@ -1,0 +1,44 @@
+name: F-Droid reference build
+
+# Builds a release the way F-Droid will, in F-Droid's own buildserver image. The unsigned APK it
+# produces is signed locally with the release key and published as the GitHub release asset that
+# F-Droid compares its build against. The key never touches CI.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to build
+        required: true
+        default: v1.0.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      # The buildserver image, NDK and Gradle caches outgrow the runner's free disk.
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force
+          df -h /
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build in F-Droid's buildserver image
+        run: |
+          commit=$(git rev-list -n 1 "${{ inputs.tag }}")
+          docker run --rm --privileged \
+            -v "$PWD:/work" \
+            registry.gitlab.com/fdroid/fdroidserver:buildserver-trixie \
+            bash /work/.github/fdroid/reference-build.sh \
+              /work/.github/fdroid/com.scarif.unruly.yml "$commit" /work/out
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fdroid-reference-${{ inputs.tag }}
+          path: out/

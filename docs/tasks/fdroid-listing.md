@@ -1,6 +1,6 @@
 # F-Droid listing
 
-Status: 🟡 In progress 2026-11-06. The release build passes R8 (from this tree, JDK 17) and is
+Status: 🟡 2026-11-06: v1.0.0 tagged and pushed; fdroiddata MR not opened yet. The release build passes R8 (from this tree, JDK 17) and is
 installed on the phone as `com.scarif.unruly` (signed with the debug key). Nothing is committed,
 tagged or submitted yet.
 
@@ -25,7 +25,7 @@ tagged or submitted yet.
 - `fastlane/metadata/android/en-US/`: `title.txt`, `short_description.txt`,
   `full_description.txt`, `changelogs/1.txt`, `images/icon.png` (512 px, rendered from the
   launcher vector with rsvg-convert). `images/phoneScreenshots/` is **empty**.
-- fdroiddata recipe: [`fdroid/com.scarif.unruly.yml`](fdroid/com.scarif.unruly.yml) (a copy; the
+- fdroiddata recipe: [`.github/fdroid/com.scarif.unruly.yml`](../../.github/fdroid/com.scarif.unruly.yml) (a copy; the
   working one is in `/tmp/fdroiddata/metadata/`, a shallow clone). It passes `fdroid lint` and has
   been through `fdroid rewritemeta`. It is Auxio's recipe plus JDK 21 from trixie and one prebuild
   line that applies `patches/media-consumer-proguard-agp9.patch`.
@@ -64,7 +64,9 @@ tagged or submitted yet.
    layout, menu, nav graph and string only they used.
 3. ✅ Screenshots 1–6 taken 2026-11-06 (iPod, PSP, Winamp, Zune, iOS 6, settings). Retake if the trim changes UI. Old notes: Ask before driving the phone (9b53f076). Take 4–6 shots of different skins
    into `fastlane/.../images/phoneScreenshots/` (`1.png`, `2.png`, ...).
-4. Update CHANGELOG.md with a 1.0.0 entry. Commit with `--no-gpg-sign`, push to `scarif`, tag
+4. ✅ 2026-11-06: CHANGELOG 1.0.0, commit 3e056506b (unsigned) pushed to scarif/main, annotated
+   tag `v1.0.0` pushed (only that tag). A local copy of Auxio's 2020 `v1.0.0` tag was deleted to
+   free the name; never `git push --tags` (77 Auxio tags locally). Old notes: Update CHANGELOG.md with a 1.0.0 entry. Commit with `--no-gpg-sign`, push to `scarif`, tag
    `v1.0.0` and push the tag.
 5. Fork fdroiddata (`glab repo fork fdroid/fdroiddata`, logged in as visheh10). Add the recipe on
    a `com.scarif.unruly` branch and open an MR using fdroiddata's MR template. Their CI builds it.
